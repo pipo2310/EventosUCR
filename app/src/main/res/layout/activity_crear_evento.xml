@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CrearEvento">
+
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="17dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="18dp"
+                android:layout_marginBottom="1dp"
+                app:layout_constraintBottom_toTopOf="@+id/nombreEvento"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/imagenblanco" />
+
+            <EditText
+                android:id="@+id/nombreEvento"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="34dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Nombre del evento"
+                android:textColor="#AFAFAF"
+                android:textSize="25sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.216"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.458" />
+
+            <EditText
+                android:id="@+id/nombreInstitucion"
+                android:layout_width="242dp"
+                android:layout_height="44dp"
+                android:layout_marginTop="14dp"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Nombre de entidad/institucion"
+                android:textColor="#AFAFAF"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.101"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/nombreEvento"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <ImageButton
+
+                android:id="@+id/agregarImagen"
+                android:layout_width="68dp"
+                android:layout_height="62dp"
+                android:background="@drawable/imagenblanco"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.929"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.539"
+                app:srcCompat="@drawable/ic_add_a_photo_black_24dp" />
+
+            <TextView
+                android:id="@+id/titulofecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Fecha"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.613" />
+
+            <ImageView
+                android:id="@+id/fondo"
+                android:layout_width="156dp"
+                android:layout_height="54dp"
+                android:background="#E0E0E0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.498"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.7" />
+
+            <TextView
+                android:id="@+id/fecha"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Jueves, \n26 de marzo"
+                app:layout_constraintBottom_toBottomOf="@+id/fondo"
+                app:layout_constraintEnd_toEndOf="@+id/fondo"
+                app:layout_constraintHorizontal_bias="0.825"
+                app:layout_constraintStart_toStartOf="@+id/fondo"
+                app:layout_constraintTop_toTopOf="@+id/fondo"
+                app:layout_constraintVertical_bias="0.4" />
+
+            <ImageButton
+                android:id="@+id/calendario"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/fondo"
+                app:layout_constraintEnd_toEndOf="@+id/fondo"
+                app:layout_constraintHorizontal_bias="0.116"
+                app:layout_constraintStart_toStartOf="@+id/fondo"
+                app:layout_constraintTop_toBottomOf="@+id/titulofecha"
+                app:layout_constraintVertical_bias="0.685"
+                app:srcCompat="@drawable/calendaricon" />
+
+            <ImageView
+                android:id="@+id/fondotiempoIni"
+                android:layout_width="156dp"
+                android:layout_height="54dp"
+                android:background="#E0E0E0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.082"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.821" />
+            <TextView
+                android:id="@+id/tiempoInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                    android:text=":"
+                app:layout_constraintBottom_toBottomOf="@+id/fondotiempoIni"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoIni"
+                app:layout_constraintHorizontal_bias="0.825"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoIni"
+                app:layout_constraintTop_toTopOf="@+id/fondotiempoIni"
+                app:layout_constraintVertical_bias="0.4" />
+
+            <ImageButton
+                android:id="@+id/tiempoIniimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/fondotiempoIni"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoIni"
+                app:layout_constraintHorizontal_bias="0.143"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoIni"
+                app:layout_constraintTop_toTopOf="@+id/fondotiempoIni"
+                app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+            <ImageView
+                android:id="@+id/fondotiempoFin"
+                android:layout_width="156dp"
+                android:layout_height="54dp"
+                android:background="#E0E0E0"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.89"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.82" />
+
+            <TextView
+                android:id="@+id/tiempoFin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=":"
+                app:layout_constraintBottom_toBottomOf="@+id/fondotiempoFin"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoFin"
+                app:layout_constraintHorizontal_bias="0.825"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
+                app:layout_constraintTop_toTopOf="@+id/fondotiempoFin"
+                app:layout_constraintVertical_bias="0.4" />
+
+            <ImageButton
+                android:id="@+id/tiempoFinimg"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
+                app:layout_constraintBottom_toBottomOf="@+id/fondotiempoFin"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoFin"
+                app:layout_constraintHorizontal_bias="0.113"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
+                app:layout_constraintTop_toTopOf="@+id/fondotiempoFin"
+                app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>

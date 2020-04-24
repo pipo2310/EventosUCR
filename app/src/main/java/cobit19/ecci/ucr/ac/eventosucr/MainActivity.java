@@ -2,7 +2,10 @@ package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -14,6 +17,13 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Button button = (Button) findViewById(R.id.button);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarDePantalla();
+            }
+        });
 
         // Ejemplo de uso para verificar que funciona
         Calendar fechaInicio = Calendar.getInstance();
@@ -38,5 +48,10 @@ public class MainActivity extends AppCompatActivity {
             // Mostramos el Evento en la aplicacion
             Toast.makeText(getApplicationContext(), nuevoEvento.toString(), Toast.LENGTH_LONG).show();
         }
+    }
+
+    public void cambiarDePantalla() {
+        Intent a =new Intent(this,CrearEvento.class);
+        startActivity(a);
     }
 }
