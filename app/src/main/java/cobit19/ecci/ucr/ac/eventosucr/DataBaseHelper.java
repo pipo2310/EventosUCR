@@ -27,8 +27,9 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // implementamos el metodo para la creacion de la base de datos
     public void onCreate(SQLiteDatabase db) {
         // Crear la base de datos de la app
-        db.execSQL(DataBaseContract.SQL_DELETE_EVENTO);
         db.execSQL(DataBaseContract.SQL_CREATE_EVENTO);
+        db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA);
+        db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA_EVENTO);
     }
     // implementamos el metodo para la actualizacion de la base de datos
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

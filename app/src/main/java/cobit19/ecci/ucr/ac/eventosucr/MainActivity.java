@@ -15,7 +15,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Ejemplo de uso para verificar que funciona
+        // EJEMPLO INGRESAR EVENTO
+        /*// Ejemplo de uso para verificar que funciona
         Calendar fechaInicio = Calendar.getInstance();
         Calendar fechaFin = Calendar.getInstance();
         fechaInicio.setTime(new Date());
@@ -27,16 +28,30 @@ public class MainActivity extends AppCompatActivity {
         evento.setFechaInicio(fechaInicio);
         evento.setFechaFin(fechaFin);
 
-        long rowid = evento.insertar(getApplicationContext());
+        long rowidEvento = evento.insertar(getApplicationContext());
 
         // Verifica que se ingreso en la base de datos
-        if (rowid != -1) {
+        if (rowidEvento != -1) {
             // Pedimos de la base de datos el evento que se guardo anteriormente
             Evento nuevoEvento = new Evento();
             nuevoEvento.leer(getApplicationContext(),"1");
 
             // Mostramos el Evento en la aplicacion
             Toast.makeText(getApplicationContext(), nuevoEvento.toString(), Toast.LENGTH_LONG).show();
-        }
+        }*/
+
+        // EJEMPLO INGRESAR CATEGORIA
+        /*Categoria categoria = new Categoria();
+        categoria.setNombre("Categoria 1");
+        categoria.setDetalles("Detalles de la categoria 1");
+
+        long rowidCategoria = categoria.insertar(getApplicationContext());
+
+        if (rowidCategoria != -1) {
+            Categoria nuevaCategoria = new Categoria();
+            nuevaCategoria.leer(getApplicationContext(),"1");
+
+            Toast.makeText(getApplicationContext(), nuevaCategoria.toString(), Toast.LENGTH_LONG).show();
+        }*/
     }
 }

@@ -107,8 +107,6 @@ public class Evento implements Parcelable {
     };
 
     public long insertar(Context context) {
-        boolean seInserto = false;
-
         // usar la clase DataBaseHelper para realizar la operacion de insertar
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         // Obtiene la base de datos en modo escritura
@@ -116,38 +114,37 @@ public class Evento implements Parcelable {
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
 
-        values.put("nombre", this.nombre);
-        values.put("detalles", this.detalles);
-        values.put("fechaInicio", UtilDates.parsearaString(this.fechaInicio.getTime()));
-        values.put("fechaFin", UtilDates.parsearaString(this.fechaFin.getTime()));
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.nombre);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.detalles);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO, UtilDates.parsearaString(this.fechaInicio.getTime()));
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN, UtilDates.parsearaString(this.fechaFin.getTime()));
 
         // Insertar la nueva fila
-        return db.insert("Persona", null, values);
+        return db.insert(DataBaseContract.TABLE_EVENTO, null, values);
     }
 
     public void leer(Context context, String idParametro) {
         // usar la clase DataBaseHelper para realizar la operacion de leer
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-
         // Obtiene la base de datos en modo lectura
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
 
         // Define cuales columnas quiere solicitar // en este caso todas las de la clase
         String[] projection = {
-                "id",
-                "nombre",
-                "detalles",
-                "fechaInicio",
-                "fechaFin"
+                DataBaseContract.TABLE_EVENTO_COLUMN_ID,
+                DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
+                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
+                DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO,
+                DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN
         };
 
         // Filtro para el WHERE
-        String selection = "id = ?";
+        String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
         String[] selectionArgs = {idParametro};
 
         // Resultados en el cursor
         Cursor cursor = db.query(
-                "Persona", // tabla
+                DataBaseContract.TABLE_EVENTO, // tabla
                 projection, // columnas
                 selection, // where
                 selectionArgs, // valores del where
@@ -159,11 +156,13 @@ public class Evento implements Parcelable {
         cursor.moveToFirst();
 
         if (cursor.getCount() > 0) {
-            id = cursor.getString(cursor.getColumnIndex("id"));
-            nombre = cursor.getString(cursor.getColumnIndex("nombre"));
-            detalles = cursor.getString(cursor.getColumnIndex("detalles"));
-            fechaInicio.setTime(UtilDates.parsearaDate(cursor.getString(cursor.getColumnIndex("fechaInicio"))));
-            fechaFin.setTime(UtilDates.parsearaDate(cursor.getString(cursor.getColumnIndex("fechaFin"))));
+            id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
+            nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
+            detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
+            fechaInicio.setTime(UtilDates.parsearaDate(
+                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO))));
+            fechaFin.setTime(UtilDates.parsearaDate(
+                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN))));
         }
     }
 
