@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:fillViewport="true"
     tools:context=".CrearEvento">
 
 
@@ -22,8 +23,10 @@
                 android:layout_marginBottom="1dp"
                 app:layout_constraintBottom_toTopOf="@+id/nombreEvento"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.485"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.796"
                 app:srcCompat="@drawable/imagenblanco" />
 
             <EditText
@@ -32,16 +35,16 @@
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="34dp"
                 android:ems="10"
+                android:hint="Nombre del evento"
                 android:inputType="textPersonName"
-                android:text="Nombre del evento"
                 android:textColor="#AFAFAF"
                 android:textSize="25sp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.216"
+                app:layout_constraintHorizontal_bias="0.196"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.458" />
+                app:layout_constraintVertical_bias="0.284" />
 
             <EditText
                 android:id="@+id/nombreInstitucion"
@@ -49,8 +52,8 @@
                 android:layout_height="44dp"
                 android:layout_marginTop="14dp"
                 android:ems="10"
+                android:hint="Nombre de entidad/institucion"
                 android:inputType="textPersonName"
-                android:text="Nombre de entidad/institucion"
                 android:textColor="#AFAFAF"
                 android:textSize="12sp"
                 app:layout_constraintBottom_toBottomOf="parent"
@@ -68,10 +71,10 @@
                 android:background="@drawable/imagenblanco"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.929"
+                app:layout_constraintHorizontal_bias="0.918"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.539"
+                app:layout_constraintVertical_bias="0.324"
                 app:srcCompat="@drawable/ic_add_a_photo_black_24dp" />
 
             <TextView
@@ -84,9 +87,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.472"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.628" />
+                app:layout_constraintVertical_bias="0.404" />
 
             <ImageView
                 android:id="@+id/fondo"
@@ -98,7 +102,7 @@
                 app:layout_constraintHorizontal_bias="0.498"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.7" />
+                app:layout_constraintVertical_bias="0.441" />
 
             <TextView
                 android:id="@+id/fecha"
@@ -119,10 +123,10 @@
                 android:background="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/fondo"
                 app:layout_constraintEnd_toEndOf="@+id/fondo"
-                app:layout_constraintHorizontal_bias="0.116"
+                app:layout_constraintHorizontal_bias="0.112"
                 app:layout_constraintStart_toStartOf="@+id/fondo"
                 app:layout_constraintTop_toBottomOf="@+id/titulofecha"
-                app:layout_constraintVertical_bias="0.685"
+                app:layout_constraintVertical_bias="0.714"
                 app:srcCompat="@drawable/calendaricon" />
 
             <ImageView
@@ -132,10 +136,10 @@
                 android:background="#E0E0E0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.132"
+                app:layout_constraintHorizontal_bias="0.13"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.87" />
+                app:layout_constraintVertical_bias="0.53" />
 
             <TextView
                 android:id="@+id/tiempoInicio"
@@ -165,17 +169,17 @@
                 android:id="@+id/titulotiempoInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hora Fin"
                 android:gravity="center"
+                android:text="Hora Fin"
                 android:textColor="#000000"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/fondotiempoFin"
-                app:layout_constraintHorizontal_bias="0.454"
+                app:layout_constraintHorizontal_bias="0.546"
                 app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.784" />
+                app:layout_constraintVertical_bias="0.491" />
 
             <TextView
                 android:id="@+id/titulotiempoFin"
@@ -188,10 +192,10 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/fondotiempoIni"
-                app:layout_constraintHorizontal_bias="0.518"
+                app:layout_constraintHorizontal_bias="0.446"
                 app:layout_constraintStart_toStartOf="@+id/fondotiempoIni"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.783" />
+                app:layout_constraintVertical_bias="0.491" />
 
             <ImageView
                 android:id="@+id/fondotiempoFin"
@@ -200,10 +204,10 @@
                 android:background="#E0E0E0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.871"
+                app:layout_constraintHorizontal_bias="0.904"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.87" />
+                app:layout_constraintVertical_bias="0.529" />
 
             <TextView
                 android:id="@+id/tiempoFin"
@@ -230,15 +234,16 @@
                 app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
             <View
+                android:id="@+id/view"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:background="@android:color/darker_gray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintHorizontal_bias="1.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.933" />
+                app:layout_constraintVertical_bias="0.573" />
 
             <TextView
                 android:id="@+id/tituloDescripcion"
@@ -247,22 +252,32 @@
                 android:gravity="center"
                 android:text="Descripción"
                 android:textColor="#000000"
-                android:textSize="16sp"
+                android:textSize="18sp"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.064"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.974"
-                tools:layout_editor_absoluteX="29dp" />
+                app:layout_constraintVertical_bias="0.601" />
 
             <EditText
-                android:id="@+id/editText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/agregueDescripcion"
+                android:layout_width="307dp"
+                android:layout_height="122dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/edittextbackg"
                 android:ems="10"
+                android:gravity="left|start"
+                android:hint="Agregue Descripcion"
                 android:inputType="textPersonName"
-                android:text="Name"
-                tools:layout_editor_absoluteX="144dp"
-                tools:layout_editor_absoluteY="615dp" />
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/tituloDescripcion"
+                app:layout_constraintTop_toBottomOf="@+id/tituloDescripcion"
+                app:layout_constraintVertical_bias="0.027" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
