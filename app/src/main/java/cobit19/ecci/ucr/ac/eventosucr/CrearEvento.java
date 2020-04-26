@@ -15,15 +15,44 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener{
-
+boolean tiempoInicio;
+boolean tiempoFinal;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_evento);
+
+        TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
+        TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
+        TextView textView = (TextView) findViewById(R.id.fecha);
+
+        Date currentTime = Calendar.getInstance().getTime();
+
+        SimpleDateFormat simpleDate =  new SimpleDateFormat("hh : mm");
+
+        String strDt = simpleDate.format(currentTime);
+        tiempoIni.setText(strDt);
+        tiempoFin.setText(strDt);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
+        SimpleDateFormat sdfday = new SimpleDateFormat("dd");
+        SimpleDateFormat sdfmonth = new SimpleDateFormat("MMMM");
+        //SimpleDateFormat sdfyear = new SimpleDateFormat("YYYY");
+        Date d = new Date();
+        String dayOfTheWeek = sdf.format(d);
+        String monthOfTheWeek = sdfmonth.format(d);
+        //String yearOfTheWeek = sdfyear.format(d);
+        String numOfTheWeek = sdfday.format(d);
+        textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
+
         ImageButton button = (ImageButton) findViewById(R.id.calendario);
+
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +64,8 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         button1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tiempoInicio=true;
+
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
@@ -43,6 +74,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         button2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                tiempoFinal=true;
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
@@ -61,6 +93,22 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     }
 @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+    TextView horaIni = (TextView) findViewById(R.id.tiempoInicio);
+    TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
+    DecimalFormat df = new DecimalFormat("00");
+
+    if(tiempoInicio){
+        tiempoInicio=false;
+        horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
+        horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+
+    }else {
+        tiempoFinal=false;
+        horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+    }
+
+
+
     Toast.makeText(getApplicationContext(), hourOfDay + " " + minute, Toast.LENGTH_SHORT).show();
 
 }

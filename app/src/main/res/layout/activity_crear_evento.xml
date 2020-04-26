@@ -86,7 +86,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.613" />
+                app:layout_constraintVertical_bias="0.628" />
 
             <ImageView
                 android:id="@+id/fondo"
@@ -127,26 +127,27 @@
 
             <ImageView
                 android:id="@+id/fondotiempoIni"
-                android:layout_width="156dp"
+                android:layout_width="124dp"
                 android:layout_height="54dp"
                 android:background="#E0E0E0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.082"
+                app:layout_constraintHorizontal_bias="0.132"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.821" />
+                app:layout_constraintVertical_bias="0.87" />
+
             <TextView
                 android:id="@+id/tiempoInicio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                    android:text=":"
+                android:text=":"
                 app:layout_constraintBottom_toBottomOf="@+id/fondotiempoIni"
                 app:layout_constraintEnd_toEndOf="@+id/fondotiempoIni"
-                app:layout_constraintHorizontal_bias="0.825"
-                app:layout_constraintStart_toStartOf="@+id/fondotiempoIni"
+                app:layout_constraintHorizontal_bias="0.436"
+                app:layout_constraintStart_toEndOf="@+id/tiempoIniimg"
                 app:layout_constraintTop_toTopOf="@+id/fondotiempoIni"
-                app:layout_constraintVertical_bias="0.4" />
+                app:layout_constraintVertical_bias="0.457" />
 
             <ImageButton
                 android:id="@+id/tiempoIniimg"
@@ -160,17 +161,49 @@
                 app:layout_constraintTop_toTopOf="@+id/fondotiempoIni"
                 app:srcCompat="@drawable/ic_access_time_black_24dp" />
 
+            <TextView
+                android:id="@+id/titulotiempoInicio"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Hora Fin"
+                android:gravity="center"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoFin"
+                app:layout_constraintHorizontal_bias="0.454"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.784" />
+
+            <TextView
+                android:id="@+id/titulotiempoFin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Hora Inicio"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/fondotiempoIni"
+                app:layout_constraintHorizontal_bias="0.518"
+                app:layout_constraintStart_toStartOf="@+id/fondotiempoIni"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.783" />
+
             <ImageView
                 android:id="@+id/fondotiempoFin"
-                android:layout_width="156dp"
+                android:layout_width="124dp"
                 android:layout_height="54dp"
                 android:background="#E0E0E0"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.89"
+                app:layout_constraintHorizontal_bias="0.871"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.82" />
+                app:layout_constraintVertical_bias="0.87" />
 
             <TextView
                 android:id="@+id/tiempoFin"
@@ -179,10 +212,10 @@
                 android:text=":"
                 app:layout_constraintBottom_toBottomOf="@+id/fondotiempoFin"
                 app:layout_constraintEnd_toEndOf="@+id/fondotiempoFin"
-                app:layout_constraintHorizontal_bias="0.825"
-                app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
+                app:layout_constraintHorizontal_bias="0.464"
+                app:layout_constraintStart_toEndOf="@+id/tiempoFinimg"
                 app:layout_constraintTop_toTopOf="@+id/fondotiempoFin"
-                app:layout_constraintVertical_bias="0.4" />
+                app:layout_constraintVertical_bias="0.457" />
 
             <ImageButton
                 android:id="@+id/tiempoFinimg"
@@ -195,6 +228,41 @@
                 app:layout_constraintStart_toStartOf="@+id/fondotiempoFin"
                 app:layout_constraintTop_toTopOf="@+id/fondotiempoFin"
                 app:srcCompat="@drawable/ic_access_time_black_24dp" />
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@android:color/darker_gray"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.933" />
+
+            <TextView
+                android:id="@+id/tituloDescripcion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Descripción"
+                android:textColor="#000000"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.974"
+                tools:layout_editor_absoluteX="29dp" />
+
+            <EditText
+                android:id="@+id/editText2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName"
+                android:text="Name"
+                tools:layout_editor_absoluteX="144dp"
+                tools:layout_editor_absoluteY="615dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
