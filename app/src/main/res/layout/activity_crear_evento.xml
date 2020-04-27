@@ -47,7 +47,7 @@
                 app:layout_constraintVertical_bias="0.284" />
 
             <EditText
-                android:id="@+id/nombreInstitucion"
+                android:id="@+id/agregarDireccion"
                 android:layout_width="242dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="14dp"
@@ -307,7 +307,7 @@
                 app:layout_constraintVertical_bias="0.847" />
 
             <EditText
-                android:id="@+id/agregueDescripcion"
+                android:id="@+id/masInformacion"
                 android:layout_width="307dp"
                 android:layout_height="53dp"
                 android:layout_marginTop="10dp"
@@ -346,11 +346,11 @@
                 android:id="@+id/imageView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="@+id/nombreInstitucion"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.054"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/nombreInstitucion"
+                app:layout_constraintBottom_toBottomOf="@+id/agregarDireccion"
+                app:layout_constraintEnd_toEndOf="@+id/agregarDireccion"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toStartOf="@+id/agregarDireccion"
+                app:layout_constraintTop_toTopOf="@+id/agregarDireccion"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
