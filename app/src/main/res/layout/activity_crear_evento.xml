@@ -51,6 +51,7 @@
                 android:layout_width="242dp"
                 android:layout_height="44dp"
                 android:layout_marginTop="14dp"
+                android:maxLength="20"
                 android:ems="10"
                 android:hint="          Agregar dirección"
                 android:inputType="textPersonName"
@@ -353,6 +354,21 @@
                 app:layout_constraintTop_toTopOf="@+id/agregarDireccion"
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_location_on_black_24dp" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="102dp"
+                android:layout_height="43dp"
+                android:layout_marginBottom="28dp"
+                android:background="@drawable/boton_redondeado"
+                android:text="Guardar"
+                android:textColor="#FFFFFF"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.89"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/agregarDireccion"
+                app:layout_constraintVertical_bias="1.0" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
