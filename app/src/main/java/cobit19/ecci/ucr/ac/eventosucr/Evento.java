@@ -21,21 +21,84 @@ public class Evento implements Parcelable {
 
     private String id;
     private String nombre;
+    private String institucion;
+    private String masInfo;
     private String detalles;
-    private Calendar fechaInicio;
-    private Calendar fechaFin;
+    private Calendar fecha;
+    private String ubicacion;//Ubicacion escrita...200 mts oeste...
+    //private double latitud;
+    //private double longitud;
+    private String horaInicio;
+    private String horaFin;
 
-    public Evento() {
-        fechaInicio = Calendar.getInstance();
-        fechaFin = Calendar.getInstance();
+    public String getInstitucion() {
+        return institucion;
     }
 
-    public Evento(String id, String nombre, String dettalles, Calendar fechaInicio, Calendar fechaFin) {
+    public void setInstitucion(String institucion) {
+        this.institucion = institucion;
+    }
+
+    public String getMasInfo() {
+        return masInfo;
+    }
+
+    public void setMasInfo(String masInfo) {
+        this.masInfo = masInfo;
+    }
+
+    public String getUbicacion() {
+        return ubicacion;
+    }
+
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+
+
+    public Calendar getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Calendar fecha) {
+        this.fecha = fecha;
+    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFin() {
+        return horaFin;
+    }
+
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
+
+
+
+    public Evento() {
+        fecha = Calendar.getInstance();
+
+    }
+
+    public Evento(String id, String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
         this.id = id;
         this.nombre = nombre;
         this.detalles = dettalles;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
+        this.masInfo=masInfo;
+        this.ubicacion=ubicacion;
+        this.institucion=institucion;
+        this.fecha=fecha;
+        this.horaInicio=horaInicio;
+        this.horaFin=horaFin;
+
     }
 
     public String getId() {
@@ -59,35 +122,32 @@ public class Evento implements Parcelable {
         this.detalles = dettalles;
     }
 
-    public Calendar getFechaInicio() {
-        return fechaInicio;
-    }
-    public void setFechaInicio(Calendar fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
 
-    public Calendar getFechaFin() {
-        return fechaFin;
-    }
-    public void setFechaFin(Calendar fechaFin) {
-        this.fechaFin = fechaFin;
-    }
 
     protected Evento (Parcel in) {
         id = in.readString();
         nombre = in.readString();
+        institucion=in.readString();
         detalles = in.readString();
-        fechaInicio.setTime(UtilDates.parsearaDate(in.readString()));
-        fechaFin.setTime(UtilDates.parsearaDate(in.readString()));
+        masInfo=in.readString();
+        fecha.setTime(UtilDates.parsearaDate(in.readString()));
+        horaInicio = in.readString();
+        horaFin = in.readString();
+        ubicacion=in.readString();
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(nombre);
+        dest.writeString(institucion);
         dest.writeString(detalles);
-        dest.writeString(UtilDates.parsearaString(fechaInicio.getTime()));
-        dest.writeString(UtilDates.parsearaString(fechaFin.getTime()));
+        dest.writeString(masInfo);
+        dest.writeString(horaInicio);
+        dest.writeString(horaFin);
+        dest.writeString(ubicacion);
+        dest.writeString(UtilDates.parsearaString(fecha.getTime()));
+
     }
 
     @Override
@@ -113,11 +173,16 @@ public class Evento implements Parcelable {
         SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
-
+        //values.put(DataBaseContract.TABLE_EVENTO_COLUMN_ID, this.id);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.nombre);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION, this.institucion);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.detalles);
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO, UtilDates.parsearaString(this.fechaInicio.getTime()));
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN, UtilDates.parsearaString(this.fechaFin.getTime()));
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO, this.masInfo);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(this.fecha.getTime()));
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.horaInicio);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.horaFin);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, this.ubicacion);
+
 
         // Insertar la nueva fila
         return db.insert(DataBaseContract.TABLE_EVENTO, null, values);
@@ -133,9 +198,14 @@ public class Evento implements Parcelable {
         String[] projection = {
                 DataBaseContract.TABLE_EVENTO_COLUMN_ID,
                 DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
+                DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
                 DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO,
-                DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN
+                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
+                DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
+                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION
+
         };
 
         // Filtro para el WHERE
@@ -158,18 +228,23 @@ public class Evento implements Parcelable {
         if (cursor.getCount() > 0) {
             id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
             nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
+            institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
             detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
-            fechaInicio.setTime(UtilDates.parsearaDate(
-                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAINICIO))));
-            fechaFin.setTime(UtilDates.parsearaDate(
-                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHAFIN))));
+            masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
+            fecha.setTime(UtilDates.parsearaDate(
+                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
+            horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
+            horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
+             ubicacion= cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
+
         }
     }
 
     @Override
     public String toString() {
-        return "Id: " + id + " Nombre: " + nombre + " Detalles: " + detalles +
-                " Fecha inicio: " + UtilDates.parsearaString(fechaInicio.getTime()) +
-                " Fecha fin: " + UtilDates.parsearaString(fechaFin.getTime());
+        return "Id: " + id + " Nombre: " + nombre +" Institucion: " + institucion + " Detalles: " + detalles +" MasInfo: " + masInfo +
+                " Fecha: " + UtilDates.parsearaString(fecha.getTime()) +
+                "HoraInicio: " + horaInicio +"HoraFin: " + horaFin+" Ubicacion: " + ubicacion ;
+
     }
 }
