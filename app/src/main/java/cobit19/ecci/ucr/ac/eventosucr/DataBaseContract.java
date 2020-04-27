@@ -2,7 +2,7 @@ package cobit19.ecci.ucr.ac.eventosucr;
 
 /**
  * Created by Fabian on 22/4/2020.
- * Ultima modificacion by Fabian on 22/4/2020.
+ * Ultima modificacion by Christian on 27/4/2020.
  * Esta clase define el esquema de la base de datos de la app
  * Esta clase debe usarse en toda la app
  */
@@ -13,8 +13,9 @@ public final class DataBaseContract {
     public static final String TABLE_EVENTO_COLUMN_ID = "id";
     public static final String TABLE_EVENTO_COLUMN_NOMBRE = "nombre";
     public static final String TABLE_EVENTO_COLUMN_DETALLES = "detalles";
-    public static final String TABLE_EVENTO_COLUMN_FECHAINICIO = "fechaInicio";
-    public static final String TABLE_EVENTO_COLUMN_FECHAFIN = "fechaFin";
+    public static final String TABLE_EVENTO_COLUMN_FECHA = "fecha";
+    public static final String TABLE_EVENTO_COLUMN_HORAINICIO = "horaInicio";
+    public static final String TABLE_EVENTO_COLUMN_HORAFIN = "horaFin";
 
     //Tabla Categoria
     public static final String TABLE_CATEGORIA = "Categoria";
@@ -33,8 +34,9 @@ public final class DataBaseContract {
             TABLE_EVENTO_COLUMN_ID + " INTEGER PRIMARY KEY," +
             TABLE_EVENTO_COLUMN_NOMBRE +" TEXT," +
             TABLE_EVENTO_COLUMN_DETALLES + " TEXT," +
-            TABLE_EVENTO_COLUMN_FECHAINICIO + " TEXT," +
-            TABLE_EVENTO_COLUMN_FECHAFIN + " TEXT" +
+            TABLE_EVENTO_COLUMN_FECHA + " TEXT," +
+            TABLE_EVENTO_COLUMN_HORAINICIO + " TEXT," +
+            TABLE_EVENTO_COLUMN_HORAFIN + " TEXT" +
             ");";
 
     public static final String SQL_DELETE_EVENTO = "DROP TABLE IF EXISTS " + TABLE_EVENTO + ";" +

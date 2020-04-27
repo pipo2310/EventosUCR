@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.TimePicker;
@@ -79,8 +80,46 @@ boolean tiempoFinal;
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
         });
+
+        Button crearEvento = (Button) findViewById(R.id.guardarEvento);
+        button1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               guardarEvento();
+            }
+        });
     }
-@Override
+
+    public void guardarEvento() {
+        boolean insertar=true;
+        EditText nombre=(EditText)findViewById(R.id.nombreEvento);
+        EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
+        EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
+        EditText masinfo=(EditText)findViewById(R.id.masInformacion);
+        if(nombre.length()==0){
+            nombre.setError("Nombre no valido");
+            insertar=false;
+
+        }
+        if(institucion.length()==0){
+            institucion.setError("Institucion no valido");
+            insertar=false;
+
+        }
+        if(detalles.length()==0){
+            detalles.setError("Detalles no valido");
+            insertar=false;
+
+        }
+        if(insertar==true){
+            Evento evento = new Evento();
+            // inserta el estudiante, se le pasa como parametro el contexto de la app
+            long newRowId = evento.insertar(getApplicationContext());
+        }
+
+    }
+
+    @Override
     public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
         Calendar c = Calendar.getInstance();
         c.set(Calendar.YEAR, year);

@@ -356,7 +356,7 @@
                 app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
             <Button
-                android:id="@+id/button2"
+                android:id="@+id/guardarEvento"
                 android:layout_width="102dp"
                 android:layout_height="43dp"
                 android:layout_marginBottom="28dp"
