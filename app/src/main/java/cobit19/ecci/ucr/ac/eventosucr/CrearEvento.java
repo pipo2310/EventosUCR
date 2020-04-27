@@ -24,6 +24,9 @@ import java.util.Date;
 public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener{
 boolean tiempoInicio;
 boolean tiempoFinal;
+Calendar fecha;
+String horaInicio;
+String horaFinalBase;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +85,7 @@ boolean tiempoFinal;
         });
 
         Button crearEvento = (Button) findViewById(R.id.guardarEvento);
-        button1.setOnClickListener(new View.OnClickListener() {
+        crearEvento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                guardarEvento();
@@ -96,6 +99,7 @@ boolean tiempoFinal;
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
         EditText masinfo=(EditText)findViewById(R.id.masInformacion);
+        EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
         if(nombre.length()==0){
             nombre.setError("Nombre no valido");
             insertar=false;
@@ -111,10 +115,22 @@ boolean tiempoFinal;
             insertar=false;
 
         }
+        if(ubicacion.length()==0){
+            ubicacion.setError("Detalles no valido");
+            insertar=false;
+
+        }
         if(insertar==true){
-            Evento evento = new Evento();
+            Evento evento = new Evento("id",nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),masinfo.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = evento.insertar(getApplicationContext());
+            Toast.makeText(getApplicationContext(), "Insertar Evento: " + newRowId +
+                    " Id: " + evento.getId() +
+                    " Ubicacion "+evento.getUbicacion()+
+                    " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
+                    evento.getInstitucion() +
+                    " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
+
         }
 
     }
@@ -125,6 +141,7 @@ boolean tiempoFinal;
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        fecha=c;
         String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
 
         TextView textView = (TextView) findViewById(R.id.fecha);
@@ -140,10 +157,12 @@ boolean tiempoFinal;
         tiempoInicio=false;
         horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+        horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
 
     }else {
         tiempoFinal=false;
         horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+        horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
     }
 
 

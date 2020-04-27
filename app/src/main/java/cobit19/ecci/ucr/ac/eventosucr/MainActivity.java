@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         Calendar fechaFin = Calendar.getInstance();
         fechaInicio.setTime(new Date());
         fechaFin.setTime(new Date());
-
+/*
         Evento evento = new Evento();
         evento.setNombre("Evento 1");
         evento.setDetalles("Detalles del evento 1");
@@ -47,7 +47,10 @@ public class MainActivity extends AppCompatActivity {
 
             // Mostramos el Evento en la aplicacion
             Toast.makeText(getApplicationContext(), nuevoEvento.toString(), Toast.LENGTH_LONG).show();
+
         }
+        */
+
     }
 
     public void cambiarDePantalla() {
