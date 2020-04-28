@@ -95,7 +95,7 @@ String horaFinalBase;
 
     public void guardarEvento() {
         boolean insertar=true;
-        EditText nombre=(EditText)findViewById(R.id.nombreEvento);
+        EditText nombre=(EditText)findViewById(R.id.imgEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
         EditText masinfo=(EditText)findViewById(R.id.masInformacion);
