@@ -142,10 +142,18 @@ String horaFinalBase;
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
         fecha=c;
-        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+
+        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());//Fecha completa
+        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+        int dia=c.get(Calendar.DAY_OF_MONTH);
+        String diaFinal=String.valueOf(dia);
+        String diaSemana = dateFormat.format(c.getTime());
+
+        SimpleDateFormat dateFormatMes = new SimpleDateFormat("MMMM");
+        String mes = dateFormatMes.format(c.getTime());
 
         TextView textView = (TextView) findViewById(R.id.fecha);
-        textView.setText(currentDateString);
+        textView.setText(diaSemana+", \n"+diaFinal+" de "+mes);
     }
 @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
