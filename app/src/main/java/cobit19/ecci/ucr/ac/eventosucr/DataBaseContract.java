@@ -34,7 +34,7 @@ public final class DataBaseContract {
     private DataBaseContract() {}
 
     public static final String SQL_CREATE_EVENTO = "CREATE TABLE " + TABLE_EVENTO + " (" +
-            TABLE_EVENTO_COLUMN_ID + " INTEGER PRIMARY KEY," +
+            TABLE_EVENTO_COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
             TABLE_EVENTO_COLUMN_NOMBRE +" TEXT," +
             TABLE_EVENTO_COLUMN_INSTITUCION +" TEXT," +
             TABLE_EVENTO_COLUMN_DETALLES + " TEXT," +

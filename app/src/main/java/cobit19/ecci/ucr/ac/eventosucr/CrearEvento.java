@@ -121,10 +121,10 @@ String horaFinalBase;
 
         }
         if(insertar==true){
-            Evento evento = new Evento("id",nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),masinfo.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),masinfo.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = evento.insertar(getApplicationContext());
-            Toast.makeText(getApplicationContext(), "Insertar Evento: " + newRowId +
+            Toast.makeText(getApplicationContext(),
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +

@@ -13,7 +13,12 @@ import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.widget.Toast;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -30,6 +35,7 @@ public class Evento implements Parcelable {
     //private double longitud;
     private String horaInicio;
     private String horaFin;
+
 
     public String getInstitucion() {
         return institucion;
@@ -88,8 +94,8 @@ public class Evento implements Parcelable {
 
     }
 
-    public Evento(String id, String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
-        this.id = id;
+    public Evento(String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
+        //this.id = id;
         this.nombre = nombre;
         this.detalles = dettalles;
         this.masInfo=masInfo;
@@ -125,7 +131,7 @@ public class Evento implements Parcelable {
 
 
     protected Evento (Parcel in) {
-        id = in.readString();
+        //id = in.readString();
         nombre = in.readString();
         institucion=in.readString();
         detalles = in.readString();
@@ -138,7 +144,7 @@ public class Evento implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(id);
+        //dest.writeString(id);
         dest.writeString(nombre);
         dest.writeString(institucion);
         dest.writeString(detalles);
@@ -167,6 +173,7 @@ public class Evento implements Parcelable {
     };
 
     public long insertar(Context context) {
+
         // usar la clase DataBaseHelper para realizar la operacion de insertar
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         // Obtiene la base de datos en modo escritura
@@ -179,8 +186,8 @@ public class Evento implements Parcelable {
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.detalles);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO, this.masInfo);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(this.fecha.getTime()));
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.horaInicio);
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.horaFin);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, this.horaInicio);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN, this.horaFin);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, this.ubicacion);
 
 
@@ -188,36 +195,41 @@ public class Evento implements Parcelable {
         return db.insert(DataBaseContract.TABLE_EVENTO, null, values);
     }
 
-    public void leer(Context context, String idParametro) {
+    public ArrayList<Evento> leerEventos(Context context) {//Solo devuelve el nombre del evento
+
         // usar la clase DataBaseHelper para realizar la operacion de leer
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
         // Obtiene la base de datos en modo lectura
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
-
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+        ArrayList<Evento> nombresEventos=new ArrayList<Evento>();
         // Define cuales columnas quiere solicitar // en este caso todas las de la clase
         String[] projection = {
                 DataBaseContract.TABLE_EVENTO_COLUMN_ID,
                 DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
                 DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
-                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
+                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
-                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION
+                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
+                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO
+
+
+
 
         };
 
         // Filtro para el WHERE
-        String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
-        String[] selectionArgs = {idParametro};
+        //String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
+        //String[] selectionArgs = {idParametro};
 
         // Resultados en el cursor
         Cursor cursor = db.query(
                 DataBaseContract.TABLE_EVENTO, // tabla
                 projection, // columnas
-                selection, // where
-                selectionArgs, // valores del where
+                null, // where
+                null, // valores del where
                 null, // agrupamiento
                 null, // filtros por grupo
                 null // orden
@@ -226,18 +238,47 @@ public class Evento implements Parcelable {
         cursor.moveToFirst();
 
         if (cursor.getCount() > 0) {
-            id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
-            nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
-            institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
-            detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
-            masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
-            fecha.setTime(UtilDates.parsearaDate(
-                    cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
-            horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
-            horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
-             ubicacion= cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
+             do{
+                 Evento eventoALeer=new Evento();
+                 eventoALeer.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID)));
+                 //id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
+                 eventoALeer.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE)));
+                 //nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
+                 eventoALeer.setInstitucion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION)));
+                 //institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
+                 eventoALeer.setHoraInicio(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO)));
+                 //horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
+                 eventoALeer.setHoraFin(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN)));
+                 //horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
+                 eventoALeer.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES)));
+                 //detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
+                 eventoALeer.setUbicacion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION)));
+                 //ubicacion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
+                 try {
+                     eventoALeer.fecha.setTime(sdf.parse(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
+                 } catch (ParseException e) {
+                     e.printStackTrace();
+                 }
+                 //fecha = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA));
+
+
+                 //fecha = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA));
+
+                 //fecha = (UtilDates.StringToDate(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
+                 eventoALeer.setMasInfo(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO)));
+                //masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
+                nombresEventos.add(eventoALeer);
+                eventoALeer=null;
+
+            }while (cursor.moveToNext());
+
+
+
+
+
 
         }
+        return nombresEventos;
     }
 
     @Override
