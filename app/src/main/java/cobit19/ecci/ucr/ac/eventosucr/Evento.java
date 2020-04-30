@@ -21,6 +21,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 public class Evento implements Parcelable {
 
@@ -131,12 +133,17 @@ public class Evento implements Parcelable {
 
 
     protected Evento (Parcel in) {
-        //id = in.readString();
+        id = in.readString();
         nombre = in.readString();
         institucion=in.readString();
         detalles = in.readString();
         masInfo=in.readString();
-        fecha.setTime(UtilDates.parsearaDate(in.readString()));
+        long milliseconds = in.readLong();
+        String timezone_id = in.readString();
+
+        fecha = new GregorianCalendar(TimeZone.getTimeZone(timezone_id));
+        fecha.setTimeInMillis(milliseconds);
+        //fecha.setTime(UtilDates.parsearaDate(in.readString()));
         horaInicio = in.readString();
         horaFin = in.readString();
         ubicacion=in.readString();
@@ -144,15 +151,18 @@ public class Evento implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        //dest.writeString(id);
+        dest.writeString(id);
         dest.writeString(nombre);
         dest.writeString(institucion);
         dest.writeString(detalles);
         dest.writeString(masInfo);
+        dest.writeLong(fecha.getTimeInMillis());
+        dest.writeString(fecha.getTimeZone().getID());
+        //dest.writeString(UtilDates.parsearaString(fecha.getTime()));
         dest.writeString(horaInicio);
         dest.writeString(horaFin);
         dest.writeString(ubicacion);
-        dest.writeString(UtilDates.parsearaString(fecha.getTime()));
+
 
     }
 
@@ -280,6 +290,60 @@ public class Evento implements Parcelable {
         }
         return nombresEventos;
     }
+/*
+    public int actualizar(Context context){
+
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        // Obtiene la base de datos
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(
+                DataBaseContract, getCorreo());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_NOMBRE, getNombre());
+        values.put(DataBaseContract.DataBaseEntry.COLUMN_NAME_PRIMER_APELLIDO,
+                getPrimerApellido());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_SEGUNDO_APELLIDO,
+                getSegundoApellido());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_TELEFONO, getTelefono());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_CELULAR, getCelular());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_FECHA_NACIMIENTO,
+                UtilDates.DateToStringShort(getFechaNacimiento()));
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_TIPO, getTipo());
+        values.put(
+                DataBaseContract.DataBaseEntry.COLUMN_NAME_GENERO, getGenero());
+        // Criterio de actualizacion
+        String selection = DataBaseContract.DataBaseEntry._ID + " LIKE ?";
+        // Se detallan los argumentos
+        String[] selectionArgs = {getIdentificacion()};
+        // Actualizar la base de datos
+        return db.update(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA, values,
+                selection, selectionArgs);
+    }
+    */
+
+
+
+
+    public void eliminar (Context context, String identificacion){
+        // usar la clase DataBaseHelper para realizar la operacion de eliminar
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        // Obtiene la base de datos en modo escritura
+        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
+        // Define el where para el borrado
+        String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " LIKE ?";
+        // Se detallan los argumentos
+        String[] selectionArgs = {identificacion};
+        // Realiza el SQL de borrado
+        db.delete(DataBaseContract.TABLE_EVENTO, selection,
+                selectionArgs);
+    }
+
 
     @Override
     public String toString() {
