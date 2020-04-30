@@ -51,10 +51,25 @@ public class MainActivity extends AppCompatActivity {
         }
         */
 
+
+        Button irAMenu = (Button) findViewById(R.id.ir_a_menu);
+        irAMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irMenu();
+            }
+        });
     }
 
     public void cambiarDePantalla() {
         Intent a =new Intent(this,CrearEvento.class);
         startActivity(a);
+        finish();
+    }
+
+    public void irMenu(){
+        Intent a =new Intent(this, MenuActivity.class);
+        startActivity(a);
+        finish();
     }
 }
