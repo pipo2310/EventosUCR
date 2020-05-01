@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -23,8 +24,24 @@ ArrayList<Evento>eventos;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_eventos_super_usuario);
+        ImageButton btnAgregar=(ImageButton)findViewById(R.id.btnAgregar);
+        btnAgregar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               addEvento();
+            }
+        });
         leerEventos();
     }
+
+    public void addEvento() {
+        Intent intent = new Intent(this, CrearEvento.class);
+
+        finish();
+        // Deseo recibir una respuesta: startActivityForResult()
+        startActivity(intent);
+    }
+
 
     public void leerEventos() {
         Evento evento=new Evento();

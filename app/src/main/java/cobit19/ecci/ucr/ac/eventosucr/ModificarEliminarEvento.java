@@ -131,18 +131,20 @@ String id;
     public void showAlertDialogButtonClicked() {
         // create an alert builder
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Eliminar Evento");
+        //builder.setTitle("Eliminar Evento");
 
         //builder.setTitle("¿Desea eliminar el evento \n"+evento.getNombre()+" ?\n Esta opción es irreversible");
 
         // set the custom layout
-        final View customLayout = getLayoutInflater().inflate(R.layout.modal_eliminar, null);
+        final View customLayout = getLayoutInflater().inflate(R.layout.modal_eliminar_2, null);
         builder.setView(customLayout);
         // add a button
         Button eliminar = customLayout.findViewById(R.id.button_elimina);
         Button cancelar = customLayout.findViewById(R.id.button_cancela);
         TextView textoModal = customLayout.findViewById(R.id.textoEliminar);
         textoModal.setText("¿Desea eliminar el evento \n"+evento.getNombre()+" ?\n Esta opción es irreversible");
+        TextView titulo = customLayout.findViewById(R.id.title);
+        titulo.setText("Eliminar Evento");
 
 
 

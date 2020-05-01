@@ -5,6 +5,7 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -130,7 +131,11 @@ String horaFinalBase;
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
                     evento.getInstitucion() +
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
+            finish();
+            // Deseo recibir una respuesta: startActivityForResult()
+            startActivity(intent);
         }
 
     }

@@ -73,25 +73,24 @@
             android:textColor="#FFFFFF"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.89"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintHorizontal_bias="0.74"
+            app:layout_constraintStart_toEndOf="@+id/button_cancela"
             app:layout_constraintTop_toBottomOf="@+id/textoEliminar"
-            app:layout_constraintVertical_bias="0.928" />
+            app:layout_constraintVertical_bias="0.929" />
 
         <Button
             android:id="@+id/button_cancela"
             android:layout_width="84dp"
             android:layout_height="31dp"
-            android:layout_marginStart="160dp"
             android:background="@drawable/boton_modal_eliminar_cancel"
             android:text="Cancelar"
             android:textColor="@color/colorGrisModal"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/button_elimina"
-            app:layout_constraintHorizontal_bias="0.513"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.389"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textoEliminar"
-            app:layout_constraintVertical_bias="0.918" />
+            app:layout_constraintVertical_bias="0.941" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
