@@ -17,20 +17,25 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.004"></ListView>
+        app:layout_constraintVertical_bias="0.004">
 
-    <ImageButton
-        android:id="@+id/btnAgregar"
-        android:layout_width="69dp"
-        android:layout_height="70dp"
-        android:background="#00FFFFFF"
+    </ListView>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floating_action_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:backgroundTint="@color/colorBotonAzul"
+        android:elevation="200dp"
+        android:layout_margin="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.893"
+        app:layout_constraintHorizontal_bias="0.909"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.944"
-        app:srcCompat="@drawable/ic_add_circle_black_24dp" />
+        app:layout_constraintVertical_bias="0.945"
+        app:srcCompat="@drawable/cruzblanca" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

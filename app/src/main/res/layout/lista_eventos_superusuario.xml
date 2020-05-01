@@ -15,6 +15,17 @@
             android:padding="2dp"
             android:textColor="#040404"
             android:textStyle="bold"/>
+        <TextView
+            android:id="@+id/institucion"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Small Text"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="5dp"
+            android:padding="2dp"
+            android:textColor="@color/colorGrisModal"
+            android:textStyle="normal"/>
 
 
 

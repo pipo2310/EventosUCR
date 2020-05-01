@@ -25,6 +25,8 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         View rowView = inflater.inflate(R.layout.lista_eventos_superusuario, null, true);
         TextView nombre = (TextView) rowView.findViewById(R.id.name);
         nombre.setText(itemname.get(position).getNombre());
+        TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
+        institucion.setText(itemname.get(position).getInstitucion());
         return rowView;
     }
 }

@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
 import java.util.ArrayList;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
@@ -24,11 +26,13 @@ ArrayList<Evento>eventos;
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_eventos_super_usuario);
-        ImageButton btnAgregar=(ImageButton)findViewById(R.id.btnAgregar);
-        btnAgregar.setOnClickListener(new View.OnClickListener() {
+        FloatingActionButton floatingActionButton =
+                (FloatingActionButton) findViewById(R.id.floating_action_button);
+
+        floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
-               addEvento();
+            public void onClick(View view) {
+                addEvento();
             }
         });
         leerEventos();
@@ -37,9 +41,10 @@ ArrayList<Evento>eventos;
     public void addEvento() {
         Intent intent = new Intent(this, CrearEvento.class);
 
-        finish();
+
         // Deseo recibir una respuesta: startActivityForResult()
         startActivity(intent);
+        //finish();
     }
 
 
@@ -68,8 +73,9 @@ ArrayList<Evento>eventos;
     public void cambiarDePantalla(Evento evento) {
         Intent intent = new Intent(this, ModificarEliminarEvento.class);
         intent.putExtra(EXTRA_MESSAGE, evento);
-        finish();
+
         // Deseo recibir una respuesta: startActivityForResult()
         startActivityForResult(intent, 0);
+        //finish();
     }
 }
