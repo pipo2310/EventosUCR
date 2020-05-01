@@ -290,7 +290,7 @@ public class Evento implements Parcelable {
         }
         return nombresEventos;
     }
-/*
+
     public int actualizar(Context context){
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
@@ -298,34 +298,33 @@ public class Evento implements Parcelable {
         SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
         ContentValues values = new ContentValues();
         values.put(
-                DataBaseContract, getCorreo());
+                DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE, getNombre());
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_NOMBRE, getNombre());
-        values.put(DataBaseContract.DataBaseEntry.COLUMN_NAME_PRIMER_APELLIDO,
-                getPrimerApellido());
+                DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION, getInstitucion());
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
+                getDetalles());
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_SEGUNDO_APELLIDO,
-                getSegundoApellido());
+                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
+                getMasInfo());
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_TELEFONO, getTelefono());
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, getHoraInicio());
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_CELULAR, getCelular());
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN, getHoraFin());
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_FECHA_NACIMIENTO,
-                UtilDates.DateToStringShort(getFechaNacimiento()));
+                DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
+                UtilDates.parsearaString(this.getFecha().getTime()));
         values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_TIPO, getTipo());
-        values.put(
-                DataBaseContract.DataBaseEntry.COLUMN_NAME_GENERO, getGenero());
+                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, getUbicacion());
+
         // Criterio de actualizacion
-        String selection = DataBaseContract.DataBaseEntry._ID + " LIKE ?";
+        String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " LIKE ?";
         // Se detallan los argumentos
-        String[] selectionArgs = {getIdentificacion()};
+        String[] selectionArgs = {getId()};
         // Actualizar la base de datos
-        return db.update(DataBaseContract.DataBaseEntry.TABLE_NAME_PERSONA, values,
+        return db.update(DataBaseContract.TABLE_EVENTO, values,
                 selection, selectionArgs);
     }
-    */
+
 
 
 
