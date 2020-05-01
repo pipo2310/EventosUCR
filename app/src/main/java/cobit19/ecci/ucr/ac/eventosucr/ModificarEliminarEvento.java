@@ -99,7 +99,7 @@ String id;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
-        EditText masinfo=(EditText)findViewById(R.id.masInformacion);
+
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
         if(nombre.length()!=0){
             evento.setNombre(nombre.getText().toString());
@@ -113,10 +113,7 @@ String id;
             evento.setDetalles(detalles.getText().toString());
 
         }
-        if(masinfo.length()!=0){
-            evento.setMasInfo(masinfo.getText().toString());
 
-        }
         if(ubicacion.length()!=0){
             evento.setUbicacion(ubicacion.getText().toString());
 
@@ -195,7 +192,7 @@ String id;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
-        EditText masinfo=(EditText)findViewById(R.id.masInformacion);
+
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
 
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
@@ -205,7 +202,7 @@ String id;
         nombre.setHint(evento.getNombre());
         institucion.setHint(evento.getInstitucion());
         detalles.setText(evento.getDetalles());
-        masinfo.setHint(evento.getMasInfo());
+
         ubicacion.setHint(evento.getUbicacion());
         tiempoIni.setText(evento.getHoraInicio());
         tiempoFin.setText(evento.getHoraFin());

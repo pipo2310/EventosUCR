@@ -99,7 +99,7 @@ String horaFinalBase;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
-        EditText masinfo=(EditText)findViewById(R.id.masInformacion);
+
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
         if(nombre.length()==0){
             nombre.setError("Nombre no valido");
@@ -122,7 +122,7 @@ String horaFinalBase;
 
         }
         if(insertar==true){
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),masinfo.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = evento.insertar(getApplicationContext());
             Toast.makeText(getApplicationContext(),

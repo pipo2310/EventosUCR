@@ -14,7 +14,6 @@ public final class DataBaseContract {
     public static final String TABLE_EVENTO_COLUMN_NOMBRE = "nombre";
     public static final String TABLE_EVENTO_COLUMN_INSTITUCION = "institucion";
     public static final String TABLE_EVENTO_COLUMN_DETALLES = "detalles";
-    public static final String TABLE_EVENTO_COLUMN_MASINFO = "masinfo";
     public static final String TABLE_EVENTO_COLUMN_FECHA = "fecha";
     public static final String TABLE_EVENTO_COLUMN_HORAINICIO = "horaInicio";
     public static final String TABLE_EVENTO_COLUMN_HORAFIN = "horaFin";
@@ -38,7 +37,6 @@ public final class DataBaseContract {
             TABLE_EVENTO_COLUMN_NOMBRE +" TEXT," +
             TABLE_EVENTO_COLUMN_INSTITUCION +" TEXT," +
             TABLE_EVENTO_COLUMN_DETALLES + " TEXT," +
-            TABLE_EVENTO_COLUMN_MASINFO +" TEXT," +
             TABLE_EVENTO_COLUMN_FECHA + " TEXT," +
             TABLE_EVENTO_COLUMN_HORAINICIO + " TEXT," +
             TABLE_EVENTO_COLUMN_HORAFIN + " TEXT," +

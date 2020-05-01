@@ -29,7 +29,7 @@ public class Evento implements Parcelable {
     private String id;
     private String nombre;
     private String institucion;
-    private String masInfo;
+
     private String detalles;
     private Calendar fecha;
     private String ubicacion;//Ubicacion escrita...200 mts oeste...
@@ -47,13 +47,7 @@ public class Evento implements Parcelable {
         this.institucion = institucion;
     }
 
-    public String getMasInfo() {
-        return masInfo;
-    }
 
-    public void setMasInfo(String masInfo) {
-        this.masInfo = masInfo;
-    }
 
     public String getUbicacion() {
         return ubicacion;
@@ -96,11 +90,11 @@ public class Evento implements Parcelable {
 
     }
 
-    public Evento(String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
+    public Evento(String nombre, String institucion,String dettalles,Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
         //this.id = id;
         this.nombre = nombre;
         this.detalles = dettalles;
-        this.masInfo=masInfo;
+
         this.ubicacion=ubicacion;
         this.institucion=institucion;
         this.fecha=fecha;
@@ -137,7 +131,7 @@ public class Evento implements Parcelable {
         nombre = in.readString();
         institucion=in.readString();
         detalles = in.readString();
-        masInfo=in.readString();
+
         long milliseconds = in.readLong();
         String timezone_id = in.readString();
 
@@ -155,7 +149,7 @@ public class Evento implements Parcelable {
         dest.writeString(nombre);
         dest.writeString(institucion);
         dest.writeString(detalles);
-        dest.writeString(masInfo);
+
         dest.writeLong(fecha.getTimeInMillis());
         dest.writeString(fecha.getTimeZone().getID());
         //dest.writeString(UtilDates.parsearaString(fecha.getTime()));
@@ -194,7 +188,7 @@ public class Evento implements Parcelable {
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.nombre);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION, this.institucion);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.detalles);
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO, this.masInfo);
+
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(this.fecha.getTime()));
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, this.horaInicio);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN, this.horaFin);
@@ -222,8 +216,7 @@ public class Evento implements Parcelable {
                 DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
-                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO
+                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES
 
 
 
@@ -275,7 +268,7 @@ public class Evento implements Parcelable {
                  //fecha = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA));
 
                  //fecha = (UtilDates.StringToDate(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
-                 eventoALeer.setMasInfo(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO)));
+
                 //masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
                 nombresEventos.add(eventoALeer);
                 eventoALeer=null;
@@ -303,9 +296,7 @@ public class Evento implements Parcelable {
                 DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION, getInstitucion());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
                 getDetalles());
-        values.put(
-                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
-                getMasInfo());
+
         values.put(
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, getHoraInicio());
         values.put(
@@ -346,7 +337,7 @@ public class Evento implements Parcelable {
 
     @Override
     public String toString() {
-        return "Id: " + id + " Nombre: " + nombre +" Institucion: " + institucion + " Detalles: " + detalles +" MasInfo: " + masInfo +
+        return "Id: " + id + " Nombre: " + nombre +" Institucion: " + institucion + " Detalles: " + detalles +
                 " Fecha: " + UtilDates.parsearaString(fecha.getTime()) +
                 "HoraInicio: " + horaInicio +"HoraFin: " + horaFin+" Ubicacion: " + ubicacion ;
 
