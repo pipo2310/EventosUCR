@@ -11,6 +11,7 @@ import android.view.MenuItem;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
 public class MenuActivity extends AppCompatActivity {
 
@@ -28,7 +29,12 @@ public class MenuActivity extends AppCompatActivity {
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                showSelectedFragment(new FavoritosFragment());
+                if(menuItem.getItemId() == R.id.menu_buscar){
+                    showSelectedFragment(new VistaEventoFragment());
+                }
+                else{
+                    showSelectedFragment(new FavoritosFragment());
+                }
                 return true;
             }
         });
