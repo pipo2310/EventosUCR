@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void cambiarDePantalla() {
-        Intent a =new Intent(this,VistaEvento.class);
+        Intent a =new Intent(this,CrearEvento.class);
         startActivity(a);
     }
 
