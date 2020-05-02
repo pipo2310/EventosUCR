@@ -28,6 +28,9 @@ boolean tiempoFinal;
 Calendar fecha;
 String horaInicio;
 String horaFinalBase;
+int horaInicioManejoError;
+int minutoInicioManejoError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -146,19 +149,30 @@ String horaFinalBase;
         c.set(Calendar.YEAR, year);
         c.set(Calendar.MONTH, month);
         c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
-        fecha=c;
+        Date fechaSeleccionada=c.getTime();
 
-        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());//Fecha completa
-        SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
-        int dia=c.get(Calendar.DAY_OF_MONTH);
-        String diaFinal=String.valueOf(dia);
-        String diaSemana = dateFormat.format(c.getTime());
+        if(System.currentTimeMillis()>fechaSeleccionada.getTime()){//Tiempo seleccionado es menor a tiempo actual(selecciono ayer por ejemplo)
+            TextView fechaSelect = (TextView) findViewById(R.id.fecha);
+            fechaSelect.setError("Fecha no valida");
+        }else{
+            TextView fechaSelect = (TextView) findViewById(R.id.fecha);
+            fechaSelect.setError(null);
 
-        SimpleDateFormat dateFormatMes = new SimpleDateFormat("MMMM");
-        String mes = dateFormatMes.format(c.getTime());
+            fecha=c;
 
-        TextView textView = (TextView) findViewById(R.id.fecha);
-        textView.setText(diaSemana+", \n"+diaFinal+" de "+mes);
+            String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());//Fecha completa
+            SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE");
+            int dia=c.get(Calendar.DAY_OF_MONTH);
+            String diaFinal=String.valueOf(dia);
+            String diaSemana = dateFormat.format(c.getTime());
+
+            SimpleDateFormat dateFormatMes = new SimpleDateFormat("MMMM");
+            String mes = dateFormatMes.format(c.getTime());
+
+            TextView textView = (TextView) findViewById(R.id.fecha);
+            textView.setText(diaSemana+", \n"+diaFinal+" de "+mes);
+        }
+
     }
 @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -166,16 +180,29 @@ String horaFinalBase;
     TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
     DecimalFormat df = new DecimalFormat("00");
 
+
     if(tiempoInicio){
         tiempoInicio=false;
         horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
+        horaInicioManejoError=hourOfDay;
+        minutoInicioManejoError=minute;
 
     }else {
         tiempoFinal=false;
-        horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-        horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+        if(hourOfDay>horaInicioManejoError){
+            horaFin.setError(null);
+            horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+        }else if((hourOfDay==horaInicioManejoError)&&(minute>minutoInicioManejoError)){
+            horaFin.setError(null);
+            horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+        }else{
+            horaFin.setError("Tiempo final no valido");
+        }
+
     }
 
 
