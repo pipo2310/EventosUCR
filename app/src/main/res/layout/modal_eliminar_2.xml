@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+
+    <TextView
+        android:id="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="@color/colorEliminar"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:text="XXXX"
+        android:textColor="#fff"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="179dp"
+        android:layout_below="@+id/title"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginStart="1dp"
+        android:layout_marginLeft="1dp"
+        android:layout_marginTop="0dp"
+        android:background="#FFF"
+        android:paddingBottom="16dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/image"
+            android:layout_width="45dp"
+            android:layout_height="48dp"
+            android:layout_centerHorizontal="true"
+            android:background="#00FFFFFF"
+            android:contentDescription="image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_warning_red_24dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.095"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.274" />
+
+        <TextView
+            android:id="@+id/textoEliminar"
+            android:layout_width="296dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/image"
+            android:gravity="center"
+            android:text="xxxx"
+            android:textColor="@color/colorGrisModal"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.529"
+            app:layout_constraintStart_toEndOf="@+id/image"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.27" />
+
+        <Button
+            android:id="@+id/button_elimina"
+            android:layout_width="95dp"
+            android:layout_height="32dp"
+            android:background="@drawable/boton_modal_eliminar_si"
+            android:text="Si"
+            android:textColor="#FFFFFF"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.74"
+            app:layout_constraintStart_toEndOf="@+id/button_cancela"
+            app:layout_constraintTop_toBottomOf="@+id/textoEliminar"
+            app:layout_constraintVertical_bias="0.929" />
+
+        <Button
+            android:id="@+id/button_cancela"
+            android:layout_width="84dp"
+            android:layout_height="31dp"
+            android:background="@drawable/boton_modal_eliminar_cancel"
+            android:text="Cancelar"
+            android:textColor="@color/colorGrisModal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.389"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textoEliminar"
+            app:layout_constraintVertical_bias="0.941" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

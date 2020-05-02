@@ -14,7 +14,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Cada vez que cambie el esquema de la base de datos DataBaseContract,
     // debemos incrementar la version de la base de datos
-    public static final int DATABASE_VERSION = 2;
+    public static final int DATABASE_VERSION = 13;
 
     // Nombre de la base de datos
     public static final String DATABASE_NAME = "AndroidStorage.db";
@@ -27,13 +27,16 @@ public class DataBaseHelper extends SQLiteOpenHelper {
     // implementamos el metodo para la creacion de la base de datos
     public void onCreate(SQLiteDatabase db) {
         // Crear la base de datos de la app
-        db.execSQL(DataBaseContract.SQL_DELETE_EVENTO);
         db.execSQL(DataBaseContract.SQL_CREATE_EVENTO);
+        db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA);
+        db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA_EVENTO);
     }
     // implementamos el metodo para la actualizacion de la base de datos
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Administracion de actualizaciones
         db.execSQL(DataBaseContract.SQL_DELETE_EVENTO);
+        db.execSQL(DataBaseContract.SQL_DELETE_CATEGORIA);
+        db.execSQL(DataBaseContract.SQL_DELETE_CATEGORIA_EVENTO);
         onCreate(db);
     }
     // inplementamos el metodo para volver a la version anterior de la base de datos
