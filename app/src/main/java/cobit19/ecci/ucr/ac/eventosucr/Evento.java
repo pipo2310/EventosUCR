@@ -179,8 +179,8 @@ public class Evento implements Parcelable {
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.detalles);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO, this.masInfo);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(this.fecha.getTime()));
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, this.horaInicio);
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, this.horaFin);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, this.horaInicio);
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN, this.horaFin);
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, this.ubicacion);
 
 
