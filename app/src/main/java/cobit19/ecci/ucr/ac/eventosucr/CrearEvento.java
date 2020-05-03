@@ -53,12 +53,16 @@ int minutoInicioManejoError;
         SimpleDateFormat sdfmonth = new SimpleDateFormat("MMMM");
         //SimpleDateFormat sdfyear = new SimpleDateFormat("YYYY");
         Date d = new Date();
+
         String dayOfTheWeek = sdf.format(d);
         String monthOfTheWeek = sdfmonth.format(d);
         //String yearOfTheWeek = sdfyear.format(d);
         String numOfTheWeek = sdfday.format(d);
-        textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
 
+        textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
+        fecha=Calendar.getInstance();
+
+        //fecha.setTime(d);
         ImageButton button = (ImageButton) findViewById(R.id.calendario);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -102,6 +106,8 @@ int minutoInicioManejoError;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
+        TextView tiempIni=(TextView)findViewById(R.id.tiempoInicio);
+        TextView tiempFin=(TextView)findViewById(R.id.tiempoFin);
 
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
         if(nombre.length()==0){
@@ -124,6 +130,17 @@ int minutoInicioManejoError;
             insertar=false;
 
         }
+        if(horaInicio==null){
+            tiempIni.setError("Hora inicio no valida");
+            insertar=false;
+
+        }
+        if(horaFinalBase==null){
+            tiempFin.setError("Hora final no valida");
+            insertar=false;
+
+        }
+
         if(insertar==true){
             Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
@@ -200,7 +217,7 @@ int minutoInicioManejoError;
             horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
             horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
         }else{
-            horaFin.setError("Tiempo final no valido");
+            horaFin.setError("Hora final no valida");
         }
 
     }

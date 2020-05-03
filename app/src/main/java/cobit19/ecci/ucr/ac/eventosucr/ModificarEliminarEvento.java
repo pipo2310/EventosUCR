@@ -125,7 +125,7 @@ String id;
         long ret=evento.actualizar(getApplicationContext());
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
-
+        finish();
 
     }
     public void showAlertDialogButtonClicked() {
@@ -171,6 +171,7 @@ String id;
         eventoElimina.eliminar(getApplicationContext(),evento.getId());
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
+        finish();
     }
 
     // do something with the data coming from the AlertDialog
