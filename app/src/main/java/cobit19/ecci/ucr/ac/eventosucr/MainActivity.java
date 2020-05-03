@@ -21,14 +21,28 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         populateDatabase();
-        /*setContentView(R.layout.activity_main);*/
+        /*setContentView(R.layout.activity_main);
+
+        Button irAMenu = (Button) findViewById(R.id.ir_a_menu);
+        irAMenu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irMenu();
+            }
+        });*/
 
         Intent a =new Intent(this, Explorar.class);
         startActivity(a);
+
     }
 
     public void cambiarDePantalla() {
         Intent a =new Intent(this,CrearEvento.class);
+        startActivity(a);
+    }
+
+    public void irMenu(){
+        Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
     }
 
