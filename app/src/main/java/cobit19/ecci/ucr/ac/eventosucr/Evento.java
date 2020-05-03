@@ -14,6 +14,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -85,7 +86,17 @@ public class Evento implements Parcelable {
 
     public Evento() {
         fecha = Calendar.getInstance();
+    }
 
+    public Evento(String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
+        this.nombre = nombre;
+        this.detalles = dettalles;
+        this.masInfo=masInfo;
+        this.ubicacion=ubicacion;
+        this.institucion=institucion;
+        this.fecha=fecha;
+        this.horaInicio=horaInicio;
+        this.horaFin=horaFin;
     }
 
     public Evento(String id, String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
@@ -98,7 +109,6 @@ public class Evento implements Parcelable {
         this.fecha=fecha;
         this.horaInicio=horaInicio;
         this.horaFin=horaFin;
-
     }
 
     public String getId() {
@@ -237,6 +247,60 @@ public class Evento implements Parcelable {
             horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
              ubicacion= cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
 
+        }
+    }
+
+    public void leerLista(Context context) {
+        // usar la clase DataBaseHelper para realizar la operacion de leer
+        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
+        // Obtiene la base de datos en modo lectura
+        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
+
+        // Define cuales columnas quiere solicitar // en este caso todas las de la clase
+        String[] projection = {
+                DataBaseContract.TABLE_EVENTO_COLUMN_ID,
+                DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
+                DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
+                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
+                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
+                DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
+                DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
+                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION
+
+        };
+
+        // Resultados en el cursor
+        Cursor cursor = db.query(
+                DataBaseContract.TABLE_EVENTO, // tabla
+                projection, // columnas
+                null, // where
+                null, // valores del where
+                null, // agrupamiento
+                null, // filtros por grupo
+                null // orden
+        );
+
+        ArrayList<Evento> eventos = new ArrayList<Evento>();
+        cursor.moveToFirst();
+
+        if (cursor.getCount() > 0) {
+            while(!cursor.isAfterLast()) {
+                id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
+                nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
+                institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
+                detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
+                masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
+                fecha.setTime(UtilDates.parsearaDate(
+                        cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
+                horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
+                horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
+                ubicacion= cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
+
+                eventos.add(new Evento(id, nombre, institucion, detalles, masInfo, fecha, horaInicio, horaFin, ubicacion));
+
+                cursor.moveToNext();
+            }
         }
     }
 
