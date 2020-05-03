@@ -15,6 +15,11 @@ public class Categoria implements Parcelable {
 
     public Categoria() {}
 
+    public Categoria(String nombre, String detalles) {
+        this.nombre = nombre;
+        this.detalles = detalles;
+    }
+
     public Categoria(String id, String nombre, String detalles) {
         this.id = id;
         this.nombre = nombre;

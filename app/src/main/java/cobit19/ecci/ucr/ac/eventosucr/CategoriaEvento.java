@@ -59,21 +59,6 @@ public class CategoriaEvento implements Parcelable {
         }
     };
 
-    public long insertar(Context context) {
-        // usar la clase DataBaseHelper para realizar la operacion de insertar
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-        // Obtiene la base de datos en modo escritura
-        SQLiteDatabase db = dataBaseHelper.getWritableDatabase();
-        // Crear un mapa de valores donde las columnas son las llaves
-        ContentValues values = new ContentValues();
-
-        values.put(DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA, this.idCategoria);
-        values.put(DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO, this.idEvento);
-
-        // Insertar la nueva fila
-        return db.insert(DataBaseContract.TABLE_CATEGORIA_EVENTO, null, values);
-    }
-
     @Override
     public String toString() {
         return "Id categoria: " + idCategoria + " Id evento: " + idEvento;

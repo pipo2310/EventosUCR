@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_evento"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginHorizontal="10dp"
+    tools:context=".features.explorar.BlankFragment">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="200dp"
+        android:layout_height="200dp">
+
+        <ImageView
+            android:id="@+id/explorar_evento_carta_imagen1"
+            android:layout_width="match_parent"
+            android:layout_height="130dp"
+            android:background="#005DA4"
+            android:src="@drawable/fondo" />
+
+        <TextView
+            android:id="@+id/explorar_evento_carta_fecha1"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="80dp"
+            android:background="@drawable/explorar_evento_carta_fecha_borde"
+            android:gravity="center"
+            android:text="Mar\n27"
+            android:textColor="#ffffff"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/explorar_evento_carta_nombre1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="140dp"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:text="Nombre" />
+
+        <TextView
+            android:id="@+id/explorar_evento_carta_institucion1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="170dp"
+            android:layout_marginLeft="10dp"
+            android:background="@null"
+            android:text="Institucion" />
+    </androidx.cardview.widget.CardView>
+
+</FrameLayout>
