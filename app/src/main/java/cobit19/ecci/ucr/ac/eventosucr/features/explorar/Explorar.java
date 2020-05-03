@@ -3,16 +3,13 @@ package cobit19.ecci.ucr.ac.eventosucr.features.explorar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 
 import cobit19.ecci.ucr.ac.eventosucr.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
-public class Explorar extends AppCompatActivity implements BlankFragment.OnListFragmentInteractionListener {
+public class Explorar extends AppCompatActivity implements CartaEventoFragment.OnListFragmentInteractionListener {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,9 +21,9 @@ public class Explorar extends AppCompatActivity implements BlankFragment.OnListF
                 CategoriaService categoriaService = new CategoriaService();
 
                 for(Categoria categoria: categoriaService.leerListaDeCategoriasConEventos(getApplicationContext())) {
-                    BlankFragment2 blankFragment2 = new BlankFragment2(categoria);
+                    ListaCartaEventoFragment listaCartaEventoFragment = new ListaCartaEventoFragment(categoria);
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.explorar_lista_categorias, blankFragment2).commit();
+                            .add(R.id.explorar_lista_categorias, listaCartaEventoFragment).commit();
                 }
             }
         }

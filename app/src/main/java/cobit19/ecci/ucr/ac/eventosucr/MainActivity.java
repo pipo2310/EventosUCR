@@ -4,11 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -17,10 +13,9 @@ import java.util.Date;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.explorar.EventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.Explorar;
 
-public class MainActivity extends AppCompatActivity implements EventoFragment.OnListFragmentInteractionListener {
+public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,35 +25,11 @@ public class MainActivity extends AppCompatActivity implements EventoFragment.On
 
         Intent a =new Intent(this, Explorar.class);
         startActivity(a);
-
-        /*if (findViewById(R.id.activity_main) != null) {
-            if (savedInstanceState == null) {
-                LinearLayout linearLayout = findViewById(R.id.activity_main);
-                CategoriaService categoriaService = new CategoriaService();
-                for(Categoria categoria: categoriaService.leerListaDeCategoriasConEventos(getApplicationContext())) {
-                    final TextView textView = new TextView(getApplicationContext());
-                    textView.setTextSize(18);
-                    textView.setTypeface(null, Typeface.BOLD);
-                    textView.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    textView.setText(categoria.getNombre());
-                    linearLayout.addView(textView);
-
-                    EventoFragment eventoFragment = new EventoFragment(categoria);
-
-                    getSupportFragmentManager().beginTransaction()
-                            .add(R.id.activity_main, eventoFragment).commit();
-                }
-            }
-        }*/
     }
 
     public void cambiarDePantalla() {
         Intent a =new Intent(this,CrearEvento.class);
         startActivity(a);
-    }
-
-    public void onListFragmentInteraction(Evento evento){
-        System.out.println(evento.toString());
     }
 
     private void populateDatabase() {

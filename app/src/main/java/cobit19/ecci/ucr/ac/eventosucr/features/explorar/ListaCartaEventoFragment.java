@@ -3,14 +3,12 @@ package cobit19.ecci.ucr.ac.eventosucr.features.explorar;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -22,21 +20,21 @@ import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BlankFragment2#newInstance} factory method to
+ * Use the {@link ListaCartaEventoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankFragment2 extends Fragment {
+public class ListaCartaEventoFragment extends Fragment {
 
     private static final String ARG_CATEGORIA = "categoria";
 
     private Categoria categoria;
     private int layoutId;
 
-    public BlankFragment2() {
+    public ListaCartaEventoFragment() {
         // Required empty public constructor
     }
 
-    public BlankFragment2(Categoria categoria) {
+    public ListaCartaEventoFragment(Categoria categoria) {
         this.categoria = categoria;
         layoutId = 1000 + Integer.parseInt(categoria.getId());
     }
@@ -48,8 +46,8 @@ public class BlankFragment2 extends Fragment {
      * @param categoria Parameter 1.
      */
     // TODO: Rename and change types and number of parameters
-    public static BlankFragment2 newInstance(Categoria categoria) {
-        BlankFragment2 fragment = new BlankFragment2();
+    public static ListaCartaEventoFragment newInstance(Categoria categoria) {
+        ListaCartaEventoFragment fragment = new ListaCartaEventoFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_CATEGORIA, categoria);
         fragment.setArguments(args);
@@ -67,7 +65,7 @@ public class BlankFragment2 extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_blank2, container, false);
+        View view = inflater.inflate(R.layout.fragment_lista_carta_evento, container, false);
         TextView nombre = view.findViewById(R.id.explorar_nombre_categoria_eventos);
         nombre.setText(categoria.getNombre());
 
@@ -85,7 +83,7 @@ public class BlankFragment2 extends Fragment {
 
                 for (Evento evento: eventos) {
                     getFragmentManager().beginTransaction()
-                            .add(layoutId, new BlankFragment(evento)).commit();
+                            .add(layoutId, new CartaEventoFragment(evento)).commit();
                 }
             }
 

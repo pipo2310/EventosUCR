@@ -16,20 +16,20 @@ import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BlankFragment#newInstance} factory method to
+ * Use the {@link CartaEventoFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BlankFragment extends Fragment {
+public class CartaEventoFragment extends Fragment {
 
     private static final String ARG_EVENTO = "evento";
     private Evento evento;
     private OnListFragmentInteractionListener listener;
 
-    public BlankFragment() {
+    public CartaEventoFragment() {
         // Required empty public constructor
     }
 
-    public BlankFragment(Evento evento) {
+    public CartaEventoFragment(Evento evento) {
         this.evento = evento;
     }
 
@@ -41,8 +41,8 @@ public class BlankFragment extends Fragment {
      * @return A new instance of fragment BlankFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BlankFragment newInstance(Evento evento) {
-        BlankFragment fragment = new BlankFragment();
+    public static CartaEventoFragment newInstance(Evento evento) {
+        CartaEventoFragment fragment = new CartaEventoFragment();
         Bundle args = new Bundle();
         args.putParcelable(ARG_EVENTO, evento);
         fragment.setArguments(args);
@@ -61,7 +61,7 @@ public class BlankFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_blank, container, false);
+        View view = inflater.inflate(R.layout.fragment_carta_evento, container, false);
         TextView fecha = view.findViewById(R.id.explorar_evento_carta_fecha1);
         TextView nombre = view.findViewById(R.id.explorar_evento_carta_nombre1);
         TextView institucion = view.findViewById(R.id.explorar_evento_carta_institucion1);
