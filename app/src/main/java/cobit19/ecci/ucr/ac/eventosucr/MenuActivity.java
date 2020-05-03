@@ -48,6 +48,6 @@ public class MenuActivity extends AppCompatActivity implements CartaEventoFragme
     }
 
     public void onListFragmentInteraction(Evento evento){
-        System.out.println(evento.toString());
+        showSelectedFragment(new VistaEventoFragment(evento));
     }
 }

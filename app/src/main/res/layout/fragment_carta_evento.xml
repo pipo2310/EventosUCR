@@ -18,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="130dp"
             android:background="#005DA4"
-            android:src="@drawable/fondo" />
+            android:src="@drawable/ucr_evento_img" />
 
         <TextView
             android:id="@+id/explorar_evento_carta_fecha1"

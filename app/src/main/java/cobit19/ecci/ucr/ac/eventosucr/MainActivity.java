@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import java.util.ArrayList;
@@ -19,16 +20,15 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        populateDatabase();
-        /*setContentView(R.layout.activity_main);
 
-        Button irAMenu = (Button) findViewById(R.id.ir_a_menu);
-        irAMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                irMenu();
-            }
-        });*/
+        SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("FIRST_RUN", true)) {
+            populateDatabase();
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("FIRST_RUN", false);
+            editor.commit();
+        }
 
         Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
