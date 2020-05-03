@@ -10,9 +10,11 @@ import android.view.MenuItem;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
 
-public class MenuActivity extends AppCompatActivity {
+public class MenuActivity extends AppCompatActivity implements CartaEventoFragment.OnListFragmentInteractionListener {
 
     BottomNavigationView footerMenu;
 
@@ -21,7 +23,7 @@ public class MenuActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        showSelectedFragment(new FavoritosFragment());
+        showSelectedFragment(new ExplorarFragment());
 
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
 
@@ -38,5 +40,9 @@ public class MenuActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
+    }
+
+    public void onListFragmentInteraction(Evento evento){
+        System.out.println(evento.toString());
     }
 }

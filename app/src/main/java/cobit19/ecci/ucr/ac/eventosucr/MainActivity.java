@@ -13,7 +13,6 @@ import java.util.Date;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.explorar.Explorar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });*/
 
-        Intent a =new Intent(this, Explorar.class);
+        Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
     }
 
