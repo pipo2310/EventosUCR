@@ -20,8 +20,13 @@ import cobit19.ecci.ucr.ac.eventosucr.R;
  */
 public class VistaEventoFragment extends Fragment {
     View v;
+    Evento evento;
 
     public VistaEventoFragment() {
+    }
+
+    public VistaEventoFragment(Evento evento) {
+        this.evento = evento;
     }
 
 
@@ -30,20 +35,13 @@ public class VistaEventoFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         v = inflater.inflate(R.layout.fragment_vista_evento, container, false);
-
-        Calendar fecha = Calendar.getInstance();
-        Evento evento = new Evento("1", "Semana U", "Feucr", "Evento masivo en el pretil", "", fecha, "11:00", "03:00", "Pretil, UCR");
-        long newRowId = evento.insertar(v.getContext());
         leerEvento();
         return v;
     }
 
     //Inserta los datos de la base de datos en la vista de un evento
     void leerEvento() {
-        Evento evento = new Evento();
-        //Llama al método leer que está en la clase Evento
-        evento.leer(v.getContext(), "1");
-
+        
         TextView nombreDeEvento = (TextView)v.findViewById(R.id.nombreDeEvento);
         nombreDeEvento.setText(evento.getNombre());
         TextView creadorEvento = (TextView)v.findViewById(R.id.creadorEvento);
