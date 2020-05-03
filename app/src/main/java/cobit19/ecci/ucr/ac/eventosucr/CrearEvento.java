@@ -1,6 +1,8 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
@@ -8,10 +10,14 @@ import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -19,22 +25,43 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
-public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener{
-boolean tiempoInicio;
-boolean tiempoFinal;
-Calendar fecha;
-String horaInicio;
-String horaFinalBase;
-int horaInicioManejoError;
-int minutoInicioManejoError;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+
+public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
+    boolean tiempoInicio;
+    boolean tiempoFinal;
+    Calendar fecha;
+    String horaInicio;
+    String horaFinalBase;
+    int horaInicioManejoError;
+    int minutoInicioManejoError;
+    // Lista de categorias de la base de datos
+    ArrayList<Categoria> categorias;
+    // Lista de nombres de categorias
+    ArrayList<String> nombresCategorias = new ArrayList<String>();
+    // Lista de categorias seleccionadas
+    ArrayList<Integer> categoriasSeleccionadas = new ArrayList<Integer>();
+    // Servicio de Categorias
+    CategoriaService categoriaService = new CategoriaService();
+    // Servicio de CategoriaEvento
+    CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_evento);
+
+        // Leemos las categorias de la base de datos
+        categorias = categoriaService.leerLista(getApplicationContext());
+
+        // Llenamos el spinner con los nombres de las categorias
+        llenarCategorias();
 
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
@@ -101,6 +128,39 @@ int minutoInicioManejoError;
         });
     }
 
+    // Selecciona un item del spinner
+    public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+        // Mostrar al usuario la categoria seleccionada
+        if(pos != 0){
+            LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
+            TextView textView = new TextView(this);
+            textView.setText(nombresCategorias.get(pos));
+            layout.addView(textView);
+            categoriasSeleccionadas.add(pos-1);
+        }else{
+            // Decirle al usuario que debe seleccionar una categoria
+        }
+    }
+
+    public void onNothingSelected(AdapterView<?> parent) {
+        // No sirve
+    }
+
+    // Llena el spinner con la lista de categorias
+    public void llenarCategorias(){
+        nombresCategorias.add("Seleccione una categoría");
+        for(int i = 0; i<categorias.size(); i++){
+            nombresCategorias.add(categorias.get(i).getNombre());
+        }
+        Spinner listaCategorias = (Spinner) findViewById(R.id.dropdown_cat_1);
+        //create array adapter and provide arrary list to it
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, nombresCategorias);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        listaCategorias.setAdapter(arrayAdapter);
+        listaCategorias.setOnItemSelectedListener(this);
+    }
+
+    // Guarda el evento en base de Datos
     public void guardarEvento() {
         boolean insertar=true;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
@@ -145,6 +205,9 @@ int minutoInicioManejoError;
             Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = evento.insertar(getApplicationContext());
+            for(int i=0; i<categoriasSeleccionadas.size(); i++){
+                categoriaEventoService.insertar(getApplicationContext(), new CategoriaEvento(categorias.get(categoriasSeleccionadas.get(i)).getId(), evento.getId())) ;
+            }
             Toast.makeText(getApplicationContext(),
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+

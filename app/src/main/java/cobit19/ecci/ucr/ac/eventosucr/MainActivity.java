@@ -2,14 +2,18 @@ package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -17,6 +21,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Llenamos la base de datos
+        populateDatabase();
+
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -56,5 +64,34 @@ public class MainActivity extends AppCompatActivity {
     public void cambiarDePantalla() {
         Intent a =new Intent(this,ListaEventosSuperUsuario.class);
         startActivity(a);
+    }
+
+    private void populateDatabase() {
+        Context context = getApplicationContext();
+        CategoriaService categoriaService = new CategoriaService();
+
+        ArrayList<String> idCategorias = new ArrayList<>();
+
+        // Creamos las categorias
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Musica", "Representa los eventos relacionados con la musica"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Comida", "Representa los eventos relacionados con comida"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Arte", "Representa los eventos relacionados con el arte"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Baile", "Representa los eventos relacionados con el baile"))
+        ));
+    }
+
+    private void vaciarDataBase() {
+        /*
+        Context context = getApplicationContext();
+        CategoriaService categoriaService = new CategoriaService();
+
+        categoriaService.*/
     }
 }
