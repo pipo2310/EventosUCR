@@ -21,7 +21,7 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginEnd="18dp"
                 android:layout_marginBottom="1dp"
-                app:layout_constraintBottom_toTopOf="@+id/nombreEvento"
+                app:layout_constraintBottom_toTopOf="@+id/imgEvento"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.485"
                 app:layout_constraintStart_toStartOf="parent"
@@ -30,7 +30,7 @@
                 app:srcCompat="@drawable/imagenblanco" />
 
             <EditText
-                android:id="@+id/nombreEvento"
+                android:id="@+id/imgEvento"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="34dp"
@@ -61,7 +61,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.12"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nombreEvento"
+                app:layout_constraintTop_toBottomOf="@+id/imgEvento"
                 app:layout_constraintVertical_bias="0.849" />
 
             <EditText
@@ -78,7 +78,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.101"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nombreEvento"
+                app:layout_constraintTop_toBottomOf="@+id/imgEvento"
                 app:layout_constraintVertical_bias="0.0" />
 
             <ImageButton

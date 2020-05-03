@@ -22,7 +22,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Cada vez que cambie el esquema de la base de datos DataBaseContract,
     // debemos incrementar la version de la base de datos
-    public static final int DATABASE_VERSION = 10;
+    public static final int DATABASE_VERSION = 11;
 
     // Nombre de la base de datos
     public static final String DATABASE_NAME = "AndroidStorage.db";

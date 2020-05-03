@@ -7,12 +7,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 import android.view.MenuItem;
-
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
 public class MenuActivity extends AppCompatActivity implements CartaEventoFragment.OnListFragmentInteractionListener {
 
@@ -30,7 +30,12 @@ public class MenuActivity extends AppCompatActivity implements CartaEventoFragme
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                showSelectedFragment(new FavoritosFragment());
+                if(menuItem.getItemId() == R.id.menu_buscar){
+                    showSelectedFragment(new VistaEventoFragment());
+                }
+                else{
+                    showSelectedFragment(new FavoritosFragment());
+                }
                 return true;
             }
         });
