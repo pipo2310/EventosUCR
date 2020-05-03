@@ -33,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
 
         Intent a =new Intent(this, Explorar.class);
         startActivity(a);
-
     }
 
     public void cambiarDePantalla() {
