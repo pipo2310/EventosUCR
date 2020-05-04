@@ -23,17 +23,22 @@ public class MenuActivity extends AppCompatActivity implements CartaEventoFragme
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_menu);
 
-        showSelectedFragment(new ExplorarFragment());
-
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
+
+        footerMenu.setSelectedItemId(R.id.menu_explorar);
+
+        showSelectedFragment(new ExplorarFragment());
 
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-                if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new VistaEventoFragment());
+                if(menuItem.getItemId() == R.id.menu_favoritos){
+                    showSelectedFragment(new FavoritosFragment());
                 }
-                else{
+                if(menuItem.getItemId() == R.id.menu_explorar){
+                    showSelectedFragment(new ExplorarFragment());
+                }
+                if(menuItem.getItemId() == R.id.menu_buscar){
                     showSelectedFragment(new FavoritosFragment());
                 }
                 return true;
