@@ -74,7 +74,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         if(menuItem.getItemId() == R.id.nav_cud_eventos){
-            Intent a =new Intent(this, CrearEvento.class);
+            Intent a =new Intent(this, ListaEventosSuperUsuario.class);
             startActivity(a);
             // finalizamos la aplicacion para que quede en segundo plano
             finish();

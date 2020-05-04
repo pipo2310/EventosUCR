@@ -22,7 +22,6 @@ public class EventoService {
             DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
             DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
             DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-            DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
             DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
             DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
             DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
@@ -49,7 +48,6 @@ public class EventoService {
             evento.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE)));
             evento.setInstitucion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION)));
             evento.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES)));
-            evento.setMasInfo(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO)));
             evento.setFecha(fecha);
             evento.setHoraInicio(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO)));
             evento.setHoraFin(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN)));
@@ -80,7 +78,6 @@ public class EventoService {
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, evento.getNombre());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION, evento.getInstitucion());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, evento.getDetalles());
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO, evento.getMasInfo());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(evento.getFecha().getTime()));
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, evento.getHoraInicio());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, evento.getUbicacion());

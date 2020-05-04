@@ -85,9 +85,9 @@ public class Evento implements Parcelable {
         fecha = Calendar.getInstance();
     }
 
-    public Evento(String nombre, String institucion,String dettalles,String masInfo, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
+    public Evento(String nombre, String institucion,String detalles, Calendar fecha, String horaInicio,String horaFin,String ubicacion) {
         this.nombre = nombre;
-        this.detalles = dettalles;
+        this.detalles = detalles;
         this.ubicacion=ubicacion;
         this.institucion=institucion;
         this.fecha=fecha;
@@ -276,7 +276,6 @@ public class Evento implements Parcelable {
                 DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
                 DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
                 DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
@@ -306,7 +305,6 @@ public class Evento implements Parcelable {
             nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
             institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
             detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
-            masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
             fecha.setTime(UtilDates.parsearaDate(
                     cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
             horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
@@ -328,7 +326,6 @@ public class Evento implements Parcelable {
                 DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
                 DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION,
                 DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
                 DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
@@ -356,14 +353,13 @@ public class Evento implements Parcelable {
                 nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
                 institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
                 detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
-                masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
                 fecha.setTime(UtilDates.parsearaDate(
                         cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
                 horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
                 horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
                 ubicacion= cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
 
-                eventos.add(new Evento(id, nombre, institucion, detalles, masInfo, fecha, horaInicio, horaFin, ubicacion));
+                eventos.add(new Evento(nombre, institucion, detalles, fecha, horaInicio, horaFin, ubicacion));
 
                 cursor.moveToNext();
             }
