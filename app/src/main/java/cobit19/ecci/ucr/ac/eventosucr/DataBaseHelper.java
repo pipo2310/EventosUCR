@@ -10,6 +10,14 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     // Cada vez que cambie el esquema de la base de datos DataBaseContract,
@@ -30,6 +38,7 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         db.execSQL(DataBaseContract.SQL_CREATE_EVENTO);
         db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA);
         db.execSQL(DataBaseContract.SQL_CREATE_CATEGORIA_EVENTO);
+
     }
     // implementamos el metodo para la actualizacion de la base de datos
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {

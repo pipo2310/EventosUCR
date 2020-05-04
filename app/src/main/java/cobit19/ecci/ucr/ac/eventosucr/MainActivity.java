@@ -4,62 +4,121 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.view.View;
-import android.widget.Button;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
 
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                cambiarDePantalla();
-            }
-        });
+        SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
+        if (sharedPreferences.getBoolean("FIRST_RUN", true)) {
+            populateDatabase();
 
-        // Ejemplo de uso para verificar que funciona
-        Calendar fechaInicio = Calendar.getInstance();
-        Calendar fechaFin = Calendar.getInstance();
-        fechaInicio.setTime(new Date());
-        fechaFin.setTime(new Date());
-/*
-        Evento evento = new Evento();
-        evento.setNombre("Evento 1");
-        evento.setDetalles("Detalles del evento 1");
-        evento.setFechaInicio(fechaInicio);
-        evento.setFechaFin(fechaFin);
-
-        long rowid = evento.insertar(getApplicationContext());
-
-        // Verifica que se ingreso en la base de datos
-        if (rowid != -1) {
-            // Pedimos de la base de datos el evento que se guardo anteriormente
-            Evento nuevoEvento = new Evento();
-            nuevoEvento.leer(getApplicationContext(),"1");
-
-            // Mostramos el Evento en la aplicacion
-            Toast.makeText(getApplicationContext(), nuevoEvento.toString(), Toast.LENGTH_LONG).show();
-
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("FIRST_RUN", false);
+            editor.commit();
         }
-        */
-
     }
 
-    public void cambiarDePantalla() {
-        Intent a =new Intent(this,ListaEventosSuperUsuario.class);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
+    }
+
+
+    public void cambiarDePantalla() {
+        Intent a =new Intent(this,CrearEvento.class);
+        startActivity(a);
+    }
+
+    public void irMenu(){
+        Intent a =new Intent(this, MenuActivity.class);
+        startActivity(a);
+    }
+
+    private void populateDatabase() {
+        Context context = getApplicationContext();
+        CategoriaService categoriaService = new CategoriaService();
+        CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
+        EventoService eventoService = new EventoService();
+
+        ArrayList<String> idCategorias = new ArrayList<>();
+        ArrayList<String> idEventos = new ArrayList<>();
+
+        // Creamos las categorias
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Musica", "Representa los eventos relacionados con la musica"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Comida", "Representa los eventos relacionados con comida"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Arte", "Representa los eventos relacionados con el arte"))
+        ));
+        idCategorias.add(Long.toString(
+                categoriaService.insertar(context, new Categoria("Baile", "Representa los eventos relacionados con el baile"))
+        ));
+
+        Calendar fecha = Calendar.getInstance();
+        fecha.setTime(new Date());
+        // Creamos los eventos
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Festival", "Promete", "asdf", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Son Latino", "Latino America", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Cantos Gregorianos", "A lo clasico", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Tributo a Zelda", "Filarmonica", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Tributo a Mario Bros", "Filarmonica", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Pintura", "Artistas", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Dibujo", "Artistas", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Lapiz y Papel", "No hay color", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Twerking", "Muevelo muevelo", "", "", fecha, "", "", ""))
+        ));
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Bailar merengue", "Menealo", "", "", fecha, "", "", ""))
+        ));
+
+        // Asociamos a Musica
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(0), idEventos.get(0)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(0), idEventos.get(1)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(0), idEventos.get(2)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(0), idEventos.get(3)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(0), idEventos.get(4)));
+        // Asociamos a Artesanias
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(2), idEventos.get(5)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(2), idEventos.get(6)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(2), idEventos.get(7)));
+        // Asociamos a Bailes
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(1)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(8)));
+        categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(9)));
     }
 }

@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">EventosUCR</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
+    <string name="nav_header_title">Eventos Universidad de Costa Rica</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="menu_home">Principal</string>
+    <string name="menu_cud_eventos">Crear Evento</string>
+    <string name="menu_cerrar_sesion">Cerrar Sesión</string>
 </resources>

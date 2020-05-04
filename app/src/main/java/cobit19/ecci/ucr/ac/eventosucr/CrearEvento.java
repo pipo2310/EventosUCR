@@ -163,7 +163,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     // Guarda el evento en base de Datos
     public void guardarEvento() {
         boolean insertar=true;
-        EditText nombre=(EditText)findViewById(R.id.nombreEvento);
+        EditText nombre=(EditText)findViewById(R.id.imgEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
         TextView tiempIni=(TextView)findViewById(R.id.tiempoInicio);
