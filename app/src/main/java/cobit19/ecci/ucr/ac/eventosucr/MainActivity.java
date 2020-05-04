@@ -29,10 +29,15 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean("FIRST_RUN", false);
             editor.commit();
         }
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
         Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
     }
+
 
     public void cambiarDePantalla() {
         Intent a =new Intent(this,CrearEvento.class);
