@@ -1,10 +1,16 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageButton;
@@ -12,20 +18,35 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
 import static android.provider.AlarmClock.EXTRA_MESSAGE;
 
-public class ListaEventosSuperUsuario extends AppCompatActivity {
-ArrayList<Evento>eventos;
+public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+    ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
+    private DrawerLayout drawer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_eventos_super_usuario);
+
+        // nav bar de arriba
+        Toolbar toolbar = findViewById(R.id.toolbar_LE);
+        setSupportActionBar(toolbar);
+
+        // Para el menu lateral
+        drawer = findViewById(R.id.drawer_layout_LE);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawer, toolbar, R.string.app_name, R.string.app_name);
+        drawer.addDrawerListener(toggle);
+        toggle.syncState();
+        NavigationView navigationView = findViewById(R.id.nav_view_LE);
+        navigationView.setNavigationItemSelectedListener(this);
+
         FloatingActionButton floatingActionButton =
                 (FloatingActionButton) findViewById(R.id.floating_action_button);
 
@@ -76,6 +97,25 @@ ArrayList<Evento>eventos;
 
         // Deseo recibir una respuesta: startActivityForResult()
         startActivityForResult(intent, 0);
-        //finish();
+        finish();
+    }
+
+    /**
+     * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
+     * @param menuItem
+     * @return
+     */
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+        if(menuItem.getItemId() == R.id.nav_home){
+            Intent a =new Intent(this, MenuActivity.class);
+            startActivity(a);
+            // finalizamos la aplicacion para que NO quede en segundo plano
+            finish();
+        }
+        else{
+            drawer.closeDrawer(Gravity.LEFT, true);
+        }
+        return true;
     }
 }

@@ -58,4 +58,9 @@ public class ExplorarFragment extends Fragment {
 
         return view;
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
 }

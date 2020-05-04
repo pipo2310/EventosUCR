@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".ModificarEliminarEvento"></activity>
-        <activity android:name=".ListaEventosSuperUsuario" />
+        <activity android:name=".ListaEventosSuperUsuario"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".CrearEvento" />
         <activity android:name=".MenuActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>

@@ -76,7 +76,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         if(menuItem.getItemId() == R.id.nav_cud_eventos){
             Intent a =new Intent(this, ListaEventosSuperUsuario.class);
             startActivity(a);
-            // finalizamos la aplicacion para que quede en segundo plano
+            // finalizamos la aplicacion para que NO quede en segundo plano
             finish();
         }
         else{

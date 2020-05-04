@@ -29,6 +29,7 @@ public class ListaCartaEventoFragment extends Fragment {
 
     private Categoria categoria;
     private int layoutId;
+    private View view;
 
     public ListaCartaEventoFragment() {
         // Required empty public constructor
@@ -65,7 +66,7 @@ public class ListaCartaEventoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_lista_carta_evento, container, false);
+        view = inflater.inflate(R.layout.fragment_lista_carta_evento, container, false);
         TextView nombre = view.findViewById(R.id.explorar_nombre_categoria_eventos);
         nombre.setText(categoria.getNombre());
 
@@ -77,18 +78,21 @@ public class ListaCartaEventoFragment extends Fragment {
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 linearLayout.setId(layoutId);
                 horizontalScrollView.addView(linearLayout);
-
-                EventoService eventoService = new EventoService();
-                ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
-
-                for (Evento evento: eventos) {
-                    getFragmentManager().beginTransaction()
-                            .add(layoutId, new CartaEventoFragment(evento)).commit();
-                }
             }
-
         }
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        EventoService eventoService = new EventoService();
+        ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
+
+        for (Evento evento: eventos) {
+            getFragmentManager().beginTransaction()
+                    .add(layoutId, new CartaEventoFragment(evento)).commit();
+        }
     }
 }

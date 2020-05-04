@@ -31,6 +31,7 @@ import java.util.Date;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
     boolean tiempoInicio;
@@ -50,6 +51,8 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     CategoriaService categoriaService = new CategoriaService();
     // Servicio de CategoriaEvento
     CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
+    // Servicio del Evento
+    EventoService eventoService = new EventoService();
 
 
     @Override
@@ -204,9 +207,10 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         if(insertar==true){
             Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
             // inserta el estudiante, se le pasa como parametro el contexto de la app
-            long newRowId = evento.insertar(getApplicationContext());
+            long newRowId = eventoService.insertar(getApplicationContext(), evento);
+            String eventoID = Long.toString(newRowId);
             for(int i=0; i<categoriasSeleccionadas.size(); i++){
-                categoriaEventoService.insertar(getApplicationContext(), new CategoriaEvento(categorias.get(categoriasSeleccionadas.get(i)).getId(), evento.getId())) ;
+                categoriaEventoService.insertar(getApplicationContext(), new CategoriaEvento(categorias.get(categoriasSeleccionadas.get(i)).getId(), eventoID));
             }
             Toast.makeText(getApplicationContext(),
                     " Id: " + evento.getId() +
