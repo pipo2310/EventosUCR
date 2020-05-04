@@ -22,9 +22,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // Llenamos la base de datos
-        populateDatabase();
-
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -64,34 +61,5 @@ public class MainActivity extends AppCompatActivity {
     public void cambiarDePantalla() {
         Intent a =new Intent(this,ListaEventosSuperUsuario.class);
         startActivity(a);
-    }
-
-    private void populateDatabase() {
-        Context context = getApplicationContext();
-        CategoriaService categoriaService = new CategoriaService();
-
-        ArrayList<String> idCategorias = new ArrayList<>();
-
-        // Creamos las categorias
-        idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Musica", "Representa los eventos relacionados con la musica"))
-        ));
-        idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Comida", "Representa los eventos relacionados con comida"))
-        ));
-        idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Arte", "Representa los eventos relacionados con el arte"))
-        ));
-        idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Baile", "Representa los eventos relacionados con el baile"))
-        ));
-    }
-
-    private void vaciarDataBase() {
-        /*
-        Context context = getApplicationContext();
-        CategoriaService categoriaService = new CategoriaService();
-
-        categoriaService.*/
     }
 }
