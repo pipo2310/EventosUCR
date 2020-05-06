@@ -76,34 +76,34 @@ public class MainActivity extends AppCompatActivity {
         fecha.setTime(new Date());
         // Creamos los eventos
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Festival", "Promete", "asdf", fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("FestivalUCR", "UCR", "Música, ventas y más", fecha, "10:00", "07:00", "Universidad de Costa Rica"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Son Latino", "Latino America", "", fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Bailongo", "Son Latino", "Ven a bailar merengue, salsa y bachata", fecha, "07:00", "10:00", "Facultad de Educación"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Cantos Gregorianos", "A lo clasico", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Cantos Gregorianos", "Artes Dramáticas", "Evento artístico",fecha, "05:00", "09:00", "Facultad de Artes Dramáticas"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Zelda", "Filarmonica", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Tributo a Zelda", "Filarmonica", "Para los amantes de Zelda",fecha, "03:00", "07:00", "Teatro Nacional"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Mario Bros", "Filarmonica", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Tributo a Coldplay", "UCR", "Las mejores canciones de Coldplay",fecha, "09:00", "12:00", "Hard Rock Café"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Pintura", "Artistas", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Pintura", "Escuela de Artes", "Si eres amante de la pintura, este evento es para vos!",fecha, "09:00", "01:00", "Pretil UCR"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Dibujo", "Artistas", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Aprende a dibujar", "Escuela de Artes", "Quieres aprender a dibujar? Te esperamos",fecha, "01:00", "03:00", "Pretil UCR"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Lapiz y Papel", "No hay color", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Lapiz y Papel", "Feucr", "Obra de teatro",fecha, "02:00", "03:00", "Universidad de Costa Rica"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Twerking", "Muevelo muevelo", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Muevelo", "Escuela de Música", "Taller de baile gratis",fecha, "09:00", "12:00", "Facultad de Música"))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Bailar merengue", "Menealo", "",fecha, "", "", ""))
+                eventoService.insertar(context, new Evento("Bailar merengue", "Escuela de Música", "Aprende a bailar en una clase",fecha, "10:00", "12:00", "Pretil UCR"))
         ));
 
         // Asociamos a Musica
