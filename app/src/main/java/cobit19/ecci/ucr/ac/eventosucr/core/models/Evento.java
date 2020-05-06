@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.core.models;
 
 /**
  * Created by Fabian on 22/4/2020.
@@ -9,20 +9,20 @@ package cobit19.ecci.ucr.ac.eventosucr;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.widget.Toast;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
+
+import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
+import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
+import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 
 public class Evento implements Parcelable {
 

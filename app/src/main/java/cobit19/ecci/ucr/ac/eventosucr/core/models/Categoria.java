@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.core.models;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,6 +6,9 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
+import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
 
 public class Categoria implements Parcelable {
 

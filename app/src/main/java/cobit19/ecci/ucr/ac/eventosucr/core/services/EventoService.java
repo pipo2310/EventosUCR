@@ -4,14 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 
 public class EventoService {

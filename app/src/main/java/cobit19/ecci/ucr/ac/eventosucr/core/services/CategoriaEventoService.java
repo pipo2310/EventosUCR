@@ -7,10 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.CategoriaEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
 
 public class CategoriaEventoService {
     // Define cuales columnas quiere solicitar // en este caso todas las de la clase

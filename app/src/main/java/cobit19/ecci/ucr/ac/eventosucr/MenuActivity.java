@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;

@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
 /**

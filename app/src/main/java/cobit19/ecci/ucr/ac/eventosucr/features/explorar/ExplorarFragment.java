@@ -8,7 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cobit19.ecci.ucr.ac.eventosucr.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 

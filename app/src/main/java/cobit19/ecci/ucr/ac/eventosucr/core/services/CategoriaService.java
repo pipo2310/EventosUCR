@@ -9,7 +9,7 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
-import cobit19.ecci.ucr.ac.eventosucr.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 
 public class CategoriaService {
 
