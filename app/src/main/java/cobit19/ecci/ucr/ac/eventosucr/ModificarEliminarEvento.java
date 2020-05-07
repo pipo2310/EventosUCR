@@ -24,6 +24,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener{
 Evento evento;
@@ -98,6 +99,7 @@ String id;
     }
 
     public void modificarEvento() {
+        EventoService eventoService = new EventoService();
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
@@ -121,7 +123,7 @@ String id;
 
         }
 
-        long ret=evento.actualizar(getApplicationContext());
+        long ret=eventoService.actualizar(getApplicationContext(), evento);
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -167,7 +169,8 @@ String id;
     }
 
     public void eliminarEvent() {
-        eventoElimina.eliminar(getApplicationContext(),evento.getId());
+        EventoService eventoService = new EventoService();
+        eventoService.eliminar(getApplicationContext(),evento.getId());
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
