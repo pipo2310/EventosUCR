@@ -37,69 +37,11 @@ public class Evento implements Parcelable {
     private String horaInicio;
     private String horaFin;
 
-    public String getInstitucion() {
-        return idInstitucion;
-    }
-
-    public void setInstitucion(String idInstitucion) {
-        this.idInstitucion = idInstitucion;
-    }
-
-    public String getUbicacion() {
-        return ubicacion;
-    }
-
-    public void setUbicacion(String ubicacion) {
-        this.ubicacion = ubicacion;
-    }
-
-    public double getLatitud() {
-        return latitud;
-    }
-
-    public void setLatitud(double latitud) {
-        this.latitud = latitud;
-    }
-
-    public double getLongitud() {
-        return longitud;
-    }
-
-    public void setLongitud(double longitud) {
-        this.longitud = longitud;
-    }
-
-    public Calendar getFecha() {
-        return fecha;
-    }
-
-    public void setFecha(Calendar fecha) {
-        this.fecha = fecha;
-    }
-
-    public String getHoraInicio() {
-        return horaInicio;
-    }
-
-    public void setHoraInicio(String horaInicio) {
-        this.horaInicio = horaInicio;
-    }
-
-    public String getHoraFin() {
-        return horaFin;
-    }
-
-    public void setHoraFin(String horaFin) {
-        this.horaFin = horaFin;
-    }
-
-
-
     public Evento() {
         fecha = Calendar.getInstance();
     }
 
-    public Evento(String nombre, String idInstitucion,String detalles, Calendar fecha, String horaInicio,String horaFin,String ubicacion, double latitud, double longitud) {
+    public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud) {
         this.nombre = nombre;
         this.detalles = detalles;
         this.ubicacion=ubicacion;
@@ -125,14 +67,61 @@ public class Evento implements Parcelable {
         this.nombre = nombre;
     }
 
+    public String getIdInstitucion() {
+        return idInstitucion;
+    }
+    public void setIdInstitucion(String idInstitucion) {
+        this.idInstitucion = idInstitucion;
+    }
+
     public String getDetalles() {
         return detalles;
     }
-    public void setDetalles(String dettalles) {
-        this.detalles = dettalles;
+    public void setDetalles(String detalles) {
+        this.detalles = detalles;
     }
 
+    public Calendar getFecha() {
+        return fecha;
+    }
+    public void setFecha(Calendar fecha) {
+        this.fecha = fecha;
+    }
 
+    public String getUbicacion() {
+        return ubicacion;
+    }
+    public void setUbicacion(String ubicacion) {
+        this.ubicacion = ubicacion;
+    }
+
+    public double getLatitud() {
+        return latitud;
+    }
+    public void setLatitud(double latitud) {
+        this.latitud = latitud;
+    }
+
+    public double getLongitud() {
+        return longitud;
+    }
+    public void setLongitud(double longitud) {
+        this.longitud = longitud;
+    }
+
+    public String getHoraInicio() {
+        return horaInicio;
+    }
+    public void setHoraInicio(String horaInicio) {
+        this.horaInicio = horaInicio;
+    }
+
+    public String getHoraFin() {
+        return horaFin;
+    }
+    public void setHoraFin(String horaFin) {
+        this.horaFin = horaFin;
+    }
 
     protected Evento (Parcel in) {
         id = in.readString();

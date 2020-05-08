@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
         if (sharedPreferences.getBoolean("FIRST_RUN", true)) {
-            populateDatabase();
+            /*populateDatabase();*/
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("FIRST_RUN", false);
@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         startActivity(a);
     }
 
-    private void populateDatabase() {
+    /*private void populateDatabase() {
         Context context = getApplicationContext();
         CategoriaService categoriaService = new CategoriaService();
         CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
@@ -123,5 +123,5 @@ public class MainActivity extends AppCompatActivity {
         categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(1)));
         categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(8)));
         categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(9)));
-    }
+    }*/
 }

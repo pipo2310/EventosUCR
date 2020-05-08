@@ -40,7 +40,7 @@ public final class DataBaseContract {
     public static final String TABLE_PERMISO_COLUMN_NOMBRE = "nombre";
     public static final String TABLE_PERMISO_COLUMN_DETALLES = "detalles";
 
-    //Tabla Permisos
+    //Tabla Rol
     public static final String TABLE_ROL = "Rol";
     public static final String TABLE_ROL_COLUMN_ID = "id";
     public static final String TABLE_ROL_COLUMN_NOMBRE = "nombre";
@@ -52,7 +52,7 @@ public final class DataBaseContract {
     public static final String TABLE_ROL_PERMISO_COLUMN_ID_PERMISO = "idPermiso";
 
     //Tabla Usuario
-    public static final String TABLE_USUARIO = "RolPermiso";
+    public static final String TABLE_USUARIO = "Usuario";
     public static final String TABLE_USUARIO_COLUMN_CORREO_UCR = "correoUcr";
     public static final String TABLE_USUARIO_COLUMN_NOMBRE = "nombre";
     public static final String TABLE_USUARIO_COLUMN_CONTRASENIA = "contrasenia";
@@ -65,7 +65,7 @@ public final class DataBaseContract {
     public static final String TABLE_USUARIO_EVENTO_COLUMN_ID_EVENTO = "idEvento";
 
     // Tabla Relacion del Rol, Usuario e Institucion
-    public static final String TABLE_ROL_USUARIO_INSTITUCION = "ROlUsuarioInstitucion";
+    public static final String TABLE_ROL_USUARIO_INSTITUCION = "RolUsuarioInstitucion";
     public static final String TABLE_ROL_USUARIO_INSTITUCION_COLUMN_ID_ROL = "idRol";
     public static final String TABLE_ROL_USUARIO_INSTITUCION_COLUMN_CORREO_UCR_USUARIO = "correoUcr";
     public static final String TABLE_ROL_USUARIO_INSTITUCION_COLUMN_ID_INSTITUCION = "idInstitucion";
@@ -127,7 +127,7 @@ public final class DataBaseContract {
             "FOREIGN KEY (" + TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + ") REFERENCES " +
             TABLE_CATEGORIA + "(" + TABLE_CATEGORIA_COLUMN_ID + ")," +
             "FOREIGN KEY (" + TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO + ") REFERENCES " +
-            TABLE_EVENTO + "(" + TABLE_EVENTO_COLUMN_ID + ")," +
+            TABLE_EVENTO + "(" + TABLE_EVENTO_COLUMN_ID + ")" +
             ");";
 
     public static final String SQL_DELETE_CATEGORIA_EVENTO = "DROP TABLE IF EXISTS " + TABLE_CATEGORIA_EVENTO + ";" +
@@ -139,7 +139,7 @@ public final class DataBaseContract {
             TABLE_PERMISO_COLUMN_DETALLES + " TEXT" +
             ");";
 
-    public static final String SQL_DELETE_PERMISO = "DROP TABLE IF EXIST " + TABLE_PERMISO + ";" +
+    public static final String SQL_DELETE_PERMISO = "DROP TABLE IF EXISTS " + TABLE_PERMISO + ";" +
             "DELETE FROM sqlite_sequence WHERE name = '" + TABLE_PERMISO + "';";
 
     public static final String SQL_CREATE_ROL = "CREATE TABLE " + TABLE_ROL + " (" +
@@ -148,7 +148,7 @@ public final class DataBaseContract {
             TABLE_ROL_COLUMN_DETALLES + " TEXT" +
             ");";
 
-    public static final String SQL_DELETE_ROL = "DROP TABLE IF EXIST " + TABLE_ROL + ";" +
+    public static final String SQL_DELETE_ROL = "DROP TABLE IF EXISTS " + TABLE_ROL + ";" +
             "DELETE FROM sqlite_sequence WHERE name = '" + TABLE_ROL + "';";
 
     public static final String SQL_CREATE_ROL_PERMISO = "CREATE TABLE " + TABLE_ROL_PERMISO + " (" +
@@ -158,7 +158,7 @@ public final class DataBaseContract {
             "FOREIGN KEY (" + TABLE_ROL_PERMISO_COLUMN_ID_ROL + ") REFERENCES " +
             TABLE_ROL + "(" + TABLE_ROL_COLUMN_ID + ")," +
             "FOREIGN KEY (" + TABLE_ROL_PERMISO_COLUMN_ID_PERMISO + ") REFERENCES " +
-            TABLE_PERMISO + "(" + TABLE_PERMISO_COLUMN_ID + ")," +
+            TABLE_PERMISO + "(" + TABLE_PERMISO_COLUMN_ID + ")" +
             ");";
 
     public static final String SQL_DELETE_ROL_PERMISO = "DROP TABLE IF EXISTS " + TABLE_ROL_PERMISO + ";" +
@@ -169,7 +169,7 @@ public final class DataBaseContract {
             TABLE_USUARIO_COLUMN_CONTRASENIA + " TEXT," +
             TABLE_USUARIO_COLUMN_NOMBRE + " TEXT," +
             TABLE_USUARIO_COLUMN_APELLIDO1 + " TEXT," +
-            TABLE_USUARIO_COLUMN_APELLIDO2 + " TEXT," +
+            TABLE_USUARIO_COLUMN_APELLIDO2 + " TEXT" +
             ");";
 
     public static final String SQL_DELETE_USUARIO = "DROP TABLE IF EXISTS " + TABLE_USUARIO + ";" +
@@ -178,11 +178,11 @@ public final class DataBaseContract {
     public static final String SQL_CREATE_USUARIO_EVENTO = "CREATE TABLE " + TABLE_USUARIO_EVENTO + " (" +
             TABLE_USUARIO_EVENTO_COLUMN_CORREO_UCR_USUARIO + " TEXT," +
             TABLE_USUARIO_EVENTO_COLUMN_ID_EVENTO + " INTEGER," +
-            "PRIMARY KEY (" + TABLE_ROL_PERMISO_COLUMN_ID_ROL + "," + TABLE_ROL_PERMISO_COLUMN_ID_PERMISO + ")," +
+            "PRIMARY KEY (" + TABLE_USUARIO_EVENTO_COLUMN_CORREO_UCR_USUARIO + "," + TABLE_USUARIO_EVENTO_COLUMN_ID_EVENTO + ")," +
             "FOREIGN KEY (" + TABLE_USUARIO_EVENTO_COLUMN_CORREO_UCR_USUARIO + ") REFERENCES " +
             TABLE_USUARIO + "(" + TABLE_USUARIO_COLUMN_CORREO_UCR + ")," +
             "FOREIGN KEY (" + TABLE_USUARIO_EVENTO_COLUMN_ID_EVENTO + ") REFERENCES " +
-            TABLE_EVENTO + "(" + TABLE_EVENTO_COLUMN_ID + ")," +
+            TABLE_EVENTO + "(" + TABLE_EVENTO_COLUMN_ID + ")" +
             ");";
 
     public static final String SQL_DELETE_USUARIO_EVENTO = "DROP TABLE IF EXISTS " + TABLE_USUARIO_EVENTO + ";" +
@@ -199,7 +199,7 @@ public final class DataBaseContract {
             "FOREIGN KEY (" + TABLE_ROL_USUARIO_INSTITUCION_COLUMN_CORREO_UCR_USUARIO + ") REFERENCES " +
             TABLE_USUARIO + "(" + TABLE_USUARIO_COLUMN_CORREO_UCR + ")," +
             "FOREIGN KEY (" + TABLE_ROL_USUARIO_INSTITUCION_COLUMN_ID_INSTITUCION + ") REFERENCES " +
-            TABLE_INSTITUCION + "(" + TABLE_INSTITUCION_COLUMN_ID + ")," +
+            TABLE_INSTITUCION + "(" + TABLE_INSTITUCION_COLUMN_ID + ")" +
             ");";
 
     public static final String SQL_DELETE_ROL_USUARIO_INSTITUCION = "DROP TABLE IF EXISTS " + TABLE_ROL_USUARIO_INSTITUCION + ";" +

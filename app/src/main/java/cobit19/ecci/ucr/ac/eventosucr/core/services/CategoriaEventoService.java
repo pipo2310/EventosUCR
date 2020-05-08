@@ -49,13 +49,19 @@ public class CategoriaEventoService {
         return listaCategoriaEvento;
     }
 
-    public long insertar(Context context, CategoriaEvento categoriaEvento) {
-        SQLiteDatabase db = getSQLiteDatabase(context);
-
+    private ContentValues prepararValores(CategoriaEvento categoriaEvento) {
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
         values.put(DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA, categoriaEvento.getIdCategoria());
         values.put(DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO, categoriaEvento.getIdEvento());
+
+        return values;
+    }
+
+    public long insertar(Context context, CategoriaEvento categoriaEvento) {
+        SQLiteDatabase db = getSQLiteDatabase(context);
+
+        ContentValues values = prepararValores(categoriaEvento);
 
         // Insertar la nueva fila
         return db.insert(DataBaseContract.TABLE_CATEGORIA_EVENTO, null, values);
@@ -100,5 +106,17 @@ public class CategoriaEventoService {
 
         cursor.moveToFirst();
         return generarLista(cursor);
+    }
+
+    public void eliminar (Context context, String idParametroCategoria, String idParamentroEvento){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+
+        // Define el where para el borrado
+        String selection = DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + " LIKE ? AND " +
+                DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO + " LIKE ?";
+        // Se detallan los argumentos
+        String[] selectionArgs = {idParametroCategoria, idParamentroEvento};
+        // Realiza el SQL de borrado
+        db.delete(DataBaseContract.TABLE_CATEGORIA_EVENTO, selection, selectionArgs);
     }
 }

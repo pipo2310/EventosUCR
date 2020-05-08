@@ -44,7 +44,7 @@ public class VistaEventoFragment extends Fragment {
         TextView nombreDeEvento = (TextView)v.findViewById(R.id.nombreDeEvento);
         nombreDeEvento.setText(evento.getNombre());
         TextView creadorEvento = (TextView)v.findViewById(R.id.creadorEvento);
-        creadorEvento.setText(evento.getInstitucion());
+        creadorEvento.setText(evento.getIdInstitucion());
         TextView fecha = (TextView) v.findViewById(R.id.fecha);
         fecha.setText(DateFormat.getDateInstance(DateFormat.FULL).format(evento.getFecha().getTime()));
         TextView hora = (TextView)v.findViewById(R.id.hora);

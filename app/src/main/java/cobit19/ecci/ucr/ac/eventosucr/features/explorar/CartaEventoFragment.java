@@ -68,7 +68,7 @@ public class CartaEventoFragment extends Fragment {
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
         nombre.setText("Evento: " + evento.getNombre());
-        institucion.setText("Institución: " + evento.getInstitucion());
+        institucion.setText("Institución: " + evento.getIdInstitucion());
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

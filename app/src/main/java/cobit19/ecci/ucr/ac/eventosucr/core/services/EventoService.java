@@ -49,7 +49,7 @@ public class EventoService {
 
             evento.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID)));
             evento.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE)));
-            evento.setInstitucion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION)));
+            evento.setIdInstitucion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION)));
             evento.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES)));
             evento.setFecha(fecha);
             evento.setHoraInicio(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO)));
@@ -81,7 +81,7 @@ public class EventoService {
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE, evento.getNombre());
-        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION, evento.getInstitucion());
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION, evento.getIdInstitucion());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, evento.getDetalles());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(evento.getFecha().getTime()));
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, evento.getHoraInicio());
@@ -134,88 +134,6 @@ public class EventoService {
         return generarLista(cursor);
     }
 
-    // Cambiar para que lea los eventos que un usuario ha creado
-    public ArrayList<Evento> leerEventos(Context context) {//Solo devuelve el nombre del evento
-        //SQLiteDatabase db = getSQLiteDatabase(context);
-        // usar la clase DataBaseHelper para realizar la operacion de leer
-        DataBaseHelper dataBaseHelper = new DataBaseHelper(context);
-        // Obtiene la base de datos en modo lectura
-        SQLiteDatabase db = dataBaseHelper.getReadableDatabase();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
-        ArrayList<Evento> nombresEventos=new ArrayList<Evento>();
-        // Define cuales columnas quiere solicitar // en este caso todas las de la clase
-        String[] projection = {
-                DataBaseContract.TABLE_EVENTO_COLUMN_ID,
-                DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE,
-                DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION,
-                DataBaseContract.TABLE_EVENTO_COLUMN_FECHA,
-                DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION,
-                DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO,
-                DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN,
-                DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
-                DataBaseContract.TABLE_EVENTO_COLUMN_LATITUD,
-                DataBaseContract.TABLE_EVENTO_COLUMN_LONGITUD
-        };
-
-        // Filtro para el WHERE
-        //String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
-        //String[] selectionArgs = {idParametro};
-
-        // Resultados en el cursor
-        Cursor cursor = db.query(
-                DataBaseContract.TABLE_EVENTO, // tabla
-                projection, // columnas
-                null, // where
-                null, // valores del where
-                null, // agrupamiento
-                null, // filtros por grupo
-                null // orden
-        );
-
-        cursor.moveToFirst();
-
-        if (cursor.getCount() > 0) {
-            do{
-                Evento eventoALeer=new Evento();
-                eventoALeer.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID)));
-                //id = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID));
-                eventoALeer.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE)));
-                //nombre = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE));
-                eventoALeer.setInstitucion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION)));
-                //institucion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_INSTITUCION));
-                eventoALeer.setHoraInicio(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO)));
-                //horaInicio = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO));
-                eventoALeer.setHoraFin(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN)));
-                //horaFin = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN));
-                eventoALeer.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES)));
-                //detalles = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES));
-                eventoALeer.setUbicacion(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION)));
-                //ubicacion = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION));
-                eventoALeer.setLatitud(cursor.getDouble(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_LATITUD)));
-                //latitud = cursor.getDouble(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_LATITUD));
-                eventoALeer.setLongitud(cursor.getDouble(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_LONGITUD)));
-                //latitud = cursor.getDouble(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_LATITUD));
-                try {
-                    eventoALeer.getFecha().setTime(sdf.parse(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
-                } catch (ParseException e) {
-                    e.printStackTrace();
-                }
-                //fecha = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA));
-
-
-                //fecha = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA));
-
-                //fecha = (UtilDates.StringToDate(cursor.getString(cursor.getColumnIndexOrThrow(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA))));
-
-                //masInfo = cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_EVENTO_COLUMN_MASINFO));
-                nombresEventos.add(eventoALeer);
-                eventoALeer=null;
-
-            }while (cursor.moveToNext());
-        }
-        return nombresEventos;
-    }
-
     public ArrayList<Evento> leerListaEventosPorCategoria(Context context, String idParametroCategoria) {
         SQLiteDatabase db = getSQLiteDatabase(context);
 
@@ -240,7 +158,7 @@ public class EventoService {
         values.put(
                 DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE, evento.getNombre());
         values.put(
-                DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION, evento.getInstitucion());
+                DataBaseContract.TABLE_EVENTO_COLUMN_ID_INSTITUCION, evento.getIdInstitucion());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES,
                 evento.getDetalles());
 
