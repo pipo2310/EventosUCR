@@ -55,6 +55,7 @@ public class ImagenService {
     }
 
     // recupera la/las imagenes de un evento en especifico
+    // Hay que pasar las imagenes de Bitmap a ImageView
     public ArrayList<Bitmap> leerImagenEvento(Context context, String idEvento){
         SQLiteDatabase db = getSQLiteDatabase(context);
         ArrayList<Bitmap> listaImagenes = new ArrayList<>();
@@ -84,6 +85,27 @@ public class ImagenService {
 
         }
         return listaImagenes;
+    }
+
+    public int actualizar(Context context, Imagen imagen){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+        ContentValues values = new ContentValues();
+        byte [] imagenBlob = getBitmapAsByteArray(imagen.getImagen());
+
+        values.put(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO, imagen.getIdEvento());
+        values.put(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_IMAGEN, imagenBlob);
+
+        String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = {imagen.getId()};
+
+        return db.update(DataBaseContract.TABLE_IMAGEN_EVENTO, values, selection, selectionArgs);
+    }
+
+    public void eliminar(Context context, String id){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+        String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID + " LIKE ?";
+        String[] selectionArgs = {id};
+        db.delete(DataBaseContract.TABLE_IMAGEN_EVENTO, selection, selectionArgs);
     }
 
 
