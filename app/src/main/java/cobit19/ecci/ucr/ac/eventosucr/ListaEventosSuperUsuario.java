@@ -69,7 +69,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
     public void leerEventos() {
         EventoService eventoService=new EventoService();
-        eventos = eventoService.leerEventos(getApplicationContext());
+        eventos = eventoService.leerLista(getApplicationContext());
 
         CustomListAdapter adapter = new CustomListAdapter(this, eventos);
         list = (ListView) findViewById(R.id.list);

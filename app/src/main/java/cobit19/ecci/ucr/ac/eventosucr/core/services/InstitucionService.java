@@ -68,6 +68,7 @@ public class InstitucionService {
                 null);
         cursor.moveToFirst();
         if(cursor.getCount()>0){
+            institucion.setId(idInstitucion);
             institucion.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_NOMBRE)));
             byte[] logoBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_LOGO));
             Bitmap logo = BitmapFactory.decodeByteArray(logoBlob,0,logoBlob.length);

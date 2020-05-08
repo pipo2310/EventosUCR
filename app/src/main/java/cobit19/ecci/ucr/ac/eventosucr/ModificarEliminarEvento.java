@@ -110,7 +110,7 @@ String id;
 
         }
         if(institucion.length()!=0){
-            evento.setInstitucion(institucion.getText().toString());
+            evento.setIdInstitucion(institucion.getText().toString());
 
         }
         if(detalles.length()!=0){
@@ -206,7 +206,7 @@ String id;
         TextView fecha = (TextView) findViewById(R.id.fecha);
         fecha.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         nombre.setHint(evento.getNombre());
-        institucion.setHint(evento.getInstitucion());
+        institucion.setHint(evento.getIdInstitucion());
         detalles.setText(evento.getDetalles());
 
         ubicacion.setHint(evento.getUbicacion());

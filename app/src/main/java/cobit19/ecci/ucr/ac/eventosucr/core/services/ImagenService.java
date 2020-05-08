@@ -56,16 +56,16 @@ public class ImagenService {
 
     // recupera la/las imagenes de un evento en especifico
     // Hay que pasar las imagenes de Bitmap a ImageView
-    public ArrayList<Bitmap> leerImagenEvento(Context context, String idEvento){
+    public ArrayList<Imagen> leerImagenEvento(Context context, String idEvento){
         SQLiteDatabase db = getSQLiteDatabase(context);
-        ArrayList<Bitmap> listaImagenes = new ArrayList<>();
+        ArrayList<Imagen> listaImagenes = new ArrayList<>();
         ContentValues values = new ContentValues();
         String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO + " = ?";
         String[] selectionArgs = {idEvento};
 
         Cursor cursor = db.query(
                 DataBaseContract.TABLE_IMAGEN_EVENTO, // tabla
-                imagenesRecuperadas, // columnas
+                projection, // columnas
                 selection, // where
                 selectionArgs, // valores del where
                 null, // agrupamiento
@@ -77,9 +77,13 @@ public class ImagenService {
 
         if (cursor.getCount() > 0) {
             do{
+                Imagen imagenObejeto = new Imagen();
                 byte[] imagenBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_IMAGEN));
                 Bitmap imagen = BitmapFactory.decodeByteArray(imagenBlob,0,imagenBlob.length);
-                listaImagenes.add(imagen);
+                imagenObejeto.setIdEvento(idEvento);
+                imagenObejeto.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID)));
+                imagenObejeto.setImagen(imagen);
+                listaImagenes.add(imagenObejeto);
                 imagen.recycle(); // Hay que probar esto
             }while (cursor.moveToNext());
 

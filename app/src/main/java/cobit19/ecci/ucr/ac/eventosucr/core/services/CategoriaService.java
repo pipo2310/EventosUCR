@@ -4,7 +4,11 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.ContactsContract;
 
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
@@ -17,7 +21,8 @@ public class CategoriaService {
     public static final String[] projection = {
             DataBaseContract.TABLE_CATEGORIA_COLUMN_ID,
             DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE,
-            DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES
+            DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES,
+            DataBaseContract.TABLE_CATEGORIA_COLUMN_IMAGEN
     };
 
     private SQLiteDatabase getSQLiteDatabase(Context context) {
@@ -27,6 +32,12 @@ public class CategoriaService {
         return dataBaseHelper.getReadableDatabase();
     }
 
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
+    }
+
     private Categoria obtenerCategoria(Cursor cursor) {
         Categoria categoria = new Categoria();
 
@@ -34,6 +45,9 @@ public class CategoriaService {
             categoria.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_ID)));
             categoria.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE)));
             categoria.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES)));
+            byte[] imagenBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE));
+            Bitmap imagen = BitmapFactory.decodeByteArray(imagenBlob,0,imagenBlob.length);
+            categoria.setImagen(imagen);
         }
 
         return categoria;
@@ -55,10 +69,13 @@ public class CategoriaService {
     public long insertar(Context context, Categoria categoria) {
         SQLiteDatabase db = getSQLiteDatabase(context);
 
+        byte [] imagenBlob = getBitmapAsByteArray(categoria.getImagen());
+
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
         values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE, categoria.getNombre());
         values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES, categoria.getDetalles());
+        values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_IMAGEN, imagenBlob);
 
         // Insertar la nueva fila
         return db.insert(DataBaseContract.TABLE_CATEGORIA, null, values);
@@ -105,6 +122,7 @@ public class CategoriaService {
         cursor.moveToFirst();
         return generarLista(cursor);
     }
+
 
     public ArrayList<Categoria> leerListaDeCategoriasConEventos(Context context) {
         SQLiteDatabase db = getSQLiteDatabase(context);

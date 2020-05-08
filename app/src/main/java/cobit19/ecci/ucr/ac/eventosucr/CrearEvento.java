@@ -206,7 +206,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
 
         if(insertar==true){
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), 0,0);
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);
@@ -217,7 +217,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getInstitucion() +
+                    evento.getIdInstitucion() +
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
