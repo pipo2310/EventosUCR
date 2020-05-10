@@ -7,22 +7,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 
 public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<Evento>eventos;
@@ -72,7 +70,14 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     public void leerEventos() {
         Evento evento=new Evento();
         eventos=evento.leerEventos(getApplicationContext());
-
+        //llamar a fragmento con vista de listaeventossuperusuario id=(listaEventosFragment) y la lista de eventos de parametros para hacer vuelta del adapter
+        ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos);
+        getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+        //getFragmentManager().beginTransaction()
+          //      .add(R.id.listaEventosFragmentVista, listaEventosFragment).commit();
+/*
         CustomListAdapter adapter = new CustomListAdapter(this, eventos);
         list = (ListView) findViewById(R.id.list);
         list.setAdapter(adapter);
@@ -89,8 +94,10 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
             }
         });
 
-    }
+ */
 
+    }
+/*
     public void cambiarDePantalla(Evento evento) {
         Intent intent = new Intent(this, ModificarEliminarEvento.class);
         intent.putExtra(EXTRA_MESSAGE, evento);
@@ -99,7 +106,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
         startActivityForResult(intent, 0);
         finish();
     }
-
+*/
     /**
      * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
      * @param menuItem

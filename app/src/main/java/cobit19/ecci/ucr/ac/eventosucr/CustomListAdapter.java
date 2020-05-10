@@ -27,6 +27,8 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         nombre.setText(itemname.get(position).getNombre());
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
         institucion.setText(itemname.get(position).getInstitucion());
+        ImageView image = (ImageView)rowView.findViewById(R.id.image);
+        image.setImageResource(R.drawable.ucr_evento_img);//En el futuro se saca la imagen de la base con la posicion del evento
         return rowView;
     }
 }
