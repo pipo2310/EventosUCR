@@ -10,5 +10,8 @@
     <string name="menu_cerrar_sesion">Cerrar Sesión</string>
 
     <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Lista de Eventos</string>
+    <string name="listaEventos">Lista de Eventos</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

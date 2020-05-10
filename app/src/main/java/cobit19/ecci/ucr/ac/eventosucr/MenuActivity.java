@@ -16,6 +16,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
@@ -59,7 +60,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     showSelectedFragment(new ExplorarFragment());
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment());
+                    showSelectedFragment(new BuscarFragment() );
                 }
                 return true;
             }
