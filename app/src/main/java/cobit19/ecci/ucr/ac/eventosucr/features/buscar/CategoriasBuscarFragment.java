@@ -8,13 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapter;
-import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapterCategorias;
+import cobit19.ecci.ucr.ac.eventosucr.CustomGridAdapterCategorias;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
 /**
@@ -29,7 +29,7 @@ public class CategoriasBuscarFragment extends Fragment {
     private static final String ARG_PARAM2 = "param2";
     ArrayList<Categoria> categorias;
     View v;
-    ListView list;
+    GridView grid;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -80,20 +80,25 @@ public class CategoriasBuscarFragment extends Fragment {
     }
 
     private void llenarLista() {
-        CustomListAdapterCategorias adapter = new CustomListAdapterCategorias(getActivity(), categorias);
-        list = (ListView) v.findViewById(R.id.listCategorias);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        CustomGridAdapterCategorias adapter = new CustomGridAdapterCategorias(getActivity(), categorias);
+        grid = (GridView) v.findViewById(R.id.gridCategorias);
+        grid.setAdapter(adapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // TODO Auto-generated method stub
 
                 Categoria categoriaSeleccionada = categorias.get(position);
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                //cambiarDePantalla(categoriaSeleccionada);
+                cambiarDePantalla(categoriaSeleccionada);
 
 
             }
         });
+
+    }
+
+    private void cambiarDePantalla(Categoria categoriaSeleccionada) {
+        //Hace algo con la categoria seleccionada(eg: cargar los eventos de esa categoria)
     }
 }
