@@ -7,34 +7,40 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapter;
+import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapterCategorias;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link BuscarFragment#newInstance} factory method to
+ * Use the {@link CategoriasBuscarFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class BuscarFragment extends Fragment {
+public class CategoriasBuscarFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-    ArrayList<Evento> eventos;
     ArrayList<Categoria> categorias;
+    View v;
+    ListView list;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
 
-    public BuscarFragment() {
+    public CategoriasBuscarFragment() {
         // Required empty public constructor
+    }
+
+    public CategoriasBuscarFragment(ArrayList<Categoria> categorias) {
+        this.categorias=categorias;
     }
 
     /**
@@ -43,11 +49,11 @@ public class BuscarFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BuscarFragment.
+     * @return A new instance of fragment CategoriasBuscarFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static BuscarFragment newInstance(String param1, String param2) {
-        BuscarFragment fragment = new BuscarFragment();
+    public static CategoriasBuscarFragment newInstance(String param1, String param2) {
+        CategoriasBuscarFragment fragment = new CategoriasBuscarFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,22 +73,27 @@ public class BuscarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_buscar, container, false);
-        Evento evento=new Evento();
-        eventos=evento.leerEventos(getActivity().getApplicationContext());
-        ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventos);//Lista de eventos como parametro
-        getFragmentManager().beginTransaction()
-                .add(R.id.buscarFragmentVistaLista, listaEventosFragment).commit();
+        v=inflater.inflate(R.layout.fragment_categorias_buscar, container, false);
+        llenarLista();
+        //Llenar lista de categorias
+        return v;
+    }
 
-        CategoriaService categoriaService=new CategoriaService();
-        categorias=categoriaService.leerLista(getActivity().getApplicationContext());
-        CategoriasBuscarFragment categoriasBuscarFragment=new CategoriasBuscarFragment(categorias);
-        getFragmentManager().beginTransaction()
-                .add(R.id.categoriasBuscar, categoriasBuscarFragment).commit();
+    private void llenarLista() {
+        CustomListAdapterCategorias adapter = new CustomListAdapterCategorias(getActivity(), categorias);
+        list = (ListView) v.findViewById(R.id.listCategorias);
+        list.setAdapter(adapter);
+        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // TODO Auto-generated method stub
 
-        // Aqui es donde vamos a meter los fragmentos a la vista
+                Categoria categoriaSeleccionada = categorias.get(position);
+                //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
+                //cambiarDePantalla(categoriaSeleccionada);
 
-        return view;
+
+            }
+        });
     }
 }
