@@ -10,6 +10,7 @@ import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -17,12 +18,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
-public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener{
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        CartaEventoFragment.OnListFragmentInteractionListener {
+
+    public static final String ACTIVIDAD = "actividad";
 
     BottomNavigationView footerMenu;
     DrawerLayout drawer;
@@ -45,7 +51,12 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragmento que se muestra al inicio
-        showSelectedFragment(new ExplorarFragment());
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null && bundle.getString(ACTIVIDAD).compareTo(BuscarActivity.BUSCAR) == 0) {
+            showSelectedFragment(new BuscarFragment(bundle.getString(BuscarActivity.QUERY)));
+        } else {
+            showSelectedFragment(new ExplorarFragment());
+        }
 
         // Para el menu de abajo
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
@@ -60,7 +71,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     showSelectedFragment(new ExplorarFragment());
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment());
+                    showSelectedFragment(new BuscarFragment());
+                    SearchView searchView = (SearchView) findViewById(R.id.buscar_barra);
                 }
                 return true;
             }

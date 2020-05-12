@@ -9,12 +9,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ModificarEliminarEvento"></activity>
-        <activity android:name=".ListaEventosSuperUsuario"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity android:name=".features.buscar.BuscarActivity"></activity>
+        <activity android:name=".ModificarEliminarEvento" />
+        <activity
+            android:name=".ListaEventosSuperUsuario"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".CrearEvento" />
-        <activity android:name=".MenuActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <activity
+            android:name=".MenuActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
