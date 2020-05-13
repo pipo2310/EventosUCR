@@ -45,9 +45,12 @@ public class CategoriaService {
             categoria.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_ID)));
             categoria.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE)));
             categoria.setDetalles(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES)));
-            byte[] imagenBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE));
-            Bitmap imagen = BitmapFactory.decodeByteArray(imagenBlob,0,imagenBlob.length);
-            categoria.setImagen(imagen);
+
+            byte[] imagenBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_CATEGORIA_COLUMN_IMAGEN));
+            if (imagenBlob != null) {
+                Bitmap imagen = BitmapFactory.decodeByteArray(imagenBlob,0,imagenBlob.length);
+                categoria.setImagen(imagen);
+            }
         }
 
         return categoria;
@@ -69,13 +72,15 @@ public class CategoriaService {
     public long insertar(Context context, Categoria categoria) {
         SQLiteDatabase db = getSQLiteDatabase(context);
 
-        byte [] imagenBlob = getBitmapAsByteArray(categoria.getImagen());
-
         // Crear un mapa de valores donde las columnas son las llaves
         ContentValues values = new ContentValues();
         values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_NOMBRE, categoria.getNombre());
         values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_DETALLES, categoria.getDetalles());
-        values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_IMAGEN, imagenBlob);
+
+        if (categoria.getImagen() != null) {
+            byte [] imagenBlob = getBitmapAsByteArray(categoria.getImagen());
+            values.put(DataBaseContract.TABLE_CATEGORIA_COLUMN_IMAGEN, imagenBlob);
+        }
 
         // Insertar la nueva fila
         return db.insert(DataBaseContract.TABLE_CATEGORIA, null, values);

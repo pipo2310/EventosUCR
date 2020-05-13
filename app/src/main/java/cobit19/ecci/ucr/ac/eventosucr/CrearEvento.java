@@ -217,7 +217,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getIdInstitucion() +
+                    evento.getInstitucion(getApplicationContext()).getNombre() +
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 

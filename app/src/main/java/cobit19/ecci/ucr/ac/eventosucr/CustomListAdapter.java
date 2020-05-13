@@ -27,7 +27,7 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         TextView nombre = (TextView) rowView.findViewById(R.id.name);
         nombre.setText(itemname.get(position).getNombre());
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
-        institucion.setText(itemname.get(position).getIdInstitucion());
+        institucion.setText(itemname.get(position).getInstitucion(context).getNombre());
         return rowView;
     }
 }

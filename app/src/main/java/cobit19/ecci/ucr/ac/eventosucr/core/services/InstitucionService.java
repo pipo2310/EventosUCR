@@ -40,10 +40,12 @@ public class InstitucionService {
 
         ContentValues values = new ContentValues();
 
-        byte [] logoBlob = getBitmapAsByteArray(institucion.getLogo());
+        if (institucion.getLogo() != null) {
+            byte [] logoBlob = getBitmapAsByteArray(institucion.getLogo());
+            values.put(DataBaseContract.TABLE_INSTITUCION_COLUMN_LOGO, logoBlob);
+        }
 
         values.put(DataBaseContract.TABLE_INSTITUCION_COLUMN_NOMBRE, institucion.getNombre());
-        values.put(DataBaseContract.TABLE_INSTITUCION_COLUMN_LOGO, logoBlob);
 
         return db.insert(DataBaseContract.TABLE_INSTITUCION, null, values);
 
@@ -71,8 +73,10 @@ public class InstitucionService {
             institucion.setId(idInstitucion);
             institucion.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_NOMBRE)));
             byte[] logoBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_LOGO));
-            Bitmap logo = BitmapFactory.decodeByteArray(logoBlob,0,logoBlob.length);
-            institucion.setLogo(logo);
+            if (logoBlob != null) {
+                Bitmap logo = BitmapFactory.decodeByteArray(logoBlob,0,logoBlob.length);
+                institucion.setLogo(logo);
+            }
         }
         return institucion;
     }
