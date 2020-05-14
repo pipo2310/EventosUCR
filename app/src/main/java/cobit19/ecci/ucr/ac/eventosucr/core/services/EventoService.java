@@ -80,6 +80,7 @@ public class EventoService {
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_DETALLES, evento.getDetalles());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_FECHA, UtilDates.parsearaString(evento.getFecha().getTime()));
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAINICIO, evento.getHoraInicio());
+        values.put(DataBaseContract.TABLE_EVENTO_COLUMN_HORAFIN, evento.getHoraFin());
         values.put(DataBaseContract.TABLE_EVENTO_COLUMN_UBICACION, evento.getUbicacion());
 
 
