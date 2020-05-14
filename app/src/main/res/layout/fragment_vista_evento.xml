@@ -10,175 +10,179 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent"
+            android:orientation="vertical">
 
             <ImageView
                 android:id="@+id/imgEvento"
                 android:layout_width="match_parent"
                 android:layout_height="220dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.0"
-                app:srcCompat="@drawable/ucr_evento_img"
+                android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
-                android:adjustViewBounds="true"/>
+                app:srcCompat="@drawable/ucr_evento_img" />
 
             <TextView
                 android:id="@+id/nombreDeEvento"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="334dp"
+                android:layout_height="42dp"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="34dp"
+                android:ems="10"
                 android:fontFamily="sans-serif-condensed-medium"
                 android:text="Nombre Evento"
                 android:textSize="25sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.121"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imgEvento"
-                app:layout_constraintVertical_bias="0.075" />
+                android:textStyle="bold" />
 
-            <TextView
-                android:id="@+id/creadorEvento"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Creado por"
-                android:textSize="18sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.09"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/nombreDeEvento"
-                app:layout_constraintVertical_bias="0.0" />
+                android:layout_marginStart="25dp">
 
-            <ImageView
-                android:id="@+id/imgCreadorEvento"
-                android:layout_width="47dp"
-                android:layout_height="36dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.899"
-                app:layout_constraintStart_toEndOf="@+id/creadorEvento"
-                app:layout_constraintTop_toBottomOf="@+id/imgEvento"
-                app:layout_constraintVertical_bias="0.15"
-                app:srcCompat="@drawable/ic_add_a_photo_black_24dp" />
+                <TextView
+                    android:id="@+id/creadorEvento"
+                    android:layout_width="260dp"
+                    android:layout_height="30dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Creado por"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.038"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
 
-            <ImageView
-                android:id="@+id/calendario"
-                android:layout_width="39dp"
-                android:layout_height="30dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.067"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/creadorEvento"
-                app:layout_constraintVertical_bias="0.13999999"
-                app:srcCompat="@drawable/calendar_azul" />
+                <ImageView
+                    android:id="@+id/imgCreadorEvento"
+                    android:layout_width="47dp"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="3dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/creadorEvento"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ic_add_a_photo_black_24dp" />
 
-            <ImageView
-                android:id="@+id/imageView7"
-                android:layout_width="28dp"
-                android:layout_height="25dp"
-                android:layout_marginTop="44dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.07"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/calendario"
-                app:srcCompat="@drawable/ubicacion" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <TextView
-                android:id="@+id/fecha"
-                android:layout_width="wrap_content"
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Fecha"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.03"
-                app:layout_constraintStart_toEndOf="@+id/calendario"
-                app:layout_constraintTop_toBottomOf="@+id/creadorEvento"
-                app:layout_constraintVertical_bias="0.125" />
+                android:layout_marginTop="30dp">
 
-            <TextView
-                android:id="@+id/hora"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Hora"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.024"
-                app:layout_constraintStart_toEndOf="@+id/calendario"
-                app:layout_constraintTop_toBottomOf="@+id/fecha"
-                app:layout_constraintVertical_bias="0.0" />
+                <ImageView
+                    android:id="@+id/calendario"
+                    android:layout_width="39dp"
+                    android:layout_height="30dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.067"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintVertical_bias="0.13999999"
+                    app:srcCompat="@drawable/calendar_azul" />
 
-            <TextView
-                android:id="@+id/ubicacion"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:id="@+id/fecha"
+                    android:layout_width="240dp"
+                    android:layout_height="26dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Fecha"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.074"
+                    app:layout_constraintStart_toEndOf="@+id/calendario"
+                    app:layout_constraintVertical_bias="0.122" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:text="Ubicación"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.062"
-                app:layout_constraintStart_toEndOf="@+id/imageView7"
-                app:layout_constraintTop_toBottomOf="@+id/hora"
-                app:layout_constraintVertical_bias="0.13" />
+                android:layout_marginStart="25dp">
+
+                <TextView
+                    android:id="@+id/hora"
+                    android:layout_width="236dp"
+                    android:layout_height="26dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Hora"
+                    android:textSize="16sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.411"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.0" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/imageView7"
+                    android:layout_width="28dp"
+                    android:layout_height="25dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.07"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:srcCompat="@drawable/ubicacion" />
+
+                <TextView
+                    android:id="@+id/ubicacion"
+                    android:layout_width="244dp"
+                    android:layout_height="26dp"
+                    android:fontFamily="sans-serif-condensed"
+                    android:text="Ubicación"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.145"
+                    app:layout_constraintStart_toEndOf="@+id/imageView7"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.126" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
             <View
                 android:id="@+id/divisor1"
-                android:layout_width="409dp"
+                android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginStart="2dp"
-                android:layout_marginTop="41dp"
-                android:layout_marginBottom="200dp"
                 android:background="?android:attr/listDivider"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageView7" />
+                android:layout_marginTop="35dp" />
 
             <TextView
                 android:id="@+id/tituloDetalles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="18dp"
                 android:text="Detalles "
                 android:textSize="18sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.079"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/divisor1"
-                app:layout_constraintVertical_bias="0.137" />
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/descripcionDetalles"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="339dp"
+                android:layout_height="66dp"
                 android:fontFamily="sans-serif-condensed"
+                android:layout_marginTop="10dp"
+                android:layout_marginStart="25dp"
+                android:ems="10"
                 android:text="descripcionDetalles"
-                android:textSize="16sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.13"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tituloDetalles"
-                app:layout_constraintVertical_bias="0.093" />
+                android:textSize="16sp" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
     </ScrollView>
 
