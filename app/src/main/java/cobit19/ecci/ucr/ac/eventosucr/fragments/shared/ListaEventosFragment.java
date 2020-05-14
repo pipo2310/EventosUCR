@@ -1,5 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr.fragments.shared;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapter;
 import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.ModificarEliminarEvento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
@@ -27,40 +29,23 @@ import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESS
  * create an instance of this fragment.
  */
 public class ListaEventosFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+
     private ArrayList<Evento> eventos;
     private View v;
     ListView list;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     public ListaEventosFragment() {
         // Required empty public constructor
     }
     public ListaEventosFragment(ArrayList<Evento> eventos) {
         this.eventos=eventos;
-        // Required empty public constructor
+
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ListaEventosFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static ListaEventosFragment newInstance(String param1, String param2) {
         ListaEventosFragment fragment = new ListaEventosFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,8 +54,7 @@ public class ListaEventosFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+
         }
     }
 
@@ -85,8 +69,14 @@ public class ListaEventosFragment extends Fragment {
 
     private void llenarLista() {
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), eventos);
+        String nombreActividadPadre="";
+        if(isAdded()) {
+            nombreActividadPadre=getActivity().getClass().getSimpleName();
+
+        }
         list = (ListView) v.findViewById(R.id.list);
         list.setAdapter(adapter);
+        final String finalNombreActividadPadre = nombreActividadPadre;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -94,8 +84,11 @@ public class ListaEventosFragment extends Fragment {
 
                 Evento eventoSeleccionado = eventos.get(position);
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                cambiarDePantalla(eventoSeleccionado);
-
+                if(finalNombreActividadPadre.equals("ListaEventosSuperUsuario")) {
+                    cambiarDePantalla(eventoSeleccionado);
+                }else{
+                    //Irse a vista de un evento con fragment
+                }
 
             }
         });

@@ -58,12 +58,13 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     }
 
     public void addEvento() {
+
         Intent intent = new Intent(this, CrearEvento.class);
 
 
         // Deseo recibir una respuesta: startActivityForResult()
         startActivity(intent);
-        //finish();
+        finish();
     }
 
 
@@ -75,6 +76,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
         getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
+
         //getFragmentManager().beginTransaction()
           //      .add(R.id.listaEventosFragmentVista, listaEventosFragment).commit();
 /*

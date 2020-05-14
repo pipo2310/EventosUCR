@@ -220,9 +220,10 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
-            finish();
+
             // Deseo recibir una respuesta: startActivityForResult()
             startActivity(intent);
+            finish();
         }
 
     }
