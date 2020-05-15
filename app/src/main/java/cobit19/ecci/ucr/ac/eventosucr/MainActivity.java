@@ -11,9 +11,14 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Institucion;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -22,11 +27,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
-        if (sharedPreferences.getBoolean("FIRST_RUN", true)) {
+        if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("FIRST_RUN", false);
+            editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
         }
     }
@@ -51,59 +56,89 @@ public class MainActivity extends AppCompatActivity {
 
     private void populateDatabase() {
         Context context = getApplicationContext();
+        InstitucionService institucionService = new InstitucionService();
         CategoriaService categoriaService = new CategoriaService();
         CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
         EventoService eventoService = new EventoService();
 
+        ArrayList<String> idInstituciones = new ArrayList<>();
         ArrayList<String> idCategorias = new ArrayList<>();
         ArrayList<String> idEventos = new ArrayList<>();
 
+        // Creamos las instituciones
+        idInstituciones.add(Long.toString(
+                institucionService.insertar(context, new Institucion("Institucion musical", null))
+        ));
+        idInstituciones.add(Long.toString(
+                institucionService.insertar(context, new Institucion("Institucion gastronomica", null))
+        ));
+        idInstituciones.add(Long.toString(
+                institucionService.insertar(context, new Institucion("Institucion artistica", null))
+        ));
+        idInstituciones.add(Long.toString(
+                institucionService.insertar(context, new Institucion("Institucion de baile", null))
+        ));
+
         // Creamos las categorias
         idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Musica", "Representa los eventos relacionados con la musica"))
+                categoriaService.insertar(context, new Categoria("Musica", "Representa los eventos relacionados con la musica", null))
         ));
         idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Comida", "Representa los eventos relacionados con comida"))
+                categoriaService.insertar(context, new Categoria("Comida", "Representa los eventos relacionados con comida", null))
         ));
         idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Arte", "Representa los eventos relacionados con el arte"))
+                categoriaService.insertar(context, new Categoria("Arte", "Representa los eventos relacionados con el arte", null))
         ));
         idCategorias.add(Long.toString(
-                categoriaService.insertar(context, new Categoria("Baile", "Representa los eventos relacionados con el baile"))
+                categoriaService.insertar(context, new Categoria("Baile", "Representa los eventos relacionados con el baile", null))
         ));
 
         Calendar fecha = Calendar.getInstance();
         fecha.setTime(new Date());
+        String detalles = "Vivamus ac pulvinar eros. Donec ut erat vel turpis tempor pharetra. " +
+                "Nullam condimentum neque quis facilisis commodo. In tortor eros, suscipit " +
+                "sed augue quis, accumsan efficitur orci. Sed sit amet ligula eget felis " +
+                "consequat sagittis. Praesent sed sapien rutrum, consectetur massa id, " +
+                "malesuada mauris.";
+        String horaInicio = "11:00";
+        String horaFin = "15:00";
+        String ubicacion = "300 mts norte del palo de mango";
         // Creamos los eventos
+
+        // Pertenecen a la categoria musica
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("FestivalUCR", "UCR", "Música, ventas y más", fecha, "10:00", "07:00", "Universidad de Costa Rica"))
+                eventoService.insertar(context, new Evento("Festival", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Bailongo", "Son Latino", "Ven a bailar merengue, salsa y bachata", fecha, "07:00", "10:00", "Facultad de Educación"))
+                eventoService.insertar(context, new Evento("Son Latino", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Cantos Gregorianos", "Artes Dramáticas", "Evento artístico",fecha, "05:00", "09:00", "Facultad de Artes Dramáticas"))
+                eventoService.insertar(context, new Evento("Cantos Gregorianos", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Zelda", "Filarmonica", "Para los amantes de Zelda",fecha, "03:00", "07:00", "Teatro Nacional"))
+                eventoService.insertar(context, new Evento("Tributo a Zelda", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Coldplay", "UCR", "Las mejores canciones de Coldplay",fecha, "09:00", "12:00", "Hard Rock Café"))
+                eventoService.insertar(context, new Evento("Tributo a Mario Bros", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+        ));
+
+        // Pertenecen a la categoria Arte
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Pintura", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Pintura", "Escuela de Artes", "Si eres amante de la pintura, este evento es para vos!",fecha, "09:00", "01:00", "Pretil UCR"))
+                eventoService.insertar(context, new Evento("Dibujo", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Aprende a dibujar", "Escuela de Artes", "Quieres aprender a dibujar? Te esperamos",fecha, "01:00", "03:00", "Pretil UCR"))
+                eventoService.insertar(context, new Evento("Lapiz y Papel", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+        ));
+
+        // Pertenecen a la categoria Baile
+        idEventos.add(Long.toString(
+                eventoService.insertar(context, new Evento("Twerking", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Lapiz y Papel", "Feucr", "Obra de teatro",fecha, "02:00", "03:00", "Universidad de Costa Rica"))
-        ));
-        idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Muevelo", "Escuela de Música", "Taller de baile gratis",fecha, "09:00", "12:00", "Facultad de Música"))
-        ));
-        idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Bailar merengue", "Escuela de Música", "Aprende a bailar en una clase",fecha, "10:00", "12:00", "Pretil UCR"))
+                eventoService.insertar(context, new Evento("Bailar merengue", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
         ));
 
         // Asociamos a Musica

@@ -1,8 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
@@ -29,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
@@ -218,7 +219,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
 
         if(insertar==true){
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), 0,0);
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);
@@ -229,7 +230,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getInstitucion() +
+                    evento.getInstitucion(getApplicationContext()).getNombre() +
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 

@@ -7,22 +7,20 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
 
-import static android.provider.AlarmClock.EXTRA_MESSAGE;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<Evento>eventos;
@@ -70,8 +68,8 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
 
     public void leerEventos() {
-        Evento evento=new Evento();
-        eventos=evento.leerEventos(getApplicationContext());
+        EventoService eventoService=new EventoService();
+        eventos = eventoService.leerLista(getApplicationContext());
 
         CustomListAdapter adapter = new CustomListAdapter(this, eventos);
         list = (ListView) findViewById(R.id.list);
