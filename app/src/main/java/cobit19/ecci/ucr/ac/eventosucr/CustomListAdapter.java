@@ -5,10 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 
 public class CustomListAdapter extends ArrayAdapter<Evento> {
     private final Activity context;
@@ -26,7 +27,7 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         TextView nombre = (TextView) rowView.findViewById(R.id.name);
         nombre.setText(itemname.get(position).getNombre());
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
-        institucion.setText(itemname.get(position).getInstitucion());
+        institucion.setText(itemname.get(position).getInstitucion(context).getNombre());
         return rowView;
     }
 }

@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 

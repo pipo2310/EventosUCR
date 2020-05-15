@@ -6,11 +6,8 @@ import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
@@ -25,6 +22,9 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
 public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener{
 Evento evento;
@@ -99,6 +99,7 @@ String id;
     }
 
     public void modificarEvento() {
+        EventoService eventoService = new EventoService();
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
         EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
@@ -109,7 +110,7 @@ String id;
 
         }
         if(institucion.length()!=0){
-            evento.setInstitucion(institucion.getText().toString());
+            evento.setIdInstitucion(institucion.getText().toString());
 
         }
         if(detalles.length()!=0){
@@ -122,7 +123,7 @@ String id;
 
         }
 
-        long ret=evento.actualizar(getApplicationContext());
+        long ret=eventoService.actualizar(getApplicationContext(), evento);
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -168,7 +169,8 @@ String id;
     }
 
     public void eliminarEvent() {
-        eventoElimina.eliminar(getApplicationContext(),evento.getId());
+        EventoService eventoService = new EventoService();
+        eventoService.eliminar(getApplicationContext(),evento.getId());
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -204,7 +206,7 @@ String id;
         TextView fecha = (TextView) findViewById(R.id.fecha);
         fecha.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         nombre.setHint(evento.getNombre());
-        institucion.setHint(evento.getInstitucion());
+        institucion.setHint(evento.getIdInstitucion());
         detalles.setText(evento.getDetalles());
 
         ubicacion.setHint(evento.getUbicacion());
