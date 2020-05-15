@@ -84,7 +84,14 @@ public class ImagenService {
                 imagenObejeto.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID)));
                 imagenObejeto.setImagen(imagen);
                 listaImagenes.add(imagenObejeto);
-                imagen.recycle(); // Hay que probar esto
+                /*
+                if (imagen != null && !imagen.isRecycled()) {
+                    imagen.recycle();
+                    imagen = null;
+                }
+
+                 */
+                //imagen.recycle(); // Hay que probar esto
             }while (cursor.moveToNext());
 
         }
