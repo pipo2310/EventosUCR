@@ -231,10 +231,10 @@ public final class DataBaseContract {
     public static final String SQL_CREATE_IMAGEN_EVENTO = "CREATE TABLE " + TABLE_IMAGEN_EVENTO + " (" +
             TABLE_IMAGEN_EVENTO_COLUMN_ID + " INTEGER PRIMARY KEY," +
             TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO + " INTEGER," +
-            TABLE_IMAGEN_EVENTO_COLUMN_IMAGEN + " BLOB," +
+            TABLE_IMAGEN_EVENTO_COLUMN_IMAGEN + " BLOB, CONSTRAINT fkEventoConstraint " +
             "FOREIGN KEY (" + TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO + ") REFERENCES " +
-            TABLE_EVENTO + " (" + TABLE_EVENTO_COLUMN_ID + ")" +
-            ");";
+            TABLE_EVENTO + "(" + TABLE_EVENTO_COLUMN_ID + ")" +
+            " ON DELETE CASCADE);";
 
     public static final String SQL_DELETE_IMAGEN_EVENTO = "DROP TABLE IF EXISTS " + TABLE_IMAGEN_EVENTO + ";" +
             "DELETE FROM sqlite_sequence WHERE name = '" + TABLE_IMAGEN_EVENTO + "';";

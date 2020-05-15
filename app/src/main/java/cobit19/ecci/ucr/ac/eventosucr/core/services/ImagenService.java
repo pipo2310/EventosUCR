@@ -119,5 +119,12 @@ public class ImagenService {
         db.delete(DataBaseContract.TABLE_IMAGEN_EVENTO, selection, selectionArgs);
     }
 
+    public void eliminarImagenesEventos(Context context, String idEvento){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+        String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO + " LIKE ?";
+        String[] selectionArgs = {idEvento};
+        db.delete(DataBaseContract.TABLE_IMAGEN_EVENTO, selection, selectionArgs);
+    }
+
 
 }

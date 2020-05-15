@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
@@ -20,14 +21,18 @@ import android.widget.Toast;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
 public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener{
 Evento evento;
+ArrayList<Imagen> imagenes;
 Evento eventoElimina;
 String id;
     boolean tiempoInicio;
@@ -37,6 +42,7 @@ String id;
     String horaFinalBase;
     int horaInicioManejoError;
     int minutoInicioManejoError;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,7 +56,11 @@ String id;
         {
             // obtenemos el objeto persona
             evento = b.getParcelable(ListaEventosSuperUsuario.EXTRA_MESSAGE);
+            //imagenes=b.getParcelable(ListaEventosSuperUsuario.EXTRA_MESSAGEIMAGEN);
+
         }
+        ImagenService imagenService=new ImagenService();
+        imagenes=imagenService.leerImagenEvento(getApplicationContext(),evento.getId());
         Button modificarEvento = (Button) findViewById(R.id.modificarEvento);
         modificarEvento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -171,6 +181,8 @@ String id;
     public void eliminarEvent() {
         EventoService eventoService = new EventoService();
         eventoService.eliminar(getApplicationContext(),evento.getId());
+        ImagenService imagenService=new ImagenService();
+        imagenService.eliminarImagenesEventos(getApplicationContext(),evento.getId());
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -204,6 +216,11 @@ String id;
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
         TextView fecha = (TextView) findViewById(R.id.fecha);
+        ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
+        if (imagenes.size()!=0){
+            imagenEvento.setImageBitmap(imagenes.get(0).getImagen());
+        }
+
         fecha.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         nombre.setHint(evento.getNombre());
         institucion.setHint(evento.getIdInstitucion());

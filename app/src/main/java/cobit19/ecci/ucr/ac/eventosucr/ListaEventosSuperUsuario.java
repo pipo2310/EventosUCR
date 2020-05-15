@@ -31,6 +31,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
+    public final static String EXTRA_MESSAGEIMAGEN="imagenes";
     private DrawerLayout drawer;
 
     @Override
@@ -74,7 +75,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
     public void leerEventos() {
         EventoService eventoService=new EventoService();
-        ImagenService imagenService=new ImagenService();
+        final ImagenService imagenService=new ImagenService();
         Bitmap imagenNula= BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
         ImageView imagenNulaImageView=new ImageView(this);
         imagenNulaImageView.setImageBitmap(imagenNula);
@@ -85,6 +86,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
                 //Imagen imagen=new Imagen(evento.getId(),imagenNula);
                 imagenesdeEventos.add(imagenNulaImageView);
             }else{
+
                 ImageView imagenExistente=new ImageView(this);
                 imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
                 imagenesdeEventos.add(imagenExistente);
@@ -102,6 +104,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
                 // TODO Auto-generated method stub
 
                 Evento eventoSeleccionado = eventos.get(position);
+                ArrayList<Imagen> imagenesSeleccionadas=imagenService.leerImagenEvento(getApplicationContext(),eventoSeleccionado.getId());
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
                 cambiarDePantalla(eventoSeleccionado);
 
@@ -114,6 +117,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     public void cambiarDePantalla(Evento evento) {
         Intent intent = new Intent(this, ModificarEliminarEvento.class);
         intent.putExtra(EXTRA_MESSAGE, evento);
+        //intent.putExtra(EXTRA_MESSAGEIMAGEN, imagenes);
 
         // Deseo recibir una respuesta: startActivityForResult()
         startActivityForResult(intent, 0);
