@@ -173,11 +173,12 @@
 
             <TextView
                 android:id="@+id/descripcionDetalles"
-                android:layout_width="339dp"
-                android:layout_height="66dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:fontFamily="sans-serif-condensed"
                 android:layout_marginTop="10dp"
-                android:layout_marginStart="25dp"
+                android:layout_marginLeft="25dp"
+                android:layout_marginRight="20dp"
                 android:ems="10"
                 android:text="descripcionDetalles"
                 android:textSize="16sp" />
