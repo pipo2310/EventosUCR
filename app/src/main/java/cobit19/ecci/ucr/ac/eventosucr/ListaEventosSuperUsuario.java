@@ -17,6 +17,8 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
+import androidx.fragment.app.FragmentTransaction;
+
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 
@@ -25,6 +27,7 @@ import java.util.ArrayList;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
 public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -64,12 +67,13 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     }
 
     public void addEvento() {
+
         Intent intent = new Intent(this, CrearEvento.class);
 
 
         // Deseo recibir una respuesta: startActivityForResult()
         startActivity(intent);
-        //finish();
+        finish();
     }
 
 
@@ -95,33 +99,14 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
         }
 
-        CustomListAdapter adapter = new CustomListAdapter(this, eventos,imagenesdeEventos);
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-
-                Evento eventoSeleccionado = eventos.get(position);
-                ArrayList<Imagen> imagenesSeleccionadas=imagenService.leerImagenEvento(getApplicationContext(),eventoSeleccionado.getId());
-                //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                cambiarDePantalla(eventoSeleccionado);
+        ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos,imagenesdeEventos);
+        getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
 
 
-            }
-        });
 
-    }
 
-    public void cambiarDePantalla(Evento evento) {
-        Intent intent = new Intent(this, ModificarEliminarEvento.class);
-        intent.putExtra(EXTRA_MESSAGE, evento);
-        //intent.putExtra(EXTRA_MESSAGEIMAGEN, imagenes);
-
-        // Deseo recibir una respuesta: startActivityForResult()
-        startActivityForResult(intent, 0);
-        finish();
     }
 
     /**

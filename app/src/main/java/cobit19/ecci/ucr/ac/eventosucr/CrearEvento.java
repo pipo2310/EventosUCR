@@ -95,7 +95,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        SimpleDateFormat simpleDate =  new SimpleDateFormat("hh : mm");
+        SimpleDateFormat simpleDate =  new SimpleDateFormat("kk : mm");
 
         String strDt = simpleDate.format(currentTime);
         tiempoIni.setText(strDt);
@@ -230,11 +230,24 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             insertar=false;
 
         }
-        if(horaInicio==null){
-            tiempIni.setError("Hora inicio no valida");
-            insertar=false;
-
+        if(fecha==null){
+            fecha=Calendar.getInstance();
         }
+        SimpleDateFormat myDateFormat = new SimpleDateFormat("MM.dd.yyyy");
+        Calendar fechaHoy=Calendar.getInstance();
+        String fechaHoyEscrita=myDateFormat.format(fechaHoy.getTime());
+        if(horaInicio==null){
+            if(myDateFormat.format(fecha.getTime()).equals(fechaHoyEscrita)){
+                tiempIni.setError("Hora inicio no valida");
+                insertar=false;
+            }else{
+                SimpleDateFormat simpleDate =  new SimpleDateFormat("kk : mm");
+
+                String strDt = simpleDate.format(fecha.getTime());
+                horaInicio=strDt;
+            }
+        }
+
         if(horaFinalBase==null){
             tiempFin.setError("Hora final no valida");
             insertar=false;
@@ -264,9 +277,10 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
-            finish();
+
             // Deseo recibir una respuesta: startActivityForResult()
             startActivity(intent);
+            finish();
         }
 
     }
@@ -311,6 +325,12 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     if(tiempoInicio){
         tiempoInicio=false;
+        try {
+            horaIni.setError(null);
+        }
+        catch(Exception e) {
+
+        }
         horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
