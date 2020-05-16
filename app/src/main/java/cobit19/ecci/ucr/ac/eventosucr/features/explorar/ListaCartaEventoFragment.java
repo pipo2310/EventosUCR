@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 
@@ -78,21 +78,17 @@ public class ListaCartaEventoFragment extends Fragment {
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 linearLayout.setId(layoutId);
                 horizontalScrollView.addView(linearLayout);
+
+                EventoService eventoService = new EventoService();
+                ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
+
+                for (Evento evento: eventos) {
+                    getFragmentManager().beginTransaction()
+                            .add(layoutId, new CartaEventoFragment(evento)).commit();
+                }
             }
         }
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventoService eventoService = new EventoService();
-        ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
-
-        for (Evento evento: eventos) {
-            getFragmentManager().beginTransaction()
-                    .add(layoutId, new CartaEventoFragment(evento)).commit();
-        }
     }
 }

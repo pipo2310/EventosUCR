@@ -10,9 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.text.DateFormat;
-import java.util.Calendar;
 
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
 /**
@@ -45,7 +44,7 @@ public class VistaEventoFragment extends Fragment {
         TextView nombreDeEvento = (TextView)v.findViewById(R.id.nombreDeEvento);
         nombreDeEvento.setText(evento.getNombre());
         TextView creadorEvento = (TextView)v.findViewById(R.id.creadorEvento);
-        creadorEvento.setText(evento.getInstitucion());
+        creadorEvento.setText(evento.getInstitucion(getContext()).getNombre());
         TextView fecha = (TextView) v.findViewById(R.id.fecha);
         fecha.setText(DateFormat.getDateInstance(DateFormat.FULL).format(evento.getFecha().getTime()));
         TextView hora = (TextView)v.findViewById(R.id.hora);

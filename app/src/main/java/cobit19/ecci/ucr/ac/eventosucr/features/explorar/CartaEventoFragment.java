@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 
@@ -68,7 +68,7 @@ public class CartaEventoFragment extends Fragment {
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
         nombre.setText("Evento: " + evento.getNombre());
-        institucion.setText("Institución: " + evento.getInstitucion());
+        institucion.setText("Institución: " + evento.getInstitucion(getContext()).getNombre());
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -1,8 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintSet;
 import androidx.fragment.app.DialogFragment;
 
 import android.app.DatePickerDialog;
@@ -29,6 +27,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
@@ -72,7 +73,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         Date currentTime = Calendar.getInstance().getTime();
 
-        SimpleDateFormat simpleDate =  new SimpleDateFormat("hh : mm");
+        SimpleDateFormat simpleDate =  new SimpleDateFormat("kk : mm");
 
         String strDt = simpleDate.format(currentTime);
         tiempoIni.setText(strDt);
@@ -90,7 +91,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         String numOfTheWeek = sdfday.format(d);
 
         textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
-        fecha=Calendar.getInstance();
+
 
         //fecha.setTime(d);
         ImageButton button = (ImageButton) findViewById(R.id.calendario);
@@ -193,11 +194,24 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             insertar=false;
 
         }
-        if(horaInicio==null){
-            tiempIni.setError("Hora inicio no valida");
-            insertar=false;
-
+        if(fecha==null){
+            fecha=Calendar.getInstance();
         }
+        SimpleDateFormat myDateFormat = new SimpleDateFormat("MM.dd.yyyy");
+        Calendar fechaHoy=Calendar.getInstance();
+        String fechaHoyEscrita=myDateFormat.format(fechaHoy.getTime());
+        if(horaInicio==null){
+            if(myDateFormat.format(fecha.getTime()).equals(fechaHoyEscrita)){
+                tiempIni.setError("Hora inicio no valida");
+                insertar=false;
+            }else{
+                SimpleDateFormat simpleDate =  new SimpleDateFormat("kk : mm");
+
+                String strDt = simpleDate.format(fecha.getTime());
+                horaInicio=strDt;
+            }
+        }
+
         if(horaFinalBase==null){
             tiempFin.setError("Hora final no valida");
             insertar=false;
@@ -205,7 +219,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
 
         if(insertar==true){
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString());
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), 0,0);
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);
@@ -216,7 +230,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Id: " + evento.getId() +
                     " Ubicacion "+evento.getUbicacion()+
                     " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getInstitucion() +
+                    evento.getInstitucion(getApplicationContext()).getNombre() +
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
@@ -268,6 +282,12 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     if(tiempoInicio){
         tiempoInicio=false;
+        try {
+            horaIni.setError(null);
+        }
+        catch(Exception e) {
+
+        }
         horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
         horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
