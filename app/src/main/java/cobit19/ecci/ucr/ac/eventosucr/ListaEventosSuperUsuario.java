@@ -72,8 +72,8 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
 
     public void leerEventos() {
-        Evento evento=new Evento();
-        eventos=evento.leerEventos(getApplicationContext());
+        EventoService eventoService=new EventoService();
+        eventos=eventoService.leerLista(getApplicationContext());
         //llamar a fragmento con vista de listaeventossuperusuario id=(listaEventosFragment) y la lista de eventos de parametros para hacer vuelta del adapter
         ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos);
         getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)

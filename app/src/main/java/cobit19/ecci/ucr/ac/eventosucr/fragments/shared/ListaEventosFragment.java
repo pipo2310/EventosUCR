@@ -15,10 +15,11 @@ import android.widget.ListView;
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapter;
-import cobit19.ecci.ucr.ac.eventosucr.Evento;
+
 import cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.ModificarEliminarEvento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 
 import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESSAGE;
 
