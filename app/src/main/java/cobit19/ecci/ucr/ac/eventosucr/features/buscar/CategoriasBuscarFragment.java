@@ -15,7 +15,11 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.CustomGridAdapterCategorias;
+import cobit19.ecci.ucr.ac.eventosucr.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -80,7 +84,7 @@ public class CategoriasBuscarFragment extends Fragment {
     }
 
     private void llenarLista() {
-        CustomGridAdapterCategorias adapter = new CustomGridAdapterCategorias(getActivity(), categorias);
+        final CustomGridAdapterCategorias adapter = new CustomGridAdapterCategorias(getActivity(), categorias);
         grid = (GridView) v.findViewById(R.id.gridCategorias);
         grid.setAdapter(adapter);
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,7 +93,9 @@ public class CategoriasBuscarFragment extends Fragment {
                 // TODO Auto-generated method stub
 
                 Categoria categoriaSeleccionada = categorias.get(position);
+
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
+                //adapter.getFilter().filter(categoriaSeleccionada.getNombre());
                 cambiarDePantalla(categoriaSeleccionada);
 
 
@@ -99,6 +105,13 @@ public class CategoriasBuscarFragment extends Fragment {
     }
 
     private void cambiarDePantalla(Categoria categoriaSeleccionada) {
+        EventoService eventoService =new EventoService();
+        ArrayList<Evento>eventosCategoria=new ArrayList<Evento>();
+        eventosCategoria=eventoService.leerListaEventosPorCategoria(getActivity().getApplicationContext(),categoriaSeleccionada.getId());
+        ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventosCategoria);//Lista de eventos como parametro
+        getFragmentManager().beginTransaction()
+                .replace(R.id.buscarFragmentVistaLista, listaEventosFragment).commit();
+        //Filtrar lista por categoria seleccionada
         //Hace algo con la categoria seleccionada(eg: cargar los eventos de esa categoria)
     }
 }

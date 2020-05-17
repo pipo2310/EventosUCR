@@ -34,6 +34,7 @@ public class ListaEventosFragment extends Fragment {
     private ArrayList<Evento> eventos;
     private View v;
     ListView list;
+    CustomListAdapter adapter1;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -86,6 +87,7 @@ public class ListaEventosFragment extends Fragment {
     private void llenarLista() {
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), eventos);
         list = (ListView) v.findViewById(R.id.list);
+        adapter1=adapter;
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
