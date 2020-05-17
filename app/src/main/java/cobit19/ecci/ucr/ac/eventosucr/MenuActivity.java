@@ -19,10 +19,11 @@ import androidx.appcompat.widget.Toolbar;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
+import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
-public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener{
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener, CartaEventoFavoritos.OnFavoritosItemListener {
 
     BottomNavigationView footerMenu;
     DrawerLayout drawer;
@@ -97,6 +98,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onListFragmentInteraction(Evento evento){
+        showSelectedFragment(new VistaEventoFragment(evento));
+    }
+
+    public void OnFavoritosItemListener(Evento evento){
         showSelectedFragment(new VistaEventoFragment(evento));
     }
 }

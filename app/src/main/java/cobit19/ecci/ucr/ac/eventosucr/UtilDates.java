@@ -8,6 +8,9 @@ import java.util.Locale;
 
 public class UtilDates {
 
+    // Usuario por defecto de la app
+    public static final String CORREO_UCR_USUARIO = "walter.bonillagutierrez@ucr.ac.cr";
+
     public static Date parsearaDate(String fecha) {
         SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
         Date date;
