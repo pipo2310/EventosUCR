@@ -153,20 +153,44 @@
                     app:layout_constraintVertical_bias="0.126" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="25dp">
+
+                <Button
+                    android:id="@+id/btnMeInteresa"
+                    android:layout_width="150dp"
+                    android:layout_height="40dp"
+                    android:background="@drawable/boton_redondeado"
+                    android:drawableLeft="@drawable/ic_favorite_24dp"
+                    android:gravity="center"
+                    android:padding="10dp"
+                    android:text="Me interesa"
+                    android:textColor="#FFFFFF"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
             <View
                 android:id="@+id/divisor1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:background="?android:attr/listDivider"
-                android:layout_marginTop="35dp" />
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/listDivider" />
 
             <TextView
                 android:id="@+id/tituloDetalles"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="18dp"
+                android:fontFamily="sans-serif-condensed"
                 android:text="Detalles "
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -175,13 +199,30 @@
                 android:id="@+id/descripcionDetalles"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="sans-serif-condensed"
-                android:layout_marginTop="10dp"
                 android:layout_marginLeft="25dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="20dp"
                 android:ems="10"
+                android:fontFamily="sans-serif-condensed"
                 android:text="descripcionDetalles"
                 android:textSize="16sp" />
+
+            <View
+                android:id="@+id/divisor2"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="35dp"
+                android:background="?android:attr/listDivider" />
+
+            <fragment
+                android:id="@+id/ubicacionMap"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                class="com.google.android.gms.maps.SupportMapFragment"/>
 
         </LinearLayout>
 
