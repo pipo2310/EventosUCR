@@ -20,6 +20,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioService;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onResume();
         Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
+        //finish();
     }
 
 
@@ -66,11 +68,11 @@ public class MainActivity extends AppCompatActivity {
         EventoService eventoService = new EventoService();
         UsuarioService usuarioService = new UsuarioService();
         UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
+        ImagenService imagenService = new ImagenService();
 
         ArrayList<String> idInstituciones = new ArrayList<>();
         ArrayList<String> idCategorias = new ArrayList<>();
         ArrayList<String> idEventos = new ArrayList<>();
-        ArrayList<String> idUsuarios = new ArrayList<>();
 
         // Creamos las instituciones
         idInstituciones.add(Long.toString(
@@ -164,7 +166,7 @@ public class MainActivity extends AppCompatActivity {
         categoriaEventoService.insertar(context, new CategoriaEvento(idCategorias.get(3), idEventos.get(9)));
 
         // Creamos los usuarios
-        idUsuarios.add(Long.toString(usuarioService.insertar(context, new Usuario("walter.bonillagutierrez@ucr.ac.cr", "Walter", "hola1234", "Bonilla", "Gutierrez"))));
+        usuarioService.insertar(context, new Usuario("walter.bonillagutierrez@ucr.ac.cr", "Walter", "hola1234", "Bonilla", "Gutierrez"));
 
         // Asociamos los eventos que le gustan al usuario walter.bonillagutierrez@ucr.ac.cr
         usuarioEventoService.insertar(context, new UsuarioEvento("walter.bonillagutierrez@ucr.ac.cr", idEventos.get(0)));
