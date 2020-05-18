@@ -70,6 +70,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 
 public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener , OnMapReadyCallback, GoogleMap.OnMapClickListener {
     boolean tiempoInicio;
@@ -132,6 +133,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         String monthOfTheWeek = sdfmonth.format(d);
         //String yearOfTheWeek = sdfyear.format(d);
         String numOfTheWeek = sdfday.format(d);
+        llenarInstituciones();
 
         textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
         fecha=Calendar.getInstance();
@@ -192,6 +194,13 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             }
         });
     }
+
+    private void llenarInstituciones() {
+        InstitucionService institucionService=new InstitucionService();
+        institucionService.leerLista(getApplicationContext());
+
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         eventoMap = googleMap;
@@ -242,10 +251,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
     }
 
-    private void agregarUbicacion() {
-        Intent i =new Intent(this,MapActivity.class);
-        startActivity(i);
-    }
+
 
     private void agregarImagenAImageView() {
         openImageChooser();
@@ -257,6 +263,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     // Selecciona un item del spinner
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // Mostrar al usuario la categoria seleccionada
+        
         if(pos != 0){
             LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
             TextView textView = new TextView(this);
