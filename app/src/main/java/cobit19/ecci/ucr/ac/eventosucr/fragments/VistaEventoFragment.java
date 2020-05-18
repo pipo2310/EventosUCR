@@ -21,8 +21,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.DateFormat;
 
+import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -31,7 +34,10 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     View v;
     Evento evento;
     GoogleMap VistaEventoMap;
-
+    UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
+    UsuarioEvento usuarioEvento = new UsuarioEvento();
+    Button btnMeInteresa;
+    Button btnNoMeInteresa;
     public VistaEventoFragment() {
     }
 
@@ -51,12 +57,33 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
         //Botón para que el usuario le de like a un evento
-        Button btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
+        btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
+        //Botón para que el usuario le quite like a un evento
+        btnNoMeInteresa = (Button)v.findViewById(R.id.btnNoMeInteresa);
+
+        //Saber si el evento existe en la lista UsuarioEvento
+        usuarioEvento = usuarioEventoService.leer(getContext(), "walter.bonillagutierrez@ucr.ac.cr", evento.getId());
+        if (usuarioEvento.getCorreoUcr() == null) {
+            btnMeInteresa.setVisibility(View.VISIBLE);
+            btnNoMeInteresa.setVisibility(View.GONE);
+        }
+        else {
+            btnNoMeInteresa.setVisibility(View.VISIBLE);
+            btnMeInteresa.setVisibility(View.GONE);
+        }
+
 
         btnMeInteresa.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 DarMeGusta();
+            }
+        });
+
+        btnNoMeInteresa.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                QuitarMeGusta();
             }
         });
 
@@ -83,7 +110,16 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Cuando el usuario le da click al botón, añade el evento a la lista de favoritos del usuario
     public void DarMeGusta(){
+        usuarioEventoService.insertar(getContext(), usuarioEvento);
+        btnNoMeInteresa.setVisibility(View.VISIBLE);
+        btnMeInteresa.setVisibility(View.GONE);
+    }
 
+    //Cuando el usuario le da click al botón, elimina el evento a la lista de favoritos del usuario
+    public void QuitarMeGusta(){
+        usuarioEventoService.eliminar(getContext(), usuarioEvento.getCorreoUcr(), usuarioEvento.getIdEvento());
+        btnMeInteresa.setVisibility(View.VISIBLE);
+        btnNoMeInteresa.setVisibility(View.GONE);
     }
 
     @Override

@@ -39,7 +39,7 @@ public class UsuarioEventoService {
 
     private ArrayList<UsuarioEvento> generarLista(Cursor cursor) {
         ArrayList<UsuarioEvento> listaUsuarioEvento = new ArrayList<UsuarioEvento>();
-  
+
         if (cursor.getCount() > 0) {
             while(!cursor.isAfterLast()) {
                 listaUsuarioEvento.add(obtenerUsuarioEvento(cursor));
