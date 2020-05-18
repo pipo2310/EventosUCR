@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
 import android.Manifest;
 import android.app.Activity;
@@ -42,6 +43,14 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.UiSettings;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mukesh.tinydb.TinyDB;
 
 import java.text.DateFormat;
@@ -62,7 +71,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
-public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener {
+public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener , OnMapReadyCallback, GoogleMap.OnMapClickListener {
     boolean tiempoInicio;
     boolean tiempoFinal;
     Calendar fecha;
@@ -72,6 +81,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     double latitud;
     int horaInicioManejoError;
     int minutoInicioManejoError;
+    GoogleMap eventoMap;
     private static final int SELECT_PICTURE=100;
     public static  final String TAG= "SelectImageeActivity";
 
@@ -125,6 +135,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
         fecha=Calendar.getInstance();
+        /*
         ImageButton insertarUbicacion = (ImageButton) findViewById(R.id.ubicacionImagen);
 
         insertarUbicacion.setOnClickListener(new View.OnClickListener() {
@@ -133,6 +144,8 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                 agregarUbicacion();
             }
         });
+
+         */
         ImageButton insertarImagen = (ImageButton) findViewById(R.id.agregarImagen);
 
         insertarImagen.setOnClickListener(new View.OnClickListener() {
@@ -179,12 +192,27 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             }
         });
     }
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        eventoMap = googleMap;
+        eventoMap.setOnMapClickListener(this);
+        configurarMapa(googleMap);
+    }
 
+    @Override
+    public void onMapClick(LatLng latLng) {
+        Intent i =new Intent(this,MapActivity.class);
+        startActivity(i);
+
+    }
 
 
     @Override
     protected void onResume() {
         super.onResume();
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.ubicacionMap);
+        mapFragment.getMapAsync(this);
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
             String latitudString = sharedPreferences.getString("latitud","");
@@ -242,6 +270,40 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     public void onNothingSelected(AdapterView<?> parent) {
         // No sirve
+    }
+    //Permite realizar la configuración del mapa. Añade las coordenadas y el marcador  del evento correspondiente
+    //Configura la cámara y el zoom
+    public void configurarMapa(GoogleMap googleMap){
+        eventoMap = googleMap;
+
+        //Se agregan las coordenadas del mapa
+        LatLng ubicacionEvento = new LatLng(latitud, longitud);
+
+        //Se agrega el marcador en el mapa
+        eventoMap.addMarker(new MarkerOptions().position(ubicacionEvento).title("Ubicacion"));
+
+        // Muevo el mapa hacia la posición del marcador
+        eventoMap.moveCamera(CameraUpdateFactory.newLatLng(ubicacionEvento));
+
+        //Opciones de zoom
+        UiSettings mapSettings;
+        mapSettings = eventoMap.getUiSettings();
+        mapSettings.setZoomControlsEnabled(true); //controles zoom
+        mapSettings.setZoomGesturesEnabled(true); //gestos zoom
+        mapSettings.setCompassEnabled(true); //brújula
+        mapSettings.setMyLocationButtonEnabled(true);
+        mapSettings.setRotateGesturesEnabled(true); //rotación
+
+
+        //Mover la cámara
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(ubicacionEvento)
+                .zoom(20)
+                .bearing(70)
+                .tilt(25)
+                .build();
+        eventoMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
     }
 
     // Llena el spinner con la lista de categorias
