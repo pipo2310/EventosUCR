@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -20,11 +21,14 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
 
 /**
@@ -36,6 +40,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     GoogleMap VistaEventoMap;
     UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
     UsuarioEvento usuarioEvento = new UsuarioEvento();
+    ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
     public VistaEventoFragment() {
@@ -55,6 +60,18 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ubicacionMap);
         mapFragment.getMapAsync(this);
+
+
+        // Pedimos las imagenes asociadas a un evento
+        ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());
+
+        // Preguntamos si hay alguna imagen
+        if(imagenesEvento.size() > 0){
+            // Obtenemos el ImageView
+            ImageView imagen = v.findViewById(R.id.imgEvento);
+            // Agregamos la imagen del evento
+            imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
+        }
 
         //Botón para que el usuario le de like a un evento
         btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
