@@ -311,7 +311,7 @@
                 android:ems="10"
                 android:hint="Agregar dirección"
                 android:inputType="textPersonName"
-                android:maxLength="20"
+                android:maxLength="50"
                 android:paddingStart="40sp"
                 android:textColor="#AFAFAF"
                 android:textSize="12sp"

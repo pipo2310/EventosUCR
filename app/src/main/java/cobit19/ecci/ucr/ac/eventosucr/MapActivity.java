@@ -135,7 +135,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         // nos movemos a la posicion donde hizo clic
         mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng));
         // mostramos las coordenadas
-        Toast.makeText(getApplicationContext(), latLng.toString(),
+        Toast.makeText(getApplicationContext(), "Si desea seleccionar esta ubicacion debe dejar presionado",
                 Toast.LENGTH_LONG).show();
     }
 
@@ -148,6 +148,8 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
         // Mensaje
         Toast.makeText(getApplicationContext(),
-                "Nuevo marcador: " + latLng.toString(), Toast.LENGTH_LONG).show();
+                "Ubicacion seleccionada: " + latLng.toString(), Toast.LENGTH_LONG).show();
+        latitud= latLng.latitude;
+        longitud= latLng.longitude;
     }
 }
