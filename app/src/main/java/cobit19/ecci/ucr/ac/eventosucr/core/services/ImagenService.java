@@ -84,7 +84,14 @@ public class ImagenService {
                 imagenObejeto.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID)));
                 imagenObejeto.setImagen(imagen);
                 listaImagenes.add(imagenObejeto);
-                imagen.recycle(); // Hay que probar esto
+                /*
+                if (imagen != null && !imagen.isRecycled()) {
+                    imagen.recycle();
+                    imagen = null;
+                }
+
+                 */
+                //imagen.recycle(); // Hay que probar esto
             }while (cursor.moveToNext());
 
         }
@@ -109,6 +116,13 @@ public class ImagenService {
         SQLiteDatabase db = getSQLiteDatabase(context);
         String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID + " LIKE ?";
         String[] selectionArgs = {id};
+        db.delete(DataBaseContract.TABLE_IMAGEN_EVENTO, selection, selectionArgs);
+    }
+
+    public void eliminarImagenesEventos(Context context, String idEvento){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+        String selection = DataBaseContract.TABLE_IMAGEN_EVENTO_COLUMN_ID_EVENTO + " LIKE ?";
+        String[] selectionArgs = {idEvento};
         db.delete(DataBaseContract.TABLE_IMAGEN_EVENTO, selection, selectionArgs);
     }
 

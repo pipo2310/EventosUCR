@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imagenEvento"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             app:srcCompat="@drawable/imagenblanco"

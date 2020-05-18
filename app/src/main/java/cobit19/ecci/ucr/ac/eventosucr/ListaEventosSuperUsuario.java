@@ -7,12 +7,17 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
@@ -20,12 +25,16 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
 public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
+    public final static String EXTRA_MESSAGEIMAGEN="imagenes";
     private DrawerLayout drawer;
 
     @Override
@@ -58,44 +67,46 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
     }
 
     public void addEvento() {
+
         Intent intent = new Intent(this, CrearEvento.class);
 
 
         // Deseo recibir una respuesta: startActivityForResult()
         startActivity(intent);
-        //finish();
+        finish();
     }
 
 
     public void leerEventos() {
         EventoService eventoService=new EventoService();
+        final ImagenService imagenService=new ImagenService();
+        Bitmap imagenNula= BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
+        ImageView imagenNulaImageView=new ImageView(this);
+        imagenNulaImageView.setImageBitmap(imagenNula);
         eventos = eventoService.leerLista(getApplicationContext());
+        ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
+        for (Evento evento : eventos){
+            if(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).size()==0){
+                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+                imagenesdeEventos.add(imagenNulaImageView);
+            }else{
 
-        CustomListAdapter adapter = new CustomListAdapter(this, eventos);
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-
-                Evento eventoSeleccionado = eventos.get(position);
-                //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                cambiarDePantalla(eventoSeleccionado);
-
-
+                ImageView imagenExistente=new ImageView(this);
+                imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
+                imagenesdeEventos.add(imagenExistente);
             }
-        });
 
-    }
 
-    public void cambiarDePantalla(Evento evento) {
-        Intent intent = new Intent(this, ModificarEliminarEvento.class);
-        intent.putExtra(EXTRA_MESSAGE, evento);
+        }
 
-        // Deseo recibir una respuesta: startActivityForResult()
-        startActivityForResult(intent, 0);
-        finish();
+        ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos,imagenesdeEventos);
+        getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+
+
+
+
     }
 
     /**
