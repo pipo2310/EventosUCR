@@ -13,6 +13,7 @@ import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -21,6 +22,7 @@ import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -37,6 +39,8 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
+
+import com.mukesh.tinydb.TinyDB;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -60,10 +64,13 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     Calendar fecha;
     String horaInicio;
     String horaFinalBase;
+    double longitud;
+    double latitud;
     int horaInicioManejoError;
     int minutoInicioManejoError;
     private static final int SELECT_PICTURE=100;
     public static  final String TAG= "SelectImageeActivity";
+
     // Lista de categorias de la base de datos
     ArrayList<Categoria> categorias;
     // Lista de nombres de categorias
@@ -114,6 +121,14 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
         fecha=Calendar.getInstance();
+        ImageButton insertarUbicacion = (ImageButton) findViewById(R.id.ubicacionImagen);
+
+        insertarUbicacion.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                agregarUbicacion();
+            }
+        });
         ImageButton insertarImagen = (ImageButton) findViewById(R.id.agregarImagen);
 
         insertarImagen.setOnClickListener(new View.OnClickListener() {
@@ -159,6 +174,30 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                guardarEvento();
             }
         });
+    }
+
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        try {
+            SharedPreferences sharedPreferences = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
+            String latitudString = sharedPreferences.getString("latitud","");
+            String longitudString = sharedPreferences.getString("longitud","");
+            latitud=Double.parseDouble(latitudString);
+            longitud=Double.parseDouble(longitudString);
+
+
+
+        }catch (Exception e){
+
+        }
+    }
+
+    private void agregarUbicacion() {
+        Intent i =new Intent(this,MapActivity.class);
+        startActivity(i);
     }
 
     private void agregarImagenAImageView() {
@@ -209,6 +248,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         TextView tiempIni=(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempFin=(TextView)findViewById(R.id.tiempoFin);
 
+
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
         if(nombre.length()==0){
             nombre.setError("Nombre no valido");
@@ -256,7 +296,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         if(insertar==true){
             ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), 0,0);
+            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud);
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);
