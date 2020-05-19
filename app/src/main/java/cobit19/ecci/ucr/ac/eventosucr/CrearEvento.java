@@ -66,6 +66,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Institucion;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
@@ -80,12 +81,14 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     String horaFinalBase;
     double longitud;
     double latitud;
+    String institucion;
     int horaInicioManejoError;
     int minutoInicioManejoError;
     GoogleMap eventoMap;
     private static final int SELECT_PICTURE=100;
     public static  final String TAG= "SelectImageeActivity";
-
+    // Lista de nombres de instituciones
+    ArrayList<String> nombresInstituciones = new ArrayList<String>();
     // Lista de categorias de la base de datos
     ArrayList<Categoria> categorias;
     // Lista de nombres de categorias
@@ -197,7 +200,18 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     private void llenarInstituciones() {
         InstitucionService institucionService=new InstitucionService();
-        institucionService.leerLista(getApplicationContext());
+        ArrayList<Institucion> instituciones=institucionService.leerLista(getApplicationContext());
+        nombresInstituciones.add("Seleccione una institucion");
+        for(int i = 0; i<instituciones.size(); i++){
+            nombresInstituciones.add(instituciones.get(i).getNombre());
+        }
+        Spinner listaInstituciones = (Spinner) findViewById(R.id.dropdownInstitucion);
+        //create array adapter and provide arrary list to it
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, nombresInstituciones);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        listaInstituciones.setAdapter(arrayAdapter);
+        listaInstituciones.setOnItemSelectedListener(this);
+
 
     }
 
@@ -263,16 +277,22 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     // Selecciona un item del spinner
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // Mostrar al usuario la categoria seleccionada
-        
-        if(pos != 0){
-            LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
-            TextView textView = new TextView(this);
-            textView.setText(nombresCategorias.get(pos));
-            layout.addView(textView);
-            categoriasSeleccionadas.add(pos-1);
+        Spinner spinner = (Spinner) parent;
+        if(spinner.getId()==R.id.dropdownInstitucion){//Spinner instituciones
+            institucion=Integer.toString(pos);
         }else{
-            // Decirle al usuario que debe seleccionar una categoria
+            if(pos != 0){
+                LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
+                TextView textView = new TextView(this);
+                textView.setText(nombresCategorias.get(pos));
+                layout.addView(textView);
+                categoriasSeleccionadas.add(pos-1);
+            }else{
+                // Decirle al usuario que debe seleccionar una categoria
+            }
         }
+        
+
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
@@ -331,7 +351,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     public void guardarEvento() {
         boolean insertar=true;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
-        EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
+        //EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
         TextView tiempIni=(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempFin=(TextView)findViewById(R.id.tiempoFin);
@@ -343,11 +363,15 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             insertar=false;
 
         }
+
+
         if(institucion.length()==0){
-            institucion.setError("Institucion no valido");
+            //institucion.setError("Institucion no valido");
             insertar=false;
 
         }
+
+
         if(detalles.length()==0){
             detalles.setError("Detalles no valido");
             insertar=false;
@@ -384,7 +408,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         if(insertar==true){
             ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            Evento evento = new Evento(nombre.getText().toString(),institucion.getText().toString(),detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud);
+            Evento evento = new Evento(nombre.getText().toString(),institucion,detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud);
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);

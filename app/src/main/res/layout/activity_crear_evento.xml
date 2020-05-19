@@ -40,10 +40,12 @@
 
             <Spinner
                 android:id="@+id/dropdownInstitucion"
-                android:layout_width="325dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                tools:layout_editor_absoluteX="-13dp"
-                tools:layout_editor_absoluteY="0dp"></Spinner>
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/agregarImagen"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"></Spinner>
 
             <ImageButton
 
