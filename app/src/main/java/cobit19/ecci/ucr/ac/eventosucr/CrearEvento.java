@@ -86,7 +86,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     int minutoInicioManejoError;
     GoogleMap eventoMap;
     private static final int SELECT_PICTURE=100;
-    public static  final String TAG= "SelectImageeActivity";
+    public static  final String TAG= "SelectImageActivity";
     // Lista de nombres de instituciones
     ArrayList<String> nombresInstituciones = new ArrayList<String>();
     // Lista de categorias de la base de datos
