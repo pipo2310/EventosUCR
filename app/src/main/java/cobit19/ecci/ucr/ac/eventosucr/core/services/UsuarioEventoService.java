@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 
 public class UsuarioEventoService {
@@ -107,6 +108,43 @@ public class UsuarioEventoService {
 
         cursor.moveToFirst();
         return generarLista(cursor);
+    }
+
+    public ArrayList<Evento> listaEventosPorUsuario(Context context, String idUsuario) {
+        SQLiteDatabase db = getSQLiteDatabase(context);
+
+        // Filtro para el WHERE
+        String selection = DataBaseContract.TABLE_USUARIO_EVENTO_COLUMN_CORREO_UCR_USUARIO + " = ?";
+        String[] selectionArgs = {idUsuario};
+
+        // Resultados en el cursor
+        Cursor cursor = db.query(
+                DataBaseContract.TABLE_USUARIO_EVENTO, // tabla
+                projection, // columnas
+                selection, // where
+                selectionArgs, // valores del where
+                null, // agrupamiento
+                null, // filtros por grupo
+                null// orden
+        );
+
+        cursor.moveToFirst();
+
+        // Lista de UsuarioEvento solo contiene los id de los eventos
+        ArrayList<UsuarioEvento> listaUsuarioEventos = generarLista(cursor);
+
+        // Lista de eventos que el usuario le dio like
+        ArrayList<Evento> listaEventos = new ArrayList<>();
+
+        //Evento Service
+        EventoService eventoService = new EventoService();
+
+        // Recorremos la lista y agregamos los eventos a la nueva lista
+        for(UsuarioEvento item: listaUsuarioEventos){
+            listaEventos.add(eventoService.leer(context, item.getIdEvento()));
+        }
+
+        return listaEventos;
     }
 
     public void eliminar (Context context, String idParametroUsuario, String idParamentroEvento){
