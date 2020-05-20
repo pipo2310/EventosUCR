@@ -23,6 +23,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -30,6 +31,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
+import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -43,6 +45,8 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
+    private boolean eliminarDeFavoritos = false;
+
     public VistaEventoFragment() {
     }
 
@@ -79,7 +83,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         btnNoMeInteresa = (Button)v.findViewById(R.id.btnNoMeInteresa);
 
         //Saber si el evento existe en la lista UsuarioEvento
-        usuarioEvento = usuarioEventoService.leer(getContext(), "walter.bonillagutierrez@ucr.ac.cr", evento.getId());
+        usuarioEvento = usuarioEventoService.leer(getContext(), Constantes.CORREO_UCR_USUARIO, evento.getId());
         if (usuarioEvento.getCorreoUcr() == null) {
             btnMeInteresa.setVisibility(View.VISIBLE);
             btnNoMeInteresa.setVisibility(View.GONE);
@@ -127,9 +131,10 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Cuando el usuario le da click al botón, añade el evento a la lista de favoritos del usuario
     public void DarMeGusta(){
-        usuarioEventoService.insertar(getContext(), usuarioEvento);
+        usuarioEventoService.insertar(getContext(), new UsuarioEvento(Constantes.CORREO_UCR_USUARIO, evento.getId()));
         btnNoMeInteresa.setVisibility(View.VISIBLE);
         btnMeInteresa.setVisibility(View.GONE);
+        eliminarDeFavoritos = false;
     }
 
     //Cuando el usuario le da click al botón, elimina el evento a la lista de favoritos del usuario
@@ -137,6 +142,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         usuarioEventoService.eliminar(getContext(), usuarioEvento.getCorreoUcr(), usuarioEvento.getIdEvento());
         btnMeInteresa.setVisibility(View.VISIBLE);
         btnNoMeInteresa.setVisibility(View.GONE);
+        eliminarDeFavoritos = true;
     }
 
     @Override
@@ -177,5 +183,13 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
                 .build();
         VistaEventoMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
+    }
+
+    public String getTagEliminar() {
+        String tag = null;
+        if(eliminarDeFavoritos == true){
+            tag = Constantes.EVENTO_FAV_TAG + evento.getId();
+        }
+        return tag;
     }
 }

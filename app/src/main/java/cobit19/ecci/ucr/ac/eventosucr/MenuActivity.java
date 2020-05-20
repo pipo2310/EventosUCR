@@ -49,7 +49,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragmento que se muestra al inicio
-        showSelectedFragment(new ExplorarFragment(), UtilDates.EXPLORAR_TAG);
+        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
 
         // Para el menu de abajo
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
@@ -60,13 +60,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.menu_favoritos){
-                    showSelectedFragment(new FavoritosFragment(), UtilDates.FAVORITOS_TAG);
+                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_explorar){
-                    showSelectedFragment(new ExplorarFragment(), UtilDates.EXPLORAR_TAG);
+                    showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment(), UtilDates.FAVORITOS_TAG);
+                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                 }
                 return true;
             }
@@ -123,19 +123,27 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void onListFragmentInteraction(Evento evento){
-        showItemSelectedFragment(new VistaEventoFragment(evento), UtilDates.VISTA_EVENTO_TAG);
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
     }
 
     public void OnFavoritosItemListener(Evento evento){
-        showItemSelectedFragment(new VistaEventoFragment(evento), UtilDates.VISTA_EVENTO_TAG);
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
     }
 
     @Override
     public void onBackPressed(){
-        if (currentFragmentTag == UtilDates.VISTA_EVENTO_TAG) {
+        if (currentFragmentTag == Constantes.VISTA_EVENTO_TAG) {
             Fragment olderFragment = getSupportFragmentManager().findFragmentByTag(oldFragmentTag);
             Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
             currentFragmentTag = oldFragmentTag;
+            if(oldFragmentTag == Constantes.FAVORITOS_TAG){
+                VistaEventoFragment vistaEventoFragment = (VistaEventoFragment) currentFragment;
+                FavoritosFragment favoritosFragment = (FavoritosFragment) olderFragment;
+                String tag = vistaEventoFragment.getTagEliminar();
+                if(tag != null){
+                    favoritosFragment.eliminarDeLista(tag);
+                }
+            }
             getSupportFragmentManager()
                     .beginTransaction()
                     .hide(currentFragment)
