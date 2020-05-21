@@ -237,8 +237,14 @@ String id;
         BitmapDrawable drawable = (BitmapDrawable) imagenEventoModificar.getDrawable();
         Bitmap bitmap = drawable.getBitmap();
         Imagen imagenAmodificar=new Imagen(evento.getId(),bitmap);
-        imagenAmodificar.setId(idImagenModificar);
-        imagenService.actualizar(getApplicationContext(),imagenAmodificar);
+
+        if (imagenes.size()>0){
+            imagenAmodificar.setId(idImagenModificar);
+            imagenService.actualizar(getApplicationContext(),imagenAmodificar);
+        }else{
+            imagenService.insertar(getApplicationContext(),imagenAmodificar);
+        }
+        
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -370,7 +376,7 @@ String id;
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
         TextView fecha = (TextView) findViewById(R.id.fecha);
         ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-        if (imagenes.size()!=0){
+        if (imagenes.size()>0){
             imagenEvento.setImageBitmap(imagenes.get(0).getImagen());
             idImagenModificar=imagenes.get(0).getId();
         }
