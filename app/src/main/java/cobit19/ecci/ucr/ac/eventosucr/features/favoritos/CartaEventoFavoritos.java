@@ -15,6 +15,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
@@ -92,11 +93,13 @@ public class CartaEventoFavoritos extends Fragment {
 
     public void QuitarMeGusta(){
         UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
-        usuarioEventoService.eliminar(getContext(), UtilDates.CORREO_UCR_USUARIO, evento.getId());
-        getActivity().getSupportFragmentManager()
+        usuarioEventoService.eliminar(getContext(), Constantes.CORREO_UCR_USUARIO, evento.getId());
+        String tag = Constantes.EVENTO_FAV_TAG+evento.getId();
+        Fragment fragmentToRemove = getActivity().getSupportFragmentManager().findFragmentByTag(tag);
+        getActivity()
+                .getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_fragment, new FavoritosFragment())
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .remove(fragmentToRemove)
                 .commit();
     }
 

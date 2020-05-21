@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
@@ -35,12 +36,27 @@ public class FavoritosFragment extends Fragment {
 
         UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
 
-        listaEventos = usuarioEventoService.listaEventosPorUsuario(getContext(), UtilDates.CORREO_UCR_USUARIO);
+        listaEventos = usuarioEventoService.listaEventosPorUsuario(getContext(), Constantes.CORREO_UCR_USUARIO);
 
         for (Evento evento: listaEventos){
-            getFragmentManager().beginTransaction().add(R.id.favoritos_lista, new CartaEventoFavoritos(evento)).commit();
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(R.id.favoritos_lista, new CartaEventoFavoritos(evento), Constantes.EVENTO_FAV_TAG+evento.getId())
+                    .commit();
         }
 
         return view;
+    }
+
+    public void eliminarDeLista(String tag){
+        Fragment fragmentToRemove = getActivity().getSupportFragmentManager().findFragmentByTag(tag);
+        if(fragmentToRemove != null){
+            getActivity()
+                    .getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(fragmentToRemove)
+                    .commit();
+        }
     }
 }
