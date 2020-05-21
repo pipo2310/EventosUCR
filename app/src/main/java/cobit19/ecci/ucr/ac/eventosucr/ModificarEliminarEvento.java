@@ -76,7 +76,6 @@ String id;
     String horaFinalBase;
     int horaInicioManejoError;
     String idInstitucionOriginal;
-    boolean cambioSpinner=false;
     String idImagenModificar;
     int minutoInicioManejoError;
     ArrayList<String>nombresInstituciones=new ArrayList<String>();
@@ -213,7 +212,7 @@ String id;
             evento.setNombre(nombre.getText().toString());
 
         }
-        if(!cambioSpinner){
+        if(evento.getIdInstitucion().equals("0")){//Evalua que no se haya seleccionado ninguna insitucion
             evento.setIdInstitucion(idInstitucionOriginal);
         }
         /*
@@ -413,6 +412,7 @@ String id;
 
         evento.setIdInstitucion(Integer.toString(pos));
         nombresInstituciones.set(0,nombresInstituciones.get(Integer.parseInt(evento.getIdInstitucion())));
+
         //nombresInstituciones.clear();
        // hintIntituciones();
 
@@ -420,9 +420,7 @@ String id;
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
-        cambioSpinner=true;
-        Toast.makeText(getApplicationContext(),
-                "IDINSTITUCION "+evento.getIdInstitucion() ,Toast.LENGTH_LONG).show();
+
     }
 
     @Override
