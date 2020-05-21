@@ -10,6 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import java.util.ArrayList;
@@ -20,6 +21,7 @@ import cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.ModificarEliminarEvento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 
 import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESSAGE;
 
@@ -32,6 +34,7 @@ import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESS
 public class ListaEventosFragment extends Fragment {
 
     private ArrayList<Evento> eventos;
+    ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
     private View v;
     ListView list;
 
@@ -39,8 +42,9 @@ public class ListaEventosFragment extends Fragment {
     public ListaEventosFragment() {
         // Required empty public constructor
     }
-    public ListaEventosFragment(ArrayList<Evento> eventos) {
+    public ListaEventosFragment(ArrayList<Evento> eventos,ArrayList<ImageView> imagenesdeEventos) {
         this.eventos=eventos;
+        this.imagenesdeEventos=imagenesdeEventos;
 
     }
 
@@ -69,7 +73,7 @@ public class ListaEventosFragment extends Fragment {
     }
 
     private void llenarLista() {
-        CustomListAdapter adapter = new CustomListAdapter(getActivity(), eventos);
+        CustomListAdapter adapter = new CustomListAdapter(getActivity(), eventos,imagenesdeEventos);
         String nombreActividadPadre="";
         if(isAdded()) {
             nombreActividadPadre=getActivity().getClass().getSimpleName();
@@ -84,6 +88,7 @@ public class ListaEventosFragment extends Fragment {
                 // TODO Auto-generated method stub
 
                 Evento eventoSeleccionado = eventos.get(position);
+
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
                 if(finalNombreActividadPadre.equals("ListaEventosSuperUsuario")) {
                     cambiarDePantalla(eventoSeleccionado);
