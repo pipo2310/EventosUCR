@@ -1,5 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr.fragments;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -66,16 +68,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        // Pedimos las imagenes asociadas a un evento
-        ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());
-
-        // Preguntamos si hay alguna imagen
-        if(imagenesEvento.size() > 0){
-            // Obtenemos el ImageView
-            ImageView imagen = v.findViewById(R.id.imgEvento);
-            // Agregamos la imagen del evento
-            imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
-        }
+        mostrarImagenes();
 
         //Botón para que el usuario le de like a un evento
         btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
@@ -111,9 +104,41 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         return v;
     }
 
+    public void mostrarImagenes() {
+        // Pedimos las imagenes asociadas a un evento
+        ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());
+        ImageView imagen;
+        LinearLayout imagenes=(LinearLayout)v.findViewById(R.id.slideImg);
+
+        // Preguntamos si hay alguna imagen
+        if(imagenesEvento.size() > 0){
+            for(int i = 0; i < imagenesEvento.size(); i++) {
+                // Obtenemos el ImageView
+                imagen = v.findViewById(R.id.imgEvento);
+                // Agregamos la imagen del evento
+                imagen.setImageBitmap(imagenesEvento.get(i).getImagen());
+
+                float scale = getContext().getResources().getDisplayMetrics().density;
+                int pixels = (int) (220 * scale + 0.5f);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        pixels
+                );
+                imagen.setLayoutParams(params);
+                //imagen.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                //imagen.setAdjustViewBounds(true);
+                if(imagen.getParent() != null) {
+                    ((ViewGroup)imagen.getParent()).removeView(imagen); // <- fix
+                }
+                imagenes.addView(imagen);
+            }
+
+        }
+
+    }
 
     //Inserta los datos de la base de datos en la vista de un evento
-    void leerEvento() {
+    public void leerEvento() {
         
         TextView nombreDeEvento = (TextView)v.findViewById(R.id.nombreDeEvento);
         nombreDeEvento.setText(evento.getNombre());
