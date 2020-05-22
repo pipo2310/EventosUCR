@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
+import android.widget.Switch;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -19,13 +20,16 @@ import androidx.appcompat.widget.Toolbar;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
+import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
-public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener{
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener, CartaEventoFavoritos.OnFavoritosItemListener {
 
     BottomNavigationView footerMenu;
     DrawerLayout drawer;
+    String currentFragmentTag = null;
+    String oldFragmentTag = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,22 +49,24 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragmento que se muestra al inicio
-        showSelectedFragment(new ExplorarFragment());
+        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
 
         // Para el menu de abajo
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
+        // Marcado por defecto el explorar
         footerMenu.setSelectedItemId(R.id.menu_explorar);
+        // Listener de la opciones del menú
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
                 if(menuItem.getItemId() == R.id.menu_favoritos){
-                    showSelectedFragment(new FavoritosFragment());
+                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_explorar){
-                    showSelectedFragment(new ExplorarFragment());
+                    showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment());
+                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                 }
                 return true;
             }
@@ -90,13 +96,63 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
      * Metodo que se usa para indicar cual es el feagment que se va a ver
      * @param fragment
      */
-    private void showSelectedFragment(Fragment fragment){
-        getSupportFragmentManager().beginTransaction().replace(R.id.container_fragment, fragment)
+    private void showSelectedFragment(Fragment fragment, String tag){
+        oldFragmentTag = currentFragmentTag;
+        currentFragmentTag = tag;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_fragment, fragment, tag)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+    }
+
+    /**
+     * Metodo para pasar a un fragment pero que el fragment anterior quede en cola para que se pueda regresar a el
+     * @param fragment
+     */
+    private void showItemSelectedFragment(Fragment fragment, String tag){
+        oldFragmentTag = currentFragmentTag;
+        Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+        currentFragmentTag = tag;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .hide(currentFragment)
+                .add(R.id.container_fragment, fragment, tag)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
 
     public void onListFragmentInteraction(Evento evento){
-        showSelectedFragment(new VistaEventoFragment(evento));
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
+    }
+
+    public void OnFavoritosItemListener(Evento evento){
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
+    }
+
+    @Override
+    public void onBackPressed(){
+        if (currentFragmentTag == Constantes.VISTA_EVENTO_TAG) {
+            Fragment olderFragment = getSupportFragmentManager().findFragmentByTag(oldFragmentTag);
+            Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
+            currentFragmentTag = oldFragmentTag;
+            if(oldFragmentTag == Constantes.FAVORITOS_TAG){
+                VistaEventoFragment vistaEventoFragment = (VistaEventoFragment) currentFragment;
+                FavoritosFragment favoritosFragment = (FavoritosFragment) olderFragment;
+                String tag = vistaEventoFragment.getTagEliminar();
+                if(tag != null){
+                    favoritosFragment.eliminarDeLista(tag);
+                }
+            }
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .hide(currentFragment)
+                    .show(olderFragment)
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                    .commit();
+        } else {
+            currentFragmentTag = oldFragmentTag;
+            super.onBackPressed();
+        }
     }
 }

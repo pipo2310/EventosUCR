@@ -54,8 +54,7 @@ public class Institucion implements Parcelable {
 
     public Institucion(){}
 
-    public Institucion(String id, String nombre, Bitmap logo){
-        this.id = id;
+    public Institucion(String nombre, Bitmap logo){
         this.nombre = nombre;
         this.logo = logo;
     }

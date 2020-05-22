@@ -26,13 +26,6 @@ public class Categoria implements Parcelable {
         this.imagen = imagen;
     }
 
-    public Categoria(String id, String nombre, String detalles, Bitmap imagen) {
-        this.id = id;
-        this.nombre = nombre;
-        this.detalles = detalles;
-        this.imagen = imagen;
-    }
-
     public String getId() {
         return id;
     }
