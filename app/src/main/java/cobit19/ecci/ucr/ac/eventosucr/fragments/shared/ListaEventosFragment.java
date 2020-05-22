@@ -37,6 +37,7 @@ public class ListaEventosFragment extends Fragment {
     ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
     private View v;
     ListView list;
+    CustomListAdapter adapter1;
 
 
     public ListaEventosFragment() {
@@ -80,6 +81,7 @@ public class ListaEventosFragment extends Fragment {
 
         }
         list = (ListView) v.findViewById(R.id.list);
+        adapter1=adapter;
         list.setAdapter(adapter);
         final String finalNombreActividadPadre = nombreActividadPadre;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

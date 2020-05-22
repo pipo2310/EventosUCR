@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.Switch;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
@@ -18,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
@@ -66,7 +66,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
+                    showSelectedFragment(new BuscarFragment(), Constantes.BUSCAR_TAG);
                 }
                 return true;
             }
