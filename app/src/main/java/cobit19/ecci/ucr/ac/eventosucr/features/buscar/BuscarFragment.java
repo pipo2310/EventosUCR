@@ -9,15 +9,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.SearchView;
-
-import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 
 public class BuscarFragment extends Fragment {
 
@@ -52,17 +46,11 @@ public class BuscarFragment extends Fragment {
             }
         });
 
-        /*Evento evento=new Evento();
-        eventos=evento.leerEventos(getActivity().getApplicationContext());
-        ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventos);//Lista de eventos como parametro
-        getFragmentManager().beginTransaction()
-                .add(R.id.buscarFragmentVistaLista, listaEventosFragment).commit();*/
-
-        /*CategoriaService categoriaService=new CategoriaService();
-        categorias=categoriaService.leerLista(getActivity().getApplicationContext());
-        CategoriasBuscarFragment categoriasBuscarFragment=new CategoriasBuscarFragment(categorias);
-        getFragmentManager().beginTransaction()
-                .add(R.id.categoriasBuscar, categoriasBuscarFragment).commit();*/
+        CategoriaService categoriaService = new CategoriaService();
+        CategoriasBuscarFragment categoriasBuscarFragment =
+                new CategoriasBuscarFragment(categoriaService.leerLista(getActivity().getApplicationContext()));
+        getActivity().getSupportFragmentManager().beginTransaction()
+                .add(R.id.categoriasBuscar, categoriasBuscarFragment).commit();
 
         return view;
     }

@@ -1,18 +1,29 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.buscar;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.widget.ImageView;
 import android.widget.SearchView;
+
+import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.shared.SinResultadosFragment;
 
-public class BuscarActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
+public class BuscarActivity extends AppCompatActivity implements SearchView.OnQueryTextListener,
+        ListaEventosFragment.OnEventoSeleccionadoInteractionListener {
 
-    public static final String BUSCAR = "buscar";
-    public static final String QUERY = "query";
+    public static final String EVENTO = "evento";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +36,49 @@ public class BuscarActivity extends AppCompatActivity implements SearchView.OnQu
 
     @Override
     public boolean onQueryTextSubmit(String query) {
-        Intent intent = new Intent(this, MenuActivity.class);
-        intent.putExtra(MenuActivity.ACTIVIDAD, BuscarActivity.BUSCAR);
-        intent.putExtra(BuscarActivity.QUERY, query.toLowerCase());
-        startActivity(intent);
+
+        EventoService eventoService = new EventoService();
+        ArrayList<Evento> eventos = eventoService.leetListaEventosCuyoNombreContiene(getApplicationContext(), query);
+
+        if (eventos.size() > 0) {
+            Bitmap imagenNula = BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
+            ImageView imagenNulaImageView = new ImageView(this);
+            imagenNulaImageView.setImageBitmap(imagenNula);
+            ArrayList<ImageView> imagenesdeEventos = new ArrayList<ImageView>();
+
+            for (int i = 0; i < eventos.size(); ++i) {
+                imagenesdeEventos.add(imagenNulaImageView);
+            }
+
+            ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventos, imagenesdeEventos);
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.actividad_buscar_resultado_busqueda, listaEventosFragment)
+                    .commit();
+        } else {
+            SinResultadosFragment sinResultadosFragment = new SinResultadosFragment();
+
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.actividad_buscar_resultado_busqueda, sinResultadosFragment)
+                    .commit();
+        }
+
         return false;
     }
 
     @Override
     public boolean onQueryTextChange(String newText) {
         return false;
+    }
+
+    @Override
+    public void onEventoSelecciondo(Evento evento) {
+        Intent a =new Intent(this, MenuActivity.class);
+
+        a.putExtra(EVENTO, evento);
+
+        startActivity(a);
     }
 }

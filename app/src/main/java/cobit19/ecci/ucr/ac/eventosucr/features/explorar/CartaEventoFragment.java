@@ -33,14 +33,6 @@ public class CartaEventoFragment extends Fragment {
         this.evento = evento;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param evento Parameter 1.
-     * @return A new instance of fragment BlankFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CartaEventoFragment newInstance(Evento evento) {
         CartaEventoFragment fragment = new CartaEventoFragment();
         Bundle args = new Bundle();

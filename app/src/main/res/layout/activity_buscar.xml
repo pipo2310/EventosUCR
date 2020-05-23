@@ -2,6 +2,7 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/actividadBuscar"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.buscar.BuscarActivity">
@@ -12,5 +13,13 @@
         android:layout_height="wrap_content"
         android:iconifiedByDefault="false">
     </SearchView>
+
+    <LinearLayout
+        android:id="@+id/actividad_buscar_resultado_busqueda"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/buscar_barra"
+        android:layout_marginTop="4dp"
+        android:orientation="vertical" />
 
 </RelativeLayout>

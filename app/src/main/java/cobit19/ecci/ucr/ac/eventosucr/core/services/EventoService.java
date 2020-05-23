@@ -150,6 +150,28 @@ public class EventoService {
         return generarLista(cursor);
     }
 
+    public ArrayList<Evento> leetListaEventosCuyoNombreContiene(Context context, String nombreContiene) {
+        SQLiteDatabase db = getSQLiteDatabase(context);
+
+        // Filtro para el WHERE
+        String selection = DataBaseContract.TABLE_EVENTO_COLUMN_NOMBRE + " LIKE ?";
+        String[] selectionArgs = {"%" + nombreContiene + "%"};
+
+        // Resultados en el cursor
+        Cursor cursor = db.query(
+                DataBaseContract.TABLE_EVENTO, // tabla
+                projection, // columnas
+                selection, // where
+                selectionArgs, // valores del where
+                null, // agrupamiento
+                null, // filtros por grupo
+                null // orden
+        );
+
+        cursor.moveToFirst();
+        return generarLista(cursor);
+    }
+
     public int actualizar(Context context, Evento evento){
 
         DataBaseHelper dataBaseHelper = new DataBaseHelper(context);

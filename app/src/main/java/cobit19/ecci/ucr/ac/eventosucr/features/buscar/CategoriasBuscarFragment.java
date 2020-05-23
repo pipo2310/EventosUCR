@@ -1,5 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.buscar;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,17 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import android.widget.ListView;
 
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.CustomGridAdapterCategorias;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,9 +24,9 @@ import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
  */
 public class CategoriasBuscarFragment extends Fragment {
 
+    private OnCategoriaSeleccionadaInteractionListener listener;
     ArrayList<Categoria> categorias;
-    View v;
-    GridView grid;
+    View view;
 
     public CategoriasBuscarFragment() {}
 
@@ -51,41 +47,44 @@ public class CategoriasBuscarFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v=inflater.inflate(R.layout.fragment_categorias_buscar, container, false);
-        llenarLista();
-        //Llenar lista de categorias
-        return v;
+        view = inflater.inflate(R.layout.fragment_categorias_buscar, container, false);
+        llenarListaDeCategorias();
+        return view;
     }
 
-    private void llenarLista() {
+    private void llenarListaDeCategorias() {
         final CustomGridAdapterCategorias adapter = new CustomGridAdapterCategorias(getActivity(), categorias);
-        grid = (GridView) v.findViewById(R.id.gridCategorias);
+        GridView grid = (GridView) view.findViewById(R.id.gridCategorias);
         grid.setAdapter(adapter);
+
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-
                 Categoria categoriaSeleccionada = categorias.get(position);
 
-                //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                //adapter.getFilter().filter(categoriaSeleccionada.getNombre());
-                cambiarDePantalla(categoriaSeleccionada);
-
-
+                listener.onCategoriaSeleccionada(categoriaSeleccionada);
             }
         });
-
     }
 
-    private void cambiarDePantalla(Categoria categoriaSeleccionada) {
-        /*EventoService eventoService =new EventoService();
-        ArrayList<Evento>eventosCategoria=new ArrayList<Evento>();
-        eventosCategoria=eventoService.leerListaEventosPorCategoria(getActivity().getApplicationContext(),categoriaSeleccionada.getId());
-        ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventosCategoria);//Lista de eventos como parametro
-        getFragmentManager().beginTransaction()
-                .replace(R.id.buscarFragmentVistaLista, listaEventosFragment).commit();*/
-        //Filtrar lista por categoria seleccionada
-        //Hace algo con la categoria seleccionada(eg: cargar los eventos de esa categoria)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnCategoriaSeleccionadaInteractionListener) {
+            listener = (OnCategoriaSeleccionadaInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnCategoriaSeleccionadaInteractionListener");
+        }
+    }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    public interface OnCategoriaSeleccionadaInteractionListener {
+        void onCategoriaSeleccionada(Categoria categoria);
     }
 }
