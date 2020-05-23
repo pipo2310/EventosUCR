@@ -78,21 +78,17 @@ public class ListaCartaEventoFragment extends Fragment {
                 linearLayout.setOrientation(LinearLayout.HORIZONTAL);
                 linearLayout.setId(layoutId);
                 horizontalScrollView.addView(linearLayout);
+
+                EventoService eventoService = new EventoService();
+                ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
+
+                for (Evento evento: eventos) {
+                    getFragmentManager().beginTransaction()
+                            .add(layoutId, new CartaEventoFragment(evento)).commit();
+                }
             }
         }
 
         return view;
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        EventoService eventoService = new EventoService();
-        ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getContext(), categoria.getId());
-
-        for (Evento evento: eventos) {
-            getFragmentManager().beginTransaction()
-                    .add(layoutId, new CartaEventoFragment(evento)).commit();
-        }
     }
 }

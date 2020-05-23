@@ -23,23 +23,24 @@ import java.util.TimeZone;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 
 public class Evento implements Parcelable {
+
+    private InstitucionService institucionService = new InstitucionService();
 
     private String id;
     private String nombre;
     private String idInstitucion;
     private String detalles;
-    private Calendar fecha;
+    private Calendar fecha = Calendar.getInstance();
     private String ubicacion;//Ubicacion escrita...200 mts oeste...
     private double latitud;
     private double longitud;
     private String horaInicio;
     private String horaFin;
 
-    public Evento() {
-        fecha = Calendar.getInstance();
-    }
+    public Evento() { }
 
     public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud) {
         this.nombre = nombre;
@@ -72,6 +73,10 @@ public class Evento implements Parcelable {
     }
     public void setIdInstitucion(String idInstitucion) {
         this.idInstitucion = idInstitucion;
+    }
+
+    public Institucion getInstitucion(Context context) {
+        return institucionService.leer(context, idInstitucion);
     }
 
     public String getDetalles() {

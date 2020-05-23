@@ -13,7 +13,7 @@
         android:orientation="vertical">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imagenEvento"
             android:layout_width="match_parent"
             android:layout_height="220dp"
             app:srcCompat="@drawable/imagenblanco"
@@ -38,21 +38,14 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp">
 
-            <EditText
-                android:id="@+id/nombreInstitucion2"
-                android:layout_width="242dp"
-                android:layout_height="44dp"
-                android:ems="10"
-                android:hint="Nombre de entidad/institucion"
-                android:inputType="textPersonName"
-                android:textColor="#AFAFAF"
-                android:textSize="12sp"
+            <Spinner
+                android:id="@+id/dropdownInstitucion"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/agregarImagen"
-                app:layout_constraintHorizontal_bias="0.028"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintVertical_bias="0.888" />
+                app:layout_constraintTop_toTopOf="parent"></Spinner>
 
             <ImageButton
 
@@ -306,15 +299,17 @@
 
             <EditText
                 android:id="@+id/agregarDireccion"
-                android:layout_width="242dp"
+                android:layout_width="match_parent"
                 android:layout_height="44dp"
                 android:ems="10"
                 android:hint="Agregar dirección"
                 android:inputType="textPersonName"
-                android:maxLength="20"
+                android:maxLength="50"
                 android:paddingStart="40sp"
                 android:textColor="#AFAFAF"
                 android:textSize="12sp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.121"
@@ -322,10 +317,11 @@
                 app:layout_constraintTop_toBottomOf="@+id/tituloDescripcion2"
                 app:layout_constraintVertical_bias="0.088" />
 
-            <ImageView
-                android:id="@+id/imageView2"
+            <ImageButton
+                android:id="@+id/ubicacionImagen"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:background="#00FFFFFF"
                 app:layout_constraintBottom_toBottomOf="@+id/agregarDireccion"
                 app:layout_constraintEnd_toEndOf="@+id/agregarDireccion"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -334,6 +330,20 @@
                 app:layout_constraintVertical_bias="0.0"
                 app:srcCompat="@drawable/ic_location_on_black_24dp" />
 
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <fragment
+                android:id="@+id/ubicacionMap"
+                android:layout_width="match_parent"
+                android:layout_height="400dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginEnd="10dp"
+                class="com.google.android.gms.maps.SupportMapFragment"/>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
