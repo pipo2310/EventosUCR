@@ -28,7 +28,8 @@ import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
-public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        ListaEventosFragment.OnEventoSeleccionadoInteractionListener {
     ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
@@ -125,5 +126,10 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
             drawer.closeDrawer(Gravity.LEFT, true);
         }
         return true;
+    }
+
+    @Override
+    public void onEventoSelecciondo(Evento evento) {
+
     }
 }
