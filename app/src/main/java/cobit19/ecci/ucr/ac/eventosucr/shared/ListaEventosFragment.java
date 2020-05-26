@@ -1,6 +1,6 @@
-package cobit19.ecci.ucr.ac.eventosucr.fragments.shared;
+package cobit19.ecci.ucr.ac.eventosucr.shared;
 
-import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -17,11 +17,9 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.CustomListAdapter;
 
-import cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.ModificarEliminarEvento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 
 import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESSAGE;
 
@@ -33,10 +31,13 @@ import static cobit19.ecci.ucr.ac.eventosucr.ListaEventosSuperUsuario.EXTRA_MESS
  */
 public class ListaEventosFragment extends Fragment {
 
+    private OnEventoSeleccionadoInteractionListener listener;
+
     private ArrayList<Evento> eventos;
     ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
     private View v;
     ListView list;
+    CustomListAdapter adapter1;
 
 
     public ListaEventosFragment() {
@@ -66,9 +67,10 @@ public class ListaEventosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v=inflater.inflate(R.layout.fragment_lista_eventos, container, false);
-        llenarLista();
         // Inflate the layout for this fragment
+        v=inflater.inflate(R.layout.fragment_lista_eventos, container, false);
+
+        llenarLista();
         return v;
     }
 
@@ -80,6 +82,7 @@ public class ListaEventosFragment extends Fragment {
 
         }
         list = (ListView) v.findViewById(R.id.list);
+        adapter1=adapter;
         list.setAdapter(adapter);
         final String finalNombreActividadPadre = nombreActividadPadre;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -92,8 +95,8 @@ public class ListaEventosFragment extends Fragment {
                 //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
                 if(finalNombreActividadPadre.equals("ListaEventosSuperUsuario")) {
                     cambiarDePantalla(eventoSeleccionado);
-                }else{
-                    //Irse a vista de un evento con fragment
+                }else {
+                    listener.onEventoSelecciondo(eventoSeleccionado);
                 }
 
             }
@@ -108,5 +111,24 @@ public class ListaEventosFragment extends Fragment {
         requireActivity().finish();
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        if (context instanceof OnEventoSeleccionadoInteractionListener) {
+            listener = (OnEventoSeleccionadoInteractionListener) context;
+        } else {
+            throw new RuntimeException(context.toString()
+                    + " must implement OnEventoSeleccionadoInteractionListener");
+        }
+    }
 
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        listener = null;
+    }
+
+    public interface OnEventoSeleccionadoInteractionListener {
+        void onEventoSelecciondo(Evento evento);
+    }
 }

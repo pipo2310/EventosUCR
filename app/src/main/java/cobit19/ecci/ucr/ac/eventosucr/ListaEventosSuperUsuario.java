@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 
@@ -25,12 +24,12 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
-public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        ListaEventosFragment.OnEventoSeleccionadoInteractionListener {
     ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
@@ -127,5 +126,10 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
             drawer.closeDrawer(Gravity.LEFT, true);
         }
         return true;
+    }
+
+    @Override
+    public void onEventoSelecciondo(Evento evento) {
+
     }
 }

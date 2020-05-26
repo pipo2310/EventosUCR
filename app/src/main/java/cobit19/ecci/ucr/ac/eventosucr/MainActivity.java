@@ -20,6 +20,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;

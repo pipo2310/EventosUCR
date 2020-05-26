@@ -8,11 +8,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -33,14 +38,6 @@ public class CartaEventoFragment extends Fragment {
         this.evento = evento;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param evento Parameter 1.
-     * @return A new instance of fragment BlankFragment.
-     */
-    // TODO: Rename and change types and number of parameters
     public static CartaEventoFragment newInstance(Evento evento) {
         CartaEventoFragment fragment = new CartaEventoFragment();
         Bundle args = new Bundle();
@@ -69,6 +66,11 @@ public class CartaEventoFragment extends Fragment {
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
         nombre.setText("Evento: " + evento.getNombre());
         institucion.setText("Institución: " + evento.getInstitucion(getContext()).getNombre());
+
+        ImageView imagenEvento = view.findViewById(R.id.explorar_evento_carta_imagen1);
+        ImagenService imagenService = new ImagenService();
+        ArrayList<Imagen> imagenes = imagenService.leerImagenEvento(getContext(),evento.getId());
+        if(imagenes.size()>0){ imagenEvento.setImageBitmap(imagenes.get(0).getImagen());}
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
