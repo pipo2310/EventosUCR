@@ -17,6 +17,7 @@ import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.shared.SinResultadosFragment;
 
@@ -41,13 +42,21 @@ public class BuscarActivity extends AppCompatActivity implements SearchView.OnQu
         ArrayList<Evento> eventos = eventoService.leetListaEventosCuyoNombreContiene(getApplicationContext(), query);
 
         if (eventos.size() > 0) {
+            ImagenService imagenService=new ImagenService();
             Bitmap imagenNula = BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
             ImageView imagenNulaImageView = new ImageView(this);
             imagenNulaImageView.setImageBitmap(imagenNula);
             ArrayList<ImageView> imagenesdeEventos = new ArrayList<ImageView>();
 
-            for (int i = 0; i < eventos.size(); ++i) {
-                imagenesdeEventos.add(imagenNulaImageView);
+            for (Evento evento : eventos){
+                if(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).size()==0){
+                    //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+                    imagenesdeEventos.add(imagenNulaImageView);
+                }else{
+                    ImageView imagenExistente=new ImageView(this);
+                    imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
+                    imagenesdeEventos.add(imagenExistente);
+                }
             }
 
             ListaEventosFragment listaEventosFragment = new ListaEventosFragment(eventos, imagenesdeEventos);
