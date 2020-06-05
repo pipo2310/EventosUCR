@@ -51,6 +51,7 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.mukesh.tinydb.TinyDB;
 
 import java.text.DateFormat;
@@ -429,6 +430,20 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
 
+            /* -- -- */
+
+            // Agregarlo tambien a Usuario eventos creados y a eventos
+
+
+//            FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//            for(int i=0; i<categoriasSeleccionadas.size(); i++){
+//                db.collection("categoriaEventos")
+//                        .document(categorias.get(categoriasSeleccionadas.get(i)).getNombre())
+//                        .collection("eventos").document(evento.getNombre()).set(evento);
+//            }
+
+            /* -- -- */
 
             // Deseo recibir una respuesta: startActivityForResult()
             startActivity(intent);

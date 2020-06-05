@@ -13,10 +13,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -39,6 +43,8 @@ public class Evento implements Parcelable {
     private double longitud;
     private String horaInicio;
     private String horaFin;
+
+    private Long timestamp;
 
     public Evento() { }
 
@@ -86,11 +92,21 @@ public class Evento implements Parcelable {
         this.detalles = detalles;
     }
 
+    @Exclude
     public Calendar getFecha() {
         return fecha;
     }
+    @Exclude
     public void setFecha(Calendar fecha) {
         this.fecha = fecha;
+    }
+
+
+    public Timestamp getTimestamp() {
+        return new Timestamp(fecha.getTime());
+    }
+    public void setTimestamp(Timestamp timestamp) {
+        fecha.setTime(timestamp.toDate());
     }
 
     public String getUbicacion() {

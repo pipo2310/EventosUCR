@@ -4,6 +4,18 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
+
+import androidx.annotation.NonNull;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -93,6 +105,13 @@ public class EventoService {
 
         // Insertar la nueva fila
         return db.insert(DataBaseContract.TABLE_EVENTO, null, values);
+
+        /* -- Como insertar Eventos a firebase -- */
+        // Access a Cloud Firestore instance from your Activity
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        db.collection("eventosUCR").document("eventos").set(evento);
+//        return 1;
     }
 
     public Evento leer(Context context, String idParametro) {
@@ -115,6 +134,19 @@ public class EventoService {
 
         cursor.moveToFirst();
         return obtenerEvento(cursor);
+
+        /* -- Como leer eventos de direbase -- */
+        // Access a Cloud Firestore instance from your Activity
+//        FirebaseFirestore db = FirebaseFirestore.getInstance();
+//
+//        DocumentReference docRef = db.collection("eventosUCR").document("eventos");
+//        docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+//            @Override
+//            public void onSuccess(DocumentSnapshot documentSnapshot) {
+//                Evento evento = documentSnapshot.toObject(Evento.class);
+//                System.out.println(evento.toString());
+//            }
+//        });
     }
 
     public ArrayList<Evento> leerLista(Context context) {
