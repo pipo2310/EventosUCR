@@ -20,11 +20,11 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioService;
+import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -45,20 +45,21 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        Intent a =new Intent(this, MenuActivity.class);
-        startActivity(a);
-        //finish();
+        // Verificar si hay un usuario inscrito en la app
+        if(true) {
+            // Si no hay un usuario se envia a la pantalla de login
+            cambiarDePantalla(LoginActivity.class);
+        }else{
+            // Si ya hay un usuario se envia a la vista de explorar
+            cambiarDePantalla(MenuActivity.class);
+        }
     }
 
 
-    public void cambiarDePantalla() {
-        Intent a =new Intent(this,CrearEvento.class);
+    public void cambiarDePantalla(Class<?> activity) {
+        Intent a =new Intent(this, activity);
         startActivity(a);
-    }
-
-    public void irMenu(){
-        Intent a =new Intent(this, MenuActivity.class);
-        startActivity(a);
+        finish();
     }
 
     private void populateDatabase() {
