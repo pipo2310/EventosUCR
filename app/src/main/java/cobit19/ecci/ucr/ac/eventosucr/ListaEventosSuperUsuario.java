@@ -7,11 +7,13 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 
 import androidx.fragment.app.FragmentTransaction;
@@ -23,12 +25,15 @@ import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.shared.ListaEventosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 
-public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class ListaEventosSuperUsuario extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        ListaEventosFragment.OnEventoSeleccionadoInteractionListener {
     ArrayList<Evento>eventos;
     ListView list;
     public final static String EXTRA_MESSAGE="evento";
+    public final static String EXTRA_MESSAGEIMAGEN="imagenes";
     private DrawerLayout drawer;
 
     @Override
@@ -60,6 +65,7 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
         leerEventos();
     }
 
+
     public void addEvento() {
 
         Intent intent = new Intent(this, CrearEvento.class);
@@ -73,45 +79,36 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
 
     public void leerEventos() {
         EventoService eventoService=new EventoService();
-        eventos=eventoService.leerLista(getApplicationContext());
-        //llamar a fragmento con vista de listaeventossuperusuario id=(listaEventosFragment) y la lista de eventos de parametros para hacer vuelta del adapter
-        ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos);
+        final ImagenService imagenService=new ImagenService();
+        Bitmap imagenNula= BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
+        ImageView imagenNulaImageView=new ImageView(this);
+        imagenNulaImageView.setImageBitmap(imagenNula);
+        eventos = eventoService.leerLista(getApplicationContext());
+        ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
+        for (Evento evento : eventos){
+            if(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).size()==0){
+                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+                imagenesdeEventos.add(imagenNulaImageView);
+            }else{
+
+                ImageView imagenExistente=new ImageView(this);
+                imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
+                imagenesdeEventos.add(imagenExistente);
+            }
+
+
+        }
+
+        ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventos,imagenesdeEventos);
         getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
 
-        //getFragmentManager().beginTransaction()
-          //      .add(R.id.listaEventosFragmentVista, listaEventosFragment).commit();
-/*
-        CustomListAdapter adapter = new CustomListAdapter(this, eventos);
-        list = (ListView) findViewById(R.id.list);
-        list.setAdapter(adapter);
-        list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                // TODO Auto-generated method stub
-
-                Evento eventoSeleccionado = eventos.get(position);
-                //Irse a otra pantalla con los extras desde esta para no hacer otra llamada a la base en la siguiente actividad
-                cambiarDePantalla(eventoSeleccionado);
 
 
-            }
-        });
-
- */
 
     }
-/*
-    public void cambiarDePantalla(Evento evento) {
-        Intent intent = new Intent(this, ModificarEliminarEvento.class);
-        intent.putExtra(EXTRA_MESSAGE, evento);
 
-        // Deseo recibir una respuesta: startActivityForResult()
-        startActivityForResult(intent, 0);
-        finish();
-    }
-*/
     /**
      * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
      * @param menuItem
@@ -129,5 +126,10 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
             drawer.closeDrawer(Gravity.LEFT, true);
         }
         return true;
+    }
+
+    @Override
+    public void onEventoSelecciondo(Evento evento) {
+
     }
 }

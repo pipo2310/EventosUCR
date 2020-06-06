@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.os.strictmode.SqliteObjectLeakedViolation;
 
 import java.io.ByteArrayOutputStream;
+import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
@@ -80,6 +81,42 @@ public class InstitucionService {
         }
         return institucion;
     }
+
+    public ArrayList<Institucion> leerLista(Context context){
+        SQLiteDatabase db = getSQLiteDatabase(context);
+
+        ArrayList<Institucion> instituciones=new ArrayList<Institucion>();
+        ContentValues values = new ContentValues();
+
+
+
+        Cursor cursor = db.query(DataBaseContract.TABLE_INSTITUCION,
+                projection,
+                null,
+                null,
+                null,
+                null,
+                null);
+        cursor.moveToFirst();
+        if (cursor.getCount() > 0) {
+            while(!cursor.isAfterLast()) {
+                Institucion institucionAgregar=new Institucion();
+                institucionAgregar.setId(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_ID)));
+                institucionAgregar.setNombre(cursor.getString(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_NOMBRE)));
+                byte[] logoBlob = cursor.getBlob(cursor.getColumnIndex(DataBaseContract.TABLE_INSTITUCION_COLUMN_LOGO));
+                if (logoBlob != null) {
+                    Bitmap logo = BitmapFactory.decodeByteArray(logoBlob,0,logoBlob.length);
+                    institucionAgregar.setLogo(logo);
+                }
+                instituciones.add(institucionAgregar);
+                institucionAgregar=null;
+                cursor.moveToNext();
+            }
+        }
+
+        return instituciones;
+    }
+
 
     public int actualizar(Context context, Institucion institucion){
         SQLiteDatabase db = getSQLiteDatabase(context);

@@ -14,8 +14,8 @@ public class Imagen implements Parcelable {
 
     }
 
-    public Imagen(String id, String idEvento, Bitmap imagen){
-        this.id = id;
+    public Imagen(String idEvento, Bitmap imagen){
+
         this.idEvento = idEvento;
         this.imagen = imagen;
     }
