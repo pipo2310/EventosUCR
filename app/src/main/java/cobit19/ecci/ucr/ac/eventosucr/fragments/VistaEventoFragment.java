@@ -1,8 +1,12 @@
 package cobit19.ecci.ucr.ac.eventosucr.fragments;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,6 +16,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +44,9 @@ import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
  * A simple {@link Fragment} subclass.
  */
 public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback {
+
+    private static final int LOCATION_REQUEST_CODE = 101;
+
     View v;
     Evento evento;
     GoogleMap VistaEventoMap;
@@ -170,6 +178,38 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         eliminarDeFavoritos = true;
     }
 
+
+    //Mapas
+
+    //Permisos para acceder a la ubicacion  del dispositivo
+    protected void requestPermission(String permissionType,int requestCode) {
+        ActivityCompat.requestPermissions(getActivity(),
+                new String[]{permissionType}, requestCode
+        );
+    }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case LOCATION_REQUEST_CODE: {
+                if (grantResults.length == 0
+                        || grantResults[0] !=
+                        PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(getActivity(),
+                            "Unable to show location - permission required",
+                            Toast.LENGTH_LONG).show();
+                } else {
+                    SupportMapFragment mapFragment =
+                            (SupportMapFragment) getChildFragmentManager()
+                                    .findFragmentById(R.id.ubicacionMap);
+                    mapFragment.getMapAsync(this);
+                }
+            }
+        }
+    }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         configurarMapa(googleMap);
@@ -179,6 +219,19 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     //Configura la cámara y el zoom
     public void configurarMapa(GoogleMap googleMap){
         VistaEventoMap = googleMap;
+
+        //Permiso de acceso a la ubicación del dispositivo
+        if (VistaEventoMap != null) {
+            int permission = ContextCompat.checkSelfPermission(getActivity(),
+                    Manifest.permission.ACCESS_FINE_LOCATION);
+            if (permission == PackageManager.PERMISSION_GRANTED) {
+                VistaEventoMap.setMyLocationEnabled(true);
+            } else {
+                requestPermission(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        LOCATION_REQUEST_CODE);
+            }
+        }
 
         //Se agregan las coordenadas del mapa
         LatLng ubicacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
