@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.login.LoginFragment"
+    android:fitsSystemWindows="true"
+    android:background="@color/colorPrimary"
+    android:gravity="center">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="100dp"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/login_logo"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ucr_logo_login"/>
+
+        <EditText
+            android:id="@+id/login_nombre_usuario"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Correo UCR"
+            android:textSize="18sp"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="40dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp"
+            android:background="@drawable/rounded_edittext"/>
+
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="40dp"
+            android:layout_marginRight="40dp">
+
+            <EditText
+                android:id="@+id/login_contrasenna"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Contraseña"
+                android:textSize="18sp"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/rounded_edittext" />
+
+            <ImageView
+                android:id="@+id/show_pass_btn"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center|end"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/hide_password"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <Button
+            android:id="@+id/login_boton_is"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Iniciar Sesión"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/boton_login_celeste"></Button>
+
+    </LinearLayout>
+
+</RelativeLayout>
