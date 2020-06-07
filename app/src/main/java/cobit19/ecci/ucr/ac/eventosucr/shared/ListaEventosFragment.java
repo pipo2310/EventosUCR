@@ -34,13 +34,15 @@ public class ListaEventosFragment extends Fragment {
     private OnEventoSeleccionadoInteractionListener listener;
 
     private ArrayList<Evento> eventos;
-    ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
+    private ArrayList<ImageView> imagenesdeEventos;
     private View v;
     ListView list;
     CustomListAdapter adapter1;
 
 
     public ListaEventosFragment() {
+        eventos=new ArrayList<Evento>();
+        imagenesdeEventos=new ArrayList<ImageView>();
         // Required empty public constructor
     }
     public ListaEventosFragment(ArrayList<Evento> eventos,ArrayList<ImageView> imagenesdeEventos) {
@@ -75,6 +77,10 @@ public class ListaEventosFragment extends Fragment {
     }
 
     private void llenarLista() {
+        if(eventos==null){
+            eventos=new ArrayList<Evento>();
+        }
+
         CustomListAdapter adapter = new CustomListAdapter(getActivity(), eventos,imagenesdeEventos);
         String nombreActividadPadre="";
         if(isAdded()) {

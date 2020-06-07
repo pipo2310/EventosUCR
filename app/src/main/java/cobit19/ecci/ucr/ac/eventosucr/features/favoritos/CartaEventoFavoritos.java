@@ -2,16 +2,21 @@ package cobit19.ecci.ucr.ac.eventosucr.features.favoritos;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -94,6 +99,25 @@ public class CartaEventoFavoritos extends Fragment {
     public void QuitarMeGusta(){
         UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
         usuarioEventoService.eliminar(getContext(), Constantes.CORREO_UCR_USUARIO, evento.getId());
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("meInteresaUsuarioEvento")
+                .document(Constantes.CORREO_UCR_USUARIO)
+                .collection("eventosMeInteresan")
+                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
         String tag = Constantes.EVENTO_FAV_TAG+evento.getId();
         Fragment fragmentToRemove = getActivity().getSupportFragmentManager().findFragmentByTag(tag);
         getActivity()
