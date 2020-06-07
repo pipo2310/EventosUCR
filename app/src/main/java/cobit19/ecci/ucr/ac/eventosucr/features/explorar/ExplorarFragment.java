@@ -22,26 +22,21 @@ public class ExplorarFragment extends Fragment {
     public ExplorarFragment() {
     }
 
-
-    public static ExplorarFragment newInstance(String param1, String param2) {
+    public static ExplorarFragment newInstance() {
         ExplorarFragment fragment = new ExplorarFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        // Inflate the layout for this fragment
+        // Creamos el view del fragmento explorar
         View view = inflater.inflate(R.layout.fragment_explorar, container, false);
 
         if (view.findViewById(R.id.explorar_lista_categorias) != null) {
