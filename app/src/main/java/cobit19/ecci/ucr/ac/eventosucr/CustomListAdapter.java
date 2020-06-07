@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
@@ -33,6 +35,7 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
         institucion.setText(itemname.get(position).getInstitucion(context).getNombre());
         ImageView imagenEvento=(ImageView)rowView.findViewById(R.id.image);
+        //Picasso.with(getContext()).load(itemname.get(position).getImagen()).into(imagenEvento);
         imagenEvento.setImageDrawable(imagenes.get(position).getDrawable());
 
         return rowView;

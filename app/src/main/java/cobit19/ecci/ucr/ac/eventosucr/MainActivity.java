@@ -117,38 +117,38 @@ public class MainActivity extends AppCompatActivity {
 
         // Pertenecen a la categoria musica
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Festival", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Festival", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Son Latino", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Son Latino", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Cantos Gregorianos", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Cantos Gregorianos", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Zelda", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Tributo a Zelda", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Mario Bros", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Tributo a Mario Bros", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Pertenecen a la categoria Arte
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Pintura", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Pintura", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Dibujo", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Dibujo", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Lapiz y Papel", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Lapiz y Papel", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Pertenecen a la categoria Baile
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Twerking", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Twerking", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Bailar merengue", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Bailar merengue", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Asociamos a Musica

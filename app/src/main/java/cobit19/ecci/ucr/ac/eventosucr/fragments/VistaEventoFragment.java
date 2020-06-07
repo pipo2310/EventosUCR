@@ -2,8 +2,10 @@ package cobit19.ecci.ucr.ac.eventosucr.fragments;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +21,9 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -131,6 +136,11 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Cuando el usuario le da click al botón, añade el evento a la lista de favoritos del usuario
     public void DarMeGusta(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("meInteresaUsuarioEvento")
+                .document(Constantes.CORREO_UCR_USUARIO)
+                .collection("eventosMeInteresan")
+                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre()).set(evento);
         usuarioEventoService.insertar(getContext(), new UsuarioEvento(Constantes.CORREO_UCR_USUARIO, evento.getId()));
         btnNoMeInteresa.setVisibility(View.VISIBLE);
         btnMeInteresa.setVisibility(View.GONE);
@@ -139,6 +149,24 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Cuando el usuario le da click al botón, elimina el evento a la lista de favoritos del usuario
     public void QuitarMeGusta(){
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("meInteresaUsuarioEvento")
+                .document(Constantes.CORREO_UCR_USUARIO)
+                .collection("eventosMeInteresan")
+                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre())
+                .delete()
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("", "DocumentSnapshot successfully deleted!");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("TAG", "Error deleting document", e);
+                    }
+                });
         usuarioEventoService.eliminar(getContext(), usuarioEvento.getCorreoUcr(), usuarioEvento.getIdEvento());
         btnMeInteresa.setVisibility(View.VISIBLE);
         btnNoMeInteresa.setVisibility(View.GONE);

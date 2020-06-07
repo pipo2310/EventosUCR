@@ -17,6 +17,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -47,6 +48,10 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
 import java.text.DateFormat;
 import java.text.DecimalFormat;
@@ -100,7 +105,32 @@ String id;
 
         }
         ImagenService imagenService=new ImagenService();
-        imagenes=imagenService.leerImagenEvento(getApplicationContext(),evento.getId());
+        //imagenes=imagenService.leerImagenEvento(getApplicationContext(),evento.getId());
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
+        final long ONE_MEGABYTE = 1024 * 1024;
+        final ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
+        //Leer imagen de evento
+        mountainImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+            @Override
+            public void onSuccess(byte[] bytes) {
+                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+
+                imagenEvento.setImageBitmap(bmp);
+
+
+                // Data for "images/island.jpg" is returns, use this as needed
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+                Bitmap imagenNula= BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
+                imagenEvento.setImageBitmap(imagenNula);
+            }
+        });
         Button modificarEvento = (Button) findViewById(R.id.modificarEvento);
         modificarEvento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -244,7 +274,7 @@ String id;
         }else{
             imagenService.insertar(getApplicationContext(),imagenAmodificar);
         }
-        
+
         Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
         startActivity(intent);
         finish();
@@ -375,11 +405,14 @@ String id;
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
         TextView fecha = (TextView) findViewById(R.id.fecha);
+        /*
         ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
         if (imagenes.size()>0){
             imagenEvento.setImageBitmap(imagenes.get(0).getImagen());
             idImagenModificar=imagenes.get(0).getId();
         }
+
+         */
 
         fecha.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         nombre.setHint(evento.getNombre());

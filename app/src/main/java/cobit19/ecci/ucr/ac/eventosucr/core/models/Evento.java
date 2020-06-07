@@ -43,12 +43,15 @@ public class Evento implements Parcelable {
     private double longitud;
     private String horaInicio;
     private String horaFin;
+    private String imagen;
+
+
 
     private Long timestamp;
 
     public Evento() { }
 
-    public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud) {
+    public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud,String imagen) {
         this.nombre = nombre;
         this.detalles = detalles;
         this.ubicacion=ubicacion;
@@ -58,6 +61,15 @@ public class Evento implements Parcelable {
         this.horaFin=horaFin;
         this.latitud=latitud;
         this.longitud=longitud;
+        this.imagen=imagen;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public String getId() {
