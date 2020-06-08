@@ -3,6 +3,7 @@ package cobit19.ecci.ucr.ac.eventosucr.fragments;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,14 +25,12 @@ import java.text.DateFormat;
 import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.Constantes;
-import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,6 +44,8 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
+    Button comentarios;
+
     private boolean eliminarDeFavoritos = false;
 
     public VistaEventoFragment() {
@@ -76,6 +77,13 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
             // Agregamos la imagen del evento
             imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
         }
+        comentarios=(Button)v.findViewById(R.id.comentarios);
+        comentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iraFragmentComentarios();
+            }
+        });
 
         //Botón para que el usuario le de like a un evento
         btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
@@ -109,6 +117,14 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         });
 
         return v;
+    }
+
+    private void iraFragmentComentarios() {
+        ComentariosFragment comentariosFragment= new ComentariosFragment(evento);
+        getFragmentManager().beginTransaction().replace(R.id.container_fragment, comentariosFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
+
     }
 
 
