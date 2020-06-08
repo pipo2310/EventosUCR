@@ -12,6 +12,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -76,12 +77,13 @@ public class ComentariosFragment extends Fragment {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
         DatabaseReference myRef = database.getReference();
-        myRef.child("comentariosEvento").child(evento.getNombre()).setValue(comment);
+        myRef.child("comentariosEvento").child(evento.getNombre()).push().setValue(comment);
 
 
     }
 
     private void llenarLista() {
+        /*
         ValueEventListener postListener = new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -103,10 +105,40 @@ public class ComentariosFragment extends Fragment {
                 // ...
             }
         };
+
+         */
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("comentariosEvento/"+evento.getNombre());
-        ref.addValueEventListener(postListener);
+        //ref.addValueEventListener(postListener);
+        ref.orderByKey().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                Comentario newPost = dataSnapshot.getValue(Comentario.class);
+
+                comentarios.add(newPost.getHora());
+                //ya aqui esta la el ultimo de los comentarios en teoria
+                llenarListView();
+                //System.out.println("Author: " + newPost.getNombre());
+                //System.out.println("Title: " + newPost.getHora());
+                //System.out.println("Previous Post ID: " + prevChildKey);
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
+
+        //DatabaseReference ref = database.getReference("comentariosEvento/"+evento.getNombre());
+        //ref.addValueEventListener(postListener);
 
 
 
