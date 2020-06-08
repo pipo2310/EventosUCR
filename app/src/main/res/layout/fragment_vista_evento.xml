@@ -54,7 +54,12 @@
                     app:layout_constraintHorizontal_bias="0.038"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+                    <Button
+                        android:id="@+id/comentarios"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content">
 
+                    </Button>
                 <ImageView
                     android:id="@+id/imgCreadorEvento"
                     android:layout_width="47dp"
