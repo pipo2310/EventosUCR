@@ -101,6 +101,7 @@ public class EventoService {
         // Filtro para el WHERE
         String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
         String[] selectionArgs = {idParametro};
+        String fechaEvento=DataBaseContract.TABLE_EVENTO_COLUMN_FECHA + " DESC";
 
         // Resultados en el cursor
         Cursor cursor = db.query(
@@ -110,7 +111,7 @@ public class EventoService {
                 selectionArgs, // valores del where
                 null, // agrupamiento
                 null, // filtros por grupo
-                null // orden
+                fechaEvento // orden
         );
 
         cursor.moveToFirst();
@@ -142,7 +143,8 @@ public class EventoService {
                 "FROM " + DataBaseContract.TABLE_CATEGORIA_EVENTO + " categoriaEvento " +
                 "INNER JOIN " + DataBaseContract.TABLE_EVENTO + " evento " +
                 "ON categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO + " = evento." + DataBaseContract.TABLE_EVENTO_COLUMN_ID + " " +
-                "WHERE categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + "= ?";
+                "WHERE categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + "= ?"+" "+
+                "ORDER BY evento."+DataBaseContract.TABLE_EVENTO_COLUMN_FECHA+" ASC";
         String[] selectionArgs = {idParametroCategoria};
 
         Cursor cursor = db.rawQuery(sql, selectionArgs);
