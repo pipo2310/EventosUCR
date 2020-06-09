@@ -1,5 +1,6 @@
 package cobit19.ecci.ucr.ac.eventosucr.fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -24,6 +25,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.ComentariosActivity;
 import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -45,6 +47,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     Button btnMeInteresa;
     Button btnNoMeInteresa;
     TextView comentarios;
+    public static final String EXTRA_MESSAGE_VE = "EVENTO_ID";
 
     private boolean eliminarDeFavoritos = false;
 
@@ -120,13 +123,11 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     }
 
     private void iraFragmentComentarios() {
-        ComentariosFragment comentariosFragment= new ComentariosFragment(evento);
-        getActivity()
-                .getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.container_fragment, comentariosFragment)
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                .commit();
+        // Pasar a la siguiente actividad
+        Intent intent = new Intent(getContext(), ComentariosActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_VE, evento);
+        // Deseo recibir una respuesta: startActivityForResult()
+        startActivityForResult(intent, 0);
     }
 
 
