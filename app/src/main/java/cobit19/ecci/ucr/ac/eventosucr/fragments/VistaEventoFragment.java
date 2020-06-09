@@ -3,8 +3,10 @@ package cobit19.ecci.ucr.ac.eventosucr.fragments;
 import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -18,6 +20,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -26,6 +30,8 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -57,6 +63,9 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     Button btnNoMeInteresa;
     private boolean eliminarDeFavoritos = false;
 
+    LatLng ubicacionActual = new LatLng(0,0);
+    FusedLocationProviderClient fusedLocationProviderClient;
+
     public VistaEventoFragment() {
     }
 
@@ -75,6 +84,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ubicacionMap);
         mapFragment.getMapAsync(this);
 
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mostrarImagenes();
 
@@ -232,6 +242,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
                         LOCATION_REQUEST_CODE);
             }
         }
+        obtenerUbicacion();
 
         //Se agregan las coordenadas del mapa
         LatLng ubicacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
@@ -262,6 +273,25 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         VistaEventoMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
     }
+
+    private void obtenerUbicacion() {
+        Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
+        locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
+            @Override
+            public void onComplete(@NonNull Task<Location> task) {
+                if (task.isSuccessful()) {
+                    // Set the map's camera position to the current location of the device.
+                    Location mLastKnownLocation = task.getResult();
+                    VistaEventoMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                            new LatLng(mLastKnownLocation.getLatitude(),
+                                    mLastKnownLocation.getLongitude()), 20));
+                    ubicacionActual = new LatLng(mLastKnownLocation.getLatitude(),
+                            mLastKnownLocation.getLongitude());
+                }
+            }
+        });
+    }
+
 
     public String getTagEliminar() {
         String tag = null;
