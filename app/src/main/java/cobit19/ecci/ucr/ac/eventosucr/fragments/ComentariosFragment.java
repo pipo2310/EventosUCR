@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -20,6 +21,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import cobit19.ecci.ucr.ac.eventosucr.ComentariosListAdapter;
 import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
@@ -35,8 +37,8 @@ import java.util.Date;
  */
 public class ComentariosFragment extends Fragment {
     Evento evento;
-    View v;
-    ArrayList<String> comentarios=new ArrayList<String>();
+    View view;
+    ArrayList<Comentario> comentarios=new ArrayList<Comentario>();
     ListView list;
     public ComentariosFragment() {
         // Required empty public constructor
@@ -52,8 +54,14 @@ public class ComentariosFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        v=inflater.inflate(R.layout.fragment_comentarios, container, false);
-        Button enviarComentario=(Button)v.findViewById(R.id.enviarComentario);
+        // Inflate the layout for this fragment
+        view = inflater.inflate(R.layout.fragment_comentarios, container, false);
+
+        // Llenamos la lista con los comentarios de los usuarios
+        llenarLista();
+
+        // boton para enviar un comentario
+        TextView enviarComentario = view.findViewById(R.id.comentarios_enviar_comentario);
 
         enviarComentario.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -61,62 +69,48 @@ public class ComentariosFragment extends Fragment {
                 comentar();
             }
         });
-        llenarLista();
-        // Inflate the layout for this fragment
-        return v;
+
+        // Retornamos la vista
+        return view;
     }
 
     private void comentar() {
+        // Texto del comentario que se quiere enviar
+        TextView comentarioNuevo = view.findViewById(R.id.comentarios_comentario_nuevo);
+        // Se obtiene la fecha actual
         Date currentTime = Calendar.getInstance().getTime();
+        // Se crea un objeto comentario
         Comentario comment=new Comentario();
-        comment.setComentario("Comentario");
+        // al objeto comentario se le agrega el texto que ingreso el usuario
+        comment.setComentario(comentarioNuevo.getText().toString());
+        // se agrega la fecha y hora actual del usuario
         comment.setHora(currentTime.toString());
-        comment.setNombre("Papillo");
-        comment.setCommentante(Constantes.CORREO_UCR_USUARIO);
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // se agrega el nombre del usuario que comenta
+        // TODO: Falta obtener el nombre del usuario
+        comment.setNombre("Walter Bonilla");
+        // se agrega el identificador del usuario
+        comment.setComentante(Constantes.CORREO_UCR_USUARIO);
+
+        // se limpia la entrada del usuario
+        comentarioNuevo.setText("");
+
+        // Obtenemos la base de datos de Firebase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
 
+        // insertamos el comentario en la base de datos
         DatabaseReference myRef = database.getReference();
         myRef.child("comentariosEvento").child(evento.getNombre()).push().setValue(comment);
-
-
     }
 
     private void llenarLista() {
-        /*
-        ValueEventListener postListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-
-                Comentario comentario = dataSnapshot.getValue(Comentario.class);
-                comentarios.add(comentario.getHora());
-                //ya aqui esta la el ultimo de los comentarios en teoria
-                int a =0;
-                a++;
-                llenarListView();
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w("TAG", "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-
-         */
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("comentariosEvento/"+evento.getNombre());
-        //ref.addValueEventListener(postListener);
         ref.orderByKey().addChildEventListener(new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 Comentario newPost = dataSnapshot.getValue(Comentario.class);
 
-                comentarios.add(newPost.getHora());
+                comentarios.add(newPost);
                 //ya aqui esta la el ultimo de los comentarios en teoria
                 llenarListView();
                 //System.out.println("Author: " + newPost.getNombre());
@@ -136,18 +130,12 @@ public class ComentariosFragment extends Fragment {
             @Override
             public void onCancelled(DatabaseError databaseError) {}
         });
-
-        //DatabaseReference ref = database.getReference("comentariosEvento/"+evento.getNombre());
-        //ref.addValueEventListener(postListener);
-
-
-
     }
 
     private void llenarListView() {
-        ArrayAdapter<String> itemsAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, comentarios);
-        list = (ListView) v.findViewById(R.id.list);
-        list.setAdapter(itemsAdapter);
+        ComentariosListAdapter adapter = new ComentariosListAdapter(getActivity(), comentarios);
+        list = view.findViewById(R.id.lista_comentarios);
+        list.setAdapter(adapter);
     }
 
 }

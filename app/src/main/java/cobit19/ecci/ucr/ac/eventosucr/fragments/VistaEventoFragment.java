@@ -44,7 +44,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
-    Button comentarios;
+    TextView comentarios;
 
     private boolean eliminarDeFavoritos = false;
 
@@ -77,7 +77,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
             // Agregamos la imagen del evento
             imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
         }
-        comentarios=(Button)v.findViewById(R.id.comentarios);
+        comentarios = v.findViewById(R.id.ir_a_comentarios);
         comentarios.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -121,10 +121,12 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     private void iraFragmentComentarios() {
         ComentariosFragment comentariosFragment= new ComentariosFragment(evento);
-        getFragmentManager().beginTransaction().replace(R.id.container_fragment, comentariosFragment)
+        getActivity()
+                .getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.container_fragment, comentariosFragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
-
     }
 
 
