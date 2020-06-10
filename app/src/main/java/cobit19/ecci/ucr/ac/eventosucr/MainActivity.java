@@ -2,14 +2,18 @@ package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.GregorianCalendar;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
@@ -39,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
+
+            asignarAlarma();
         }
     }
 
@@ -59,6 +65,14 @@ public class MainActivity extends AppCompatActivity {
     public void irMenu(){
         Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
+    }
+
+    //Notificaciones
+    public void asignarAlarma() {
+        Long alertTime = new GregorianCalendar().getTimeInMillis()+15*1000;
+        Intent alertIntent = new Intent(this, AlertManager.class);
+        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
+        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime, PendingIntent.getBroadcast(this, 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT));
     }
 
     private void populateDatabase() {
