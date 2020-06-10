@@ -11,6 +11,7 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import android.os.Looper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -61,9 +65,11 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
+
     private boolean eliminarDeFavoritos = false;
 
-    LatLng ubicacionActual = new LatLng(0,0);
+    private LatLng ubicacionActual = new LatLng(0,0);
+    Location mLastKnownLocation;
     FusedLocationProviderClient fusedLocationProviderClient;
 
     public VistaEventoFragment() {
@@ -242,6 +248,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
                         LOCATION_REQUEST_CODE);
             }
         }
+
         obtenerUbicacion();
 
         //Se agregan las coordenadas del mapa
@@ -249,6 +256,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
         //Se agrega el marcador en el mapa
         VistaEventoMap.addMarker(new MarkerOptions().position(ubicacionEvento).title(evento.getNombre()));
+        VistaEventoMap.addMarker(new MarkerOptions().position(ubicacionActual).title("Mi ubicacion"));
 
         // Muevo el mapa hacia la posición del marcador
         VistaEventoMap.moveCamera(CameraUpdateFactory.newLatLng(ubicacionEvento));
@@ -274,23 +282,46 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     }
 
-    private void obtenerUbicacion() {
+    private LatLng obtenerUbicacion() {
+        final LatLng ubicacion;
         Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
         locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
             @Override
             public void onComplete(@NonNull Task<Location> task) {
                 if (task.isSuccessful()) {
                     // Set the map's camera position to the current location of the device.
-                    Location mLastKnownLocation = task.getResult();
-                    VistaEventoMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
-                            new LatLng(mLastKnownLocation.getLatitude(),
-                                    mLastKnownLocation.getLongitude()), 20));
-                    ubicacionActual = new LatLng(mLastKnownLocation.getLatitude(),
+                    mLastKnownLocation = task.getResult();
+                   //VistaEventoMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
+                          //  new LatLng(mLastKnownLocation.getLatitude(),
+                              //      mLastKnownLocation.getLongitude()), 20));
+                   ubicacionActual = new LatLng(mLastKnownLocation.getLatitude(),
                             mLastKnownLocation.getLongitude());
                 }
             }
         });
+        return  ubicacionActual;
     }
+
+  /*  private double obtenerUbicacion(){
+        LocationRequest locationRequest = new LocationRequest();
+        locationRequest.setInterval(10000);
+        locationRequest.setFastestInterval(3000);
+        locationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(locationRequest, new LocationCallback() {
+            @Override
+            public void onLocationResult(LocationResult locationResult){
+                super.onLocationResult(locationResult);
+                LocationServices.getFusedLocationProviderClient(getActivity()).removeLocationUpdates(this);
+                if(locationResult != null && locationResult.getLocations().size() > 0){
+                    int latestLocationIndex = locationResult.getLocations().size()-1;
+                    double latitud = locationResult.getLocations().get(latestLocationIndex).getLatitude();
+                    double longitud = locationResult.getLocations().get(latestLocationIndex).getLongitude();
+                    ubicacionActual = new LatLng(latitud, longitud);
+                }
+            }
+        }, Looper.getMainLooper());
+        return latitud
+    }*/
 
 
     public String getTagEliminar() {
