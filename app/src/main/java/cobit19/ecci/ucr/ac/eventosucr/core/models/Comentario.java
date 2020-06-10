@@ -4,22 +4,22 @@ public class Comentario {
     private String comentario;
     private String nombre;
     private String hora;
-    private String commentante;
+    private String comentante;
     public Comentario(){}
 
     public Comentario(String comentario, String nombre, String hora,String commentante) {
         this.comentario = comentario;
         this.nombre = nombre;
         this.hora = hora;
-        this.commentante=commentante;
+        this.comentante=commentante;
     }
 
-    public String getCommentante() {
-        return commentante;
+    public String getComentante() {
+        return comentante;
     }
 
-    public void setCommentante(String commentante) {
-        this.commentante = commentante;
+    public void setComentante(String comentante) {
+        this.comentante = comentante;
     }
 
     public String getComentario() {
