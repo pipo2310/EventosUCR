@@ -41,6 +41,10 @@ public class ComentariosActivity extends AppCompatActivity {
             onBackPressed();
         }
 
+        // Ponemos el nombre del evento
+        TextView nombreEvento = findViewById(R.id.comentarios_nombre_evento);
+        nombreEvento.setText(evento.getNombre());
+
         // Llenamos la lista con los comentarios de los usuarios
         llenarLista();
 
@@ -59,8 +63,7 @@ public class ComentariosActivity extends AppCompatActivity {
         // Texto del comentario que se quiere enviar
         TextView comentarioNuevo = findViewById(R.id.comentarios_comentario_nuevo);
         String textoComentario = comentarioNuevo.getText().toString();
-        textoComentario.replaceAll("\\s+","");
-        if(textoComentario == "") {
+        if(textoComentario != "") {
             // Se obtiene la fecha actual
             Date currentTime = Calendar.getInstance().getTime();
             // Se crea un objeto comentario
