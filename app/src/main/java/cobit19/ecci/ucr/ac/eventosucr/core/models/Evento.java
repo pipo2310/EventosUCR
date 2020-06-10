@@ -13,10 +13,14 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.Exclude;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
 
@@ -39,10 +43,15 @@ public class Evento implements Parcelable {
     private double longitud;
     private String horaInicio;
     private String horaFin;
+    private String imagen;
+
+
+
+    private Long timestamp;
 
     public Evento() { }
 
-    public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud) {
+    public Evento(String nombre, String idInstitucion, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud,String imagen) {
         this.nombre = nombre;
         this.detalles = detalles;
         this.ubicacion=ubicacion;
@@ -52,6 +61,15 @@ public class Evento implements Parcelable {
         this.horaFin=horaFin;
         this.latitud=latitud;
         this.longitud=longitud;
+        this.imagen=imagen;
+    }
+
+    public String getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
     }
 
     public String getId() {
@@ -86,11 +104,21 @@ public class Evento implements Parcelable {
         this.detalles = detalles;
     }
 
+    @Exclude
     public Calendar getFecha() {
         return fecha;
     }
+    @Exclude
     public void setFecha(Calendar fecha) {
         this.fecha = fecha;
+    }
+
+
+    public Timestamp getTimestamp() {
+        return new Timestamp(fecha.getTime());
+    }
+    public void setTimestamp(Timestamp timestamp) {
+        fecha.setTime(timestamp.toDate());
     }
 
     public String getUbicacion() {

@@ -1,5 +1,7 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
+import android.text.format.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -33,5 +35,9 @@ public class UtilDates {
         fechaParaExplorarEvenoCarta = month_date.format(fecha.getTime());
         fechaParaExplorarEvenoCarta += "\n" + fecha.get(Calendar.DAY_OF_MONTH);
         return fechaParaExplorarEvenoCarta;
+    }
+
+    public static boolean esMañana(Date d){
+        return DateUtils.isToday(d.getTime()-DateUtils.DAY_IN_MILLIS);
     }
 }

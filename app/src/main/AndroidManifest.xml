@@ -60,7 +60,7 @@
 
         <receiver android:name=".AlertManager">
             <intent-filter>
-                <action android:name="cobit19.ecci.ucr.ac.eventosucr"/>
+                <action android:name="cobit19.ecci.ucr.ac.eventosucr.AlertManager"/>
             </intent-filter>
         </receiver>
 

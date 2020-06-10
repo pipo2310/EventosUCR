@@ -3,6 +3,8 @@ package cobit19.ecci.ucr.ac.eventosucr;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlarmManager;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -10,6 +12,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 
+import java.nio.channels.Channel;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -32,10 +35,14 @@ import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioService;
 
 public class MainActivity extends AppCompatActivity {
 
+    private final String NOTIFICATION_CHANNEL_ID = "1";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        //crea el canal de notificaciones
+        crearCanalNotificacion();
+        asignarAlarma();
         SharedPreferences sharedPreferences = getSharedPreferences ("COBIT19_EVENTOS_UCR", MODE_PRIVATE);
         if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
@@ -44,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
 
-            asignarAlarma();
+
         }
     }
 
@@ -68,11 +75,30 @@ public class MainActivity extends AppCompatActivity {
     }
 
     //Notificaciones
+    public void crearCanalNotificacion(){
+        if (android.os.Build.VERSION. SDK_INT >= android.os.Build.VERSION_CODES. O ) {
+            int importance = NotificationManager. IMPORTANCE_DEFAULT ;
+            NotificationChannel notificationChannel = new NotificationChannel( NOTIFICATION_CHANNEL_ID , "ProximoEvento" , importance) ;
+            notificationChannel.setDescription("Canal de notificaciones de eventos");
+
+            NotificationManager mNotificationManager = getSystemService(NotificationManager.class) ;
+            mNotificationManager.createNotificationChannel(notificationChannel);
+        }
+    }
+
     public void asignarAlarma() {
-        Long alertTime = new GregorianCalendar().getTimeInMillis()+15*1000;
+        Calendar alertTime = Calendar.getInstance();
+
+        alertTime.set(Calendar.HOUR_OF_DAY, 13);
+        alertTime.set(Calendar.MINUTE, 00);
+        alertTime.set(Calendar.SECOND, 0);
+
         Intent alertIntent = new Intent(this, AlertManager.class);
-        AlarmManager alarmManager = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
-        alarmManager.set(AlarmManager.RTC_WAKEUP, alertTime, PendingIntent.getBroadcast(this, 1, alertIntent, PendingIntent.FLAG_UPDATE_CURRENT));
+
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, alertIntent, 0);
+
+        AlarmManager alarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, alertTime.getTimeInMillis(), AlarmManager.INTERVAL_DAY, pendingIntent);
     }
 
     private void populateDatabase() {
@@ -131,38 +157,38 @@ public class MainActivity extends AppCompatActivity {
 
         // Pertenecen a la categoria musica
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Festival", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Festival", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Son Latino", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Son Latino", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Cantos Gregorianos", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Cantos Gregorianos", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Zelda", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Tributo a Zelda", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Tributo a Mario Bros", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Tributo a Mario Bros", idInstituciones.get(0), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Pertenecen a la categoria Arte
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Pintura", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Pintura", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Dibujo", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Dibujo", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Lapiz y Papel", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Lapiz y Papel", idInstituciones.get(2), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Pertenecen a la categoria Baile
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Twerking", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Twerking", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
         idEventos.add(Long.toString(
-                eventoService.insertar(context, new Evento("Bailar merengue", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0))
+                eventoService.insertar(context, new Evento("Bailar merengue", idInstituciones.get(3), detalles, fecha, horaInicio, horaFin, ubicacion, 0.0, 0.0,""))
         ));
 
         // Asociamos a Musica
