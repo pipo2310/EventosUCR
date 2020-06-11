@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -45,8 +47,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        // Obtenemos el firebase auth
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         // Verificar si hay un usuario inscrito en la app
-        if(true) {
+        if(mAuth.getCurrentUser() == null) {
             // Si no hay un usuario se envia a la pantalla de login
             cambiarDePantalla(LoginActivity.class);
         }else{

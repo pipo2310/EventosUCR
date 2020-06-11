@@ -6,6 +6,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Bundle;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginFragment;
 

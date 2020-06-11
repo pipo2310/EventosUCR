@@ -1,19 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".features.login.LoginFragment"
     android:fitsSystemWindows="true"
-    android:background="@color/colorPrimary"
-    android:gravity="center">
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="@dimen/login_der_izq"
+        android:layout_marginRight="@dimen/login_der_izq"
         android:orientation="vertical"
-        android:layout_marginBottom="100dp"
+        android:layout_gravity="center"
         android:gravity="center">
 
         <ImageView
@@ -32,16 +35,13 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:layout_marginTop="40dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp"
             android:background="@drawable/rounded_edittext"/>
+
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginLeft="40dp"
-            android:layout_marginRight="40dp">
+            android:layout_marginTop="@dimen/login_espacio_items">
 
             <EditText
                 android:id="@+id/login_contrasenna"
@@ -66,13 +66,44 @@
 
         <Button
             android:id="@+id/login_boton_is"
-            android:layout_width="150dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Iniciar Sesión"
             android:textColor="#FFFFFF"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="@dimen/login_espacio_items"
             android:background="@drawable/boton_login_celeste"></Button>
 
+        <TextView
+            android:id="@+id/login_reset_pass"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Olvidó la contraseña?"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="@dimen/login_espacio_items"/>
     </LinearLayout>
 
-</RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#ffffff"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_marginBottom="40dp"
+        android:layout_marginLeft="@dimen/login_der_izq"
+        android:layout_marginRight="@dimen/login_der_izq"/>
+
+    <TextView
+        android:id="@+id/login_registro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Crear una cuenta"
+        android:textSize="17sp"
+        android:textStyle="bold"
+        android:textColor="#FFFFFF"
+        android:layout_gravity="bottom"
+        android:gravity="center"
+        android:layout_marginBottom="10dp"/>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
