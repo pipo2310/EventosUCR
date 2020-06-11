@@ -3,8 +3,10 @@ package cobit19.ecci.ucr.ac.eventosucr.features.login;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.text.Editable;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
@@ -13,6 +15,15 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.util.concurrent.Executor;
 
 import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -25,6 +36,8 @@ public class LoginFragment extends Fragment {
     private EditText contrasenna;
     private EditText usuario;
     private ImageView showPass;
+    // Variable para acceder a Firebase Authentication
+    private FirebaseAuth mAuth;
 
 
     public LoginFragment() {
@@ -37,11 +50,14 @@ public class LoginFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_login, container, false);
 
+        // Inicializamos Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
         // Obtenemos recursos de la vista
         usuario = view.findViewById(R.id.login_nombre_usuario);
         contrasenna = view.findViewById(R.id.login_contrasenna);
         showPass = view.findViewById(R.id.show_pass_btn);
-        final Button iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
+        Button iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
 
         // Agregamos la accion que se quiere hacer cuando se presione el boton de iniciar sesion
         iniciarSesionBtn.setOnClickListener(new View.OnClickListener() {
@@ -63,11 +79,26 @@ public class LoginFragment extends Fragment {
     }
 
     public void iniciarSesion(){
-        // TODO: falta validar en BD
-        // Se envia al usuario a la vista principal
-        Intent a =new Intent(getActivity(), MenuActivity.class);
-        startActivity(a);
-        getActivity().finish();
+        if(usuario.length() > 0 && contrasenna.length() > 0) {
+            mAuth.signInWithEmailAndPassword(usuario.getText().toString(), contrasenna.getText().toString())
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Inicio de sesion exitoso
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                // Se envia al usuario a la vista principal
+                                cambiarDePantalla(MenuActivity.class);
+                            } else {
+                                // Si el inicio de sesion falla, se le indica al usuario
+                                Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        }else{
+            // Se le indica al usuario que debe agregar algo en los campos
+            Toast.makeText(getActivity(), "Debe escribir un usario y una contraseña", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -87,5 +118,11 @@ public class LoginFragment extends Fragment {
             contrasenna.setTransformationMethod(PasswordTransformationMethod.getInstance());
 
         }
+    }
+
+    public void cambiarDePantalla(Class<?> activity) {
+        Intent a =new Intent(getActivity(), activity);
+        startActivity(a);
+        getActivity().finish();
     }
 }
