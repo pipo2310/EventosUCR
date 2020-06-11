@@ -20,6 +20,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -29,6 +30,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
+import io.grpc.okhttp.internal.Util;
 
 public class AlertManager extends BroadcastReceiver {
 
@@ -54,12 +56,21 @@ public class AlertManager extends BroadcastReceiver {
                             for(QueryDocumentSnapshot document:task.getResult()){
                                 eventoUsuario = document.toObject(Evento.class);
                                 if(eventoUsuario != null){
-                                    
+                                    Date date = eventoUsuario.getTimestamp().toDate();
+                                    //SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+                                    //hola = sf.format(date);
+                                    boolean esManana = UtilDates.esMañana(date);
+                                    if(esManana){
+                                        // Si alguno de los eventos es mañana, se envía la notificación
+                                        crearNotificacion(context, "Evento Próximo", "El evento " +
+                                                eventoUsuario.getNombre() + " se realizará mañana a las " +
+                                                eventoUsuario.getHoraInicio());
+                                    }
                                 }
                             }
 
 
-                            crearNotificacion(context, "Evento Próximo", hola);
+
                         }
                     }
                 });
@@ -85,7 +96,7 @@ public class AlertManager extends BroadcastReceiver {
                 .setContentTitle(titulo)
                 .setContentText(mensaje)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
+                builder.setStyle(new NotificationCompat.BigTextStyle(builder));
                 builder.setContentIntent(pendingIntent).build();
 
 
