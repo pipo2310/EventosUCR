@@ -102,6 +102,7 @@ public class EventoService {
         String selection = DataBaseContract.TABLE_EVENTO_COLUMN_ID + " = ?";
         String[] selectionArgs = {idParametro};
 
+
         // Resultados en el cursor
         Cursor cursor = db.query(
                 DataBaseContract.TABLE_EVENTO, // tabla
@@ -142,7 +143,8 @@ public class EventoService {
                 "FROM " + DataBaseContract.TABLE_CATEGORIA_EVENTO + " categoriaEvento " +
                 "INNER JOIN " + DataBaseContract.TABLE_EVENTO + " evento " +
                 "ON categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_EVENTO + " = evento." + DataBaseContract.TABLE_EVENTO_COLUMN_ID + " " +
-                "WHERE categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + "= ?";
+                "WHERE categoriaEvento." + DataBaseContract.TABLE_CATEGORIA_EVENTO_COLUMN_ID_CATEGORIA + "= ?"+" "+
+                "ORDER BY evento."+DataBaseContract.TABLE_EVENTO_COLUMN_FECHA+" ASC";
         String[] selectionArgs = {idParametroCategoria};
 
         Cursor cursor = db.rawQuery(sql, selectionArgs);
