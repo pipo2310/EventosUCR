@@ -7,7 +7,9 @@ import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
+import android.widget.RemoteViews;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -34,6 +36,7 @@ import io.grpc.okhttp.internal.Util;
 
 public class AlertManager extends BroadcastReceiver {
 
+    private static final String EVENTO = "evento";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -82,22 +85,27 @@ public class AlertManager extends BroadcastReceiver {
     public void crearNotificacion(Context context, String titulo, String mensaje){
         //PendingIntent notifIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
 
-        Intent notificationIntent = new Intent(context, BuscarActivity.class);
+        Intent notificationIntent = new Intent(context, MenuActivity.class);
+        notificationIntent.putExtra("From", "notifFrag");
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
-        taskStackBuilder.addParentStack(BuscarActivity.class);
+        taskStackBuilder.addParentStack(MenuActivity.class);
         taskStackBuilder.addNextIntent(notificationIntent);
 
         PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(100, PendingIntent.FLAG_UPDATE_CURRENT);
 
+
+
         //Se crea la notificacion
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
-                .setSmallIcon(R.drawable.calendaricon)
+                .setSmallIcon(R.drawable.calendar_azul)
                 .setContentTitle(titulo)
                 .setContentText(mensaje)
+                .setColor(Color.parseColor("#005DA4"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 builder.setStyle(new NotificationCompat.BigTextStyle(builder));
                 builder.setContentIntent(pendingIntent).build();
+                builder.setAutoCancel(true);
 
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
