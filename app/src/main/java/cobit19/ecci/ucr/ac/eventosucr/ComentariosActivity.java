@@ -8,6 +8,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -72,11 +74,17 @@ public class ComentariosActivity extends AppCompatActivity {
             comment.setComentario(comentarioNuevo.getText().toString());
             // se agrega la fecha y hora actual del usuario
             comment.setHora(currentTime.toString());
+
+            // Obtenemos el usuario logueado de Firebase
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
             // se agrega el nombre del usuario que comenta
-            // TODO: Falta obtener el nombre del usuario
-            comment.setNombre("Walter Bonilla");
+            String[] arrOfStr = user.getEmail().split("@");
+            String userName = arrOfStr[0];
+            comment.setNombre(userName);
+
             // se agrega el identificador del usuario
-            comment.setComentante(Constantes.CORREO_UCR_USUARIO);
+            comment.setComentante(user.getEmail());
 
             // se limpia la entrada del usuario
             comentarioNuevo.setText("");
