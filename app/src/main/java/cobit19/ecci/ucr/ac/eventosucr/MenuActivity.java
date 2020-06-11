@@ -73,6 +73,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+
     /**
      * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
      * @param menuItem
