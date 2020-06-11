@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseContract;
 import cobit19.ecci.ucr.ac.eventosucr.DataBaseHelper;
@@ -138,11 +139,15 @@ public class UsuarioEventoService {
 
         //Evento Service
         EventoService eventoService = new EventoService();
+        Evento evento=new Evento();
 
         // Recorremos la lista y agregamos los eventos a la nueva lista
         for(UsuarioEvento item: listaUsuarioEventos){
             listaEventos.add(eventoService.leer(context, item.getIdEvento()));
+
         }
+
+        Collections.sort(listaEventos,Evento.FechaComparator);
 
         return listaEventos;
     }
