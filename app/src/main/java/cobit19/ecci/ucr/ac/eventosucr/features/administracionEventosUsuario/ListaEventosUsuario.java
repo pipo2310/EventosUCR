@@ -41,7 +41,7 @@ public class ListaEventosUsuario extends AppCompatActivity implements Navigation
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_lista_eventos_super_usuario);
+        setContentView(R.layout.activity_lista_eventos_usuario);
 
         // nav bar de arriba
         Toolbar toolbar = findViewById(R.id.toolbar_LE);
