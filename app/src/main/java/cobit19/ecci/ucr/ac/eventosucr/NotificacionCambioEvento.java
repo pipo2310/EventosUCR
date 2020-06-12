@@ -37,7 +37,7 @@ public class NotificacionCambioEvento extends IntentService {
     public void onCreate()
     {
         super.onCreate();
-        android.os.Debug.waitForDebugger();
+        //android.os.Debug.waitForDebugger();
     }
 
 
@@ -67,13 +67,13 @@ public class NotificacionCambioEvento extends IntentService {
                                     evento = dc.getDocument().toObject(Evento.class);
                                     alertManager.crearNotificacion(getApplicationContext(),
                                             "Evento Modificado","El evento " +
-                                                    evento.getNombre() + " ha sido cancelado");
+                                                    evento.getNombre() + " ha sido modificado", true);
                                     break;
                                 case REMOVED:
                                     evento = dc.getDocument().toObject(Evento.class);
                                     alertManager.crearNotificacion(getApplicationContext(),
                                             "Evento Cancelado","El evento " +
-                                                    evento.getNombre() + " ha sido cancelado");
+                                                    evento.getNombre() + " ha sido cancelado", false);
                                     break;
                             }
                         }

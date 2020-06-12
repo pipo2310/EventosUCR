@@ -1,6 +1,7 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import android.app.ActivityManager;
 import android.app.AlarmManager;
@@ -45,10 +46,11 @@ public class MainActivity extends AppCompatActivity {
         crearCanalNotificacion();
         asignarAlarma();
         SharedPreferences sharedPreferences = getSharedPreferences ("COBIT19_EVENTOS_UCR", MODE_PRIVATE);
-       if(!isMyServiceRunning(NotificacionCambioEvento.class)){
+       /*if(!isMyServiceRunning(NotificacionCambioEvento.class)){
             lanzarServicio();
-        }
-        startService(new Intent(MainActivity.this, NotificacionCambioEvento.class));
+        }*/
+        lanzarServicio();
+
         if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
 
@@ -59,11 +61,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected  void onStart(){
+        super.onStart();
+
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         Intent a =new Intent(this, MenuActivity.class);
         startActivity(a);
         //finish();
+
     }
 
 
@@ -92,8 +101,8 @@ public class MainActivity extends AppCompatActivity {
     public void asignarAlarma() {
         Calendar alertTime = Calendar.getInstance();
 
-        alertTime.set(Calendar.HOUR_OF_DAY, 14);
-        alertTime.set(Calendar.MINUTE, 32);
+        alertTime.set(Calendar.HOUR_OF_DAY, 16);
+        alertTime.set(Calendar.MINUTE, 31);
         alertTime.set(Calendar.SECOND, 0);
 
         Intent alertIntent = new Intent(this, AlertManager.class);

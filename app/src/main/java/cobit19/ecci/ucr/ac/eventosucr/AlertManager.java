@@ -67,7 +67,7 @@ public class AlertManager extends BroadcastReceiver {
                                         // Si alguno de los eventos es mañana, se envía la notificación
                                         crearNotificacion(context, "Evento Próximo", "El evento " +
                                                 eventoUsuario.getNombre() + " se realizará mañana a las " +
-                                                eventoUsuario.getHoraInicio());
+                                                eventoUsuario.getHoraInicio(), true);
                                     }
                                 }
                             }
@@ -82,11 +82,17 @@ public class AlertManager extends BroadcastReceiver {
 
     }
 
-    public void crearNotificacion(Context context, String titulo, String mensaje){
+    //El parametro "caso" sirve para saber si hay que irse a la vista de favoritos o a la vista de un evento
+    public void crearNotificacion(Context context, String titulo, String mensaje, boolean caso){
         //PendingIntent notifIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
 
         Intent notificationIntent = new Intent(context, MenuActivity.class);
-        notificationIntent.putExtra("From", "notifFrag");
+        if(caso){
+            notificationIntent.putExtra("From", "notifFragVista");
+        }else{
+            notificationIntent.putExtra("From", "notifFragFavoritos");
+        }
+
 
         TaskStackBuilder taskStackBuilder = TaskStackBuilder.create(context);
         taskStackBuilder.addParentStack(MenuActivity.class);

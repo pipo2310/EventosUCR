@@ -79,7 +79,10 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             String type = getIntent().getStringExtra("From");
             if (type != null) {
                 switch (type) {
-                    case "notifFrag":
+                    case "notifFragVista":
+                        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                        break;
+                    case "notifFragFavoritos":
                         showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                         break;
                 }
