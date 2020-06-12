@@ -11,23 +11,20 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.Constantes;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
+import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 
 public class CartaEventoFavoritos extends Fragment {
 
@@ -55,25 +52,16 @@ public class CartaEventoFavoritos extends Fragment {
         TextView fecha = view.findViewById(R.id.favoritos_carta_fecha);
         TextView nombre = view.findViewById(R.id.favoritos_carta_nombre);
         TextView institucion = view.findViewById(R.id.favoritos_carta_Institucion);
-
-        // Servicio para obtener las imagenes
-
-        ImagenService imagenService = new ImagenService();
-
-        // Pedimos las imagenes asociadas a un evento
-        ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());
-
-        // Preguntamos si hay alguna imagen
-        if(imagenesEvento.size() > 0){
-            // Obtenemos el ImageView
-            ImageView imagen = view.findViewById(R.id.favoritos_carta_imagen);
-            // Agregamos la imagen del evento
-            imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
-        }
+        
+        // Obtenemos el ImageView
+        ImageView imagenEvento = view.findViewById(R.id.favoritos_carta_imagen);
+        // Agregamos la imagen por medio de un URL
+        Glide.with(view).load(evento.getUrlImagen()).into(imagenEvento);
+            
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
         nombre.setText(evento.getNombre());
-        institucion.setText("Institución: " + evento.getInstitucion(getContext()).getNombre());
+        institucion.setText("Organizador: " + evento.getOrganizador());
 
         FloatingActionButton btn_like = view.findViewById(R.id.favoritos_carta_btn_like);
 
@@ -97,28 +85,25 @@ public class CartaEventoFavoritos extends Fragment {
     }
 
     public void QuitarMeGusta(){
-        UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
-        usuarioEventoService.eliminar(getContext(), Constantes.CORREO_UCR_USUARIO, evento.getId());
+        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+        
+        //FIREBASE
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         db.collection("meInteresaUsuarioEvento")
-                .document(Constantes.CORREO_UCR_USUARIO)
-                .collection("eventosMeInteresan")
-                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("", "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error deleting document", e);
-                    }
-                });
-        String tag = Constantes.EVENTO_FAV_TAG+evento.getId();
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId)
+                .delete();
+
+        db.collection("usuarioEventosCreado")
+                .document(evento.getOrganizador())
+                .collection("eventos")
+                .document(eventoId)
+                .update("usuariosInteresados", FieldValue.arrayRemove(usuarioId));
+
+        String tag = Constantes.EVENTO_FAV_TAG+eventoId;
         Fragment fragmentToRemove = getActivity().getSupportFragmentManager().findFragmentByTag(tag);
         getActivity()
                 .getSupportFragmentManager()
