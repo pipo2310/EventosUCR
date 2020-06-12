@@ -64,6 +64,8 @@
             </intent-filter>
         </receiver>
 
+        <service android:name=".NotificacionCambioEvento"
+            android:enabled="true" />
     </application>
 
 </manifest>

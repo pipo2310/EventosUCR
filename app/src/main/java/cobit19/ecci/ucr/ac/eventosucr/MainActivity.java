@@ -2,6 +2,7 @@ package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.ActivityManager;
 import android.app.AlarmManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -44,14 +45,17 @@ public class MainActivity extends AppCompatActivity {
         crearCanalNotificacion();
         asignarAlarma();
         SharedPreferences sharedPreferences = getSharedPreferences ("COBIT19_EVENTOS_UCR", MODE_PRIVATE);
+       /*if(!isMyServiceRunning(NotificacionCambioEvento.class)){
+            startService(new Intent(MainActivity.this,NotificacionCambioEvento.class));
+            finish();
+        }*/
+        startService(new Intent(MainActivity.this, NotificacionCambioEvento.class));
         if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
 
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
-
-
         }
     }
 
@@ -214,5 +218,16 @@ public class MainActivity extends AppCompatActivity {
         usuarioEventoService.insertar(context, new UsuarioEvento("walter.bonillagutierrez@ucr.ac.cr", idEventos.get(1)));
         usuarioEventoService.insertar(context, new UsuarioEvento("walter.bonillagutierrez@ucr.ac.cr", idEventos.get(2)));
         usuarioEventoService.insertar(context, new UsuarioEvento("walter.bonillagutierrez@ucr.ac.cr", idEventos.get(3)));
+    }
+
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
