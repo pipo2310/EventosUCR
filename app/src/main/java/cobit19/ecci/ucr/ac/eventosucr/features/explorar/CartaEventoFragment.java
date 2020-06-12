@@ -11,29 +11,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
+import com.bumptech.glide.Glide;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
+import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link CartaEventoFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+
 public class CartaEventoFragment extends Fragment {
 
     private static final String ARG_EVENTO = "evento";
     private Evento evento;
     private OnListFragmentInteractionListener listener;
 
-    public CartaEventoFragment() {
-        // Required empty public constructor
-    }
-
+    public CartaEventoFragment() {}
     public CartaEventoFragment(Evento evento) {
         this.evento = evento;
     }
@@ -65,19 +56,18 @@ public class CartaEventoFragment extends Fragment {
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
         nombre.setText("Evento: " + evento.getNombre());
-        institucion.setText("Institución: " + evento.getInstitucion(getContext()).getNombre());
+        institucion.setText("Organizador: " + evento.getOrganizador());
 
         ImageView imagenEvento = view.findViewById(R.id.explorar_evento_carta_imagen1);
-        ImagenService imagenService = new ImagenService();
-        ArrayList<Imagen> imagenes = imagenService.leerImagenEvento(getContext(),evento.getId());
-        if(imagenes.size()>0){ imagenEvento.setImageBitmap(imagenes.get(0).getImagen());}
+        // Agregamos la imagen por medio de un URL
+        Glide.with(view).load(evento.getUrlImagen()).into(imagenEvento);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            if (null != listener) {
-                listener.onListFragmentInteraction(evento);
-            }
+                if (null != listener) {
+                    listener.onListFragmentInteraction(evento);
+                }
             }
         });
 

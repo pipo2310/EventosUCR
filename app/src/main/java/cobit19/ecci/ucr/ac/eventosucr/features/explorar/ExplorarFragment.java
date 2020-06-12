@@ -2,25 +2,29 @@ package cobit19.ecci.ucr.ac.eventosucr.features.explorar;
 
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link ExplorarFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
+
+
 public class ExplorarFragment extends Fragment {
 
-    public ExplorarFragment() {
-    }
+    // ROOM
+    // Crear la variable del model view de categoria
+    private CategoriaViewModel categoriaViewModel;
+
+    public ExplorarFragment() { }
 
     public static ExplorarFragment newInstance() {
         ExplorarFragment fragment = new ExplorarFragment();
@@ -41,13 +45,26 @@ public class ExplorarFragment extends Fragment {
 
         if (view.findViewById(R.id.explorar_lista_categorias) != null) {
             if (savedInstanceState == null) {
-                CategoriaService categoriaService = new CategoriaService();
 
-                for(Categoria categoria: categoriaService.leerListaDeCategoriasConEventos(getContext())) {
-                    ListaCartaEventoFragment listaCartaEventoFragment = new ListaCartaEventoFragment(categoria);
-                    getFragmentManager().beginTransaction()
-                            .add(R.id.explorar_lista_categorias, listaCartaEventoFragment).commit();
-                }
+                // Le pedimos al proovedor de view models que nos de el de categorias
+                categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
+
+                categoriaViewModel.getAllCategorias().observe(getViewLifecycleOwner(), new Observer<List<Categoria>>() {
+                    @Override
+                    public void onChanged(@Nullable final List<Categoria> c) {
+                        // Int utilizado como id
+                        int id = 1;
+                        // Update the cached copy of the words in the adapter.
+                        for(Categoria categoria: c) {
+                            ListaCartaEventoFragment listaCartaEventoFragment = new ListaCartaEventoFragment(categoria, id);
+                            getFragmentManager().beginTransaction()
+                                    .add(R.id.explorar_lista_categorias, listaCartaEventoFragment).commit();
+
+                            ++id;
+                        }
+                    }
+                });
+
             }
         }
 
