@@ -9,7 +9,7 @@
     <string name="menu_cud_eventos">Crear Evento</string>
     <string name="menu_cerrar_sesion">Cerrar Sesión</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Lista de Eventos</string>
+
     <string name="title_activity_maps">Map</string>
+    <string name="listaEventos">Lista de Eventos</string>
 </resources>

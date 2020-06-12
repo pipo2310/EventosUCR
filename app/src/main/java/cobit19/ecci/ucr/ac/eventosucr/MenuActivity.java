@@ -1,30 +1,49 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.Switch;
+import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import java.util.ArrayList;
+
+import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
+import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.buscar.CategoriasBuscarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
+import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 
-public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, CartaEventoFragment.OnListFragmentInteractionListener, CartaEventoFavoritos.OnFavoritosItemListener {
+
+public class MenuActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        CartaEventoFragment.OnListFragmentInteractionListener,
+        CartaEventoFavoritos.OnFavoritosItemListener,
+        CategoriasBuscarFragment.OnCategoriaSeleccionadaInteractionListener,
+        ListaEventosFragment.OnEventoSeleccionadoInteractionListener {
+
+    public static final String ACTIVIDAD = "actvidad";
 
     BottomNavigationView footerMenu;
     DrawerLayout drawer;
@@ -49,7 +68,13 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
 
         //Fragmento que se muestra al inicio
-        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+        Intent a =  getIntent();
+        Evento evento = (Evento) a.getParcelableExtra(BuscarActivity.EVENTO);
+        if (evento != null) {
+            showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
+        } else {
+            showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+        }
 
         // Para el menu de abajo
         footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
@@ -66,7 +91,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                     showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
-                    showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
+                    showSelectedFragment(new BuscarFragment(), Constantes.BUSCAR_TAG);
+                    /*SearchView searchView = (SearchView) findViewById(R.id.buscar_barra);*/
                 }
                 return true;
             }
@@ -123,10 +149,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
-    public void onListFragmentInteraction(Evento evento){
-        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
-    }
-
     public void OnFavoritosItemListener(Evento evento){
         showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
     }
@@ -155,5 +177,40 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             currentFragmentTag = oldFragmentTag;
             super.onBackPressed();
         }
+    }
+
+    public void onListFragmentInteraction(Evento evento){
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
+    }
+
+    @Override
+    public void onCategoriaSeleccionada(Categoria categoria) {
+        EventoService eventoService = new EventoService();
+        ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getApplicationContext(), categoria.getId());
+
+        ImagenService imagenService=new ImagenService();
+
+        Bitmap imagenNula = BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
+        ImageView imagenNulaImageView = new ImageView(this);
+        imagenNulaImageView.setImageBitmap(imagenNula);
+        ArrayList<ImageView> imagenesdeEventos = new ArrayList<ImageView>();
+
+        for (Evento evento : eventos){
+            if(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).size()==0){
+                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+                imagenesdeEventos.add(imagenNulaImageView);
+            }else{
+                ImageView imagenExistente=new ImageView(this);
+                imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
+                imagenesdeEventos.add(imagenExistente);
+            }
+        }
+
+        showSelectedFragment(new ListaEventosFragment(eventos, imagenesdeEventos), Constantes.LISTA_EVENTOS_TAG);
+    }
+
+    @Override
+    public void onEventoSelecciondo(Evento evento) {
+        showItemSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
     }
 }
