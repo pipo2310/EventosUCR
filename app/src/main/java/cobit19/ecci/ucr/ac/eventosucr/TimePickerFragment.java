@@ -12,9 +12,7 @@ import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
 
-public class TimePickerFragment extends DialogFragment
-
-        {
+public class TimePickerFragment extends DialogFragment {
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -27,6 +25,4 @@ public class TimePickerFragment extends DialogFragment
         return new TimePickerDialog(getActivity(), R.style.DialogTheme,(TimePickerDialog.OnTimeSetListener) getActivity(), hour, minute,
                 DateFormat.is24HourFormat(getActivity()));
     }
-
-
-        }
+}

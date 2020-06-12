@@ -19,6 +19,6 @@ public class DatePickerFragment extends DialogFragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(Objects.requireNonNull(getActivity()),R.style.DialogTheme, (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        return new DatePickerDialog(requireActivity(),R.style.DialogTheme, (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
     }
 }

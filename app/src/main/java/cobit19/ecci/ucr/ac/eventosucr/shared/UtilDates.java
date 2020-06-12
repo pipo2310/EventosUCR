@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.shared;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
