@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.shared;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,23 +9,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 
 public class CustomListAdapter extends ArrayAdapter<Evento> {
     private final Activity context;
     private final ArrayList<Evento> itemname;
-    private final ArrayList<ImageView> imagenes;
 
-        public CustomListAdapter(Activity context, ArrayList<Evento> itemname, ArrayList<ImageView> imagenes) {
+        public CustomListAdapter(Activity context, ArrayList<Evento> itemname) {
         super(context, R.layout.lista_eventos_superusuario, itemname);
         this.context = context;
         this.itemname = itemname;
-        this.imagenes=imagenes;
 
     }
 
@@ -35,16 +32,15 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         // Nombre del evento
         TextView nombre = (TextView) rowView.findViewById(R.id.name);
         nombre.setText(itemname.get(position).getNombre());
-        // Nombre de la institucion que lo creo
+
+        // Nombre de la organizador que lo creo
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
-        institucion.setText(itemname.get(position).getInstitucion(context).getNombre());
+        institucion.setText(itemname.get(position).getOrganizador());
+
         // Imagen del evento
         ImageView imagenEvento=(ImageView)rowView.findViewById(R.id.image);
-        //Picasso.with(getContext()).load(itemname.get(position).getImagen()).into(imagenEvento);
-//        imagenEvento.setImageDrawable(imagenes.get(position).getDrawable());
-
         // Agregamos la imagen por medio de un URL
-        Glide.with(rowView).load(itemname.get(position).getImagen()).into(imagenEvento);
+        Glide.with(rowView).load(itemname.get(position).getUrlImagen()).into(imagenEvento);
 
         return rowView;
     }

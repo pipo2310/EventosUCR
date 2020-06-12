@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -21,22 +22,20 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.Constantes;
-import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -45,12 +44,12 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     View v;
     Evento evento;
     GoogleMap VistaEventoMap;
-    UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
-    UsuarioEvento usuarioEvento = new UsuarioEvento();
-    ImagenService imagenService = new ImagenService();
     Button btnMeInteresa;
     Button btnNoMeInteresa;
     private boolean eliminarDeFavoritos = false;
+
+    // Por ahora voy a hacerlo asi, pero hay que cambiarlo para que siempre sea el id del usuario actual
+    private String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
     public VistaEventoFragment() {
     }
@@ -71,32 +70,30 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         mapFragment.getMapAsync(this);
 
 
-        // Pedimos las imagenes asociadas a un evento
-        ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());
-
-        // Preguntamos si hay alguna imagen
-        if(imagenesEvento.size() > 0){
-            // Obtenemos el ImageView
-            ImageView imagen = v.findViewById(R.id.imgEvento);
-            // Agregamos la imagen del evento
-            imagen.setImageBitmap(imagenesEvento.get(0).getImagen());
-        }
-
         //Botón para que el usuario le de like a un evento
         btnMeInteresa = (Button)v.findViewById(R.id.btnMeInteresa);
         //Botón para que el usuario le quite like a un evento
         btnNoMeInteresa = (Button)v.findViewById(R.id.btnNoMeInteresa);
 
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+        // FIRESTORE
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
         //Saber si el evento existe en la lista UsuarioEvento
-        usuarioEvento = usuarioEventoService.leer(getContext(), Constantes.CORREO_UCR_USUARIO, evento.getId());
-        if (usuarioEvento.getCorreoUcr() == null) {
-            btnMeInteresa.setVisibility(View.VISIBLE);
-            btnNoMeInteresa.setVisibility(View.GONE);
-        }
-        else {
-            btnNoMeInteresa.setVisibility(View.VISIBLE);
-            btnMeInteresa.setVisibility(View.GONE);
-        }
+        db.collection("meInteresaUsuarioEvento").document(usuarioId)
+                .collection("eventos")
+                .document(eventoId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                DocumentSnapshot document = task.getResult();
+                if (document.exists()) {
+                    btnNoMeInteresa.setVisibility(View.VISIBLE);
+                    btnMeInteresa.setVisibility(View.GONE);
+                } else {
+                    btnMeInteresa.setVisibility(View.VISIBLE);
+                    btnNoMeInteresa.setVisibility(View.GONE);
+                }
+            }
+        });
 
 
         btnMeInteresa.setOnClickListener(new View.OnClickListener() {
@@ -119,11 +116,10 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Inserta los datos de la base de datos en la vista de un evento
     void leerEvento() {
-        
         TextView nombreDeEvento = (TextView)v.findViewById(R.id.nombreDeEvento);
         nombreDeEvento.setText(evento.getNombre());
         TextView creadorEvento = (TextView)v.findViewById(R.id.creadorEvento);
-        creadorEvento.setText(evento.getInstitucion(getContext()).getNombre());
+        creadorEvento.setText(evento.getOrganizador());
         TextView fecha = (TextView) v.findViewById(R.id.fecha);
         fecha.setText(DateFormat.getDateInstance(DateFormat.FULL).format(evento.getFecha().getTime()));
         TextView hora = (TextView)v.findViewById(R.id.hora);
@@ -132,16 +128,31 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         ubicacion.setText(evento.getUbicacion());
         TextView detalles = (TextView)v.findViewById(R.id.descripcionDetalles);
         detalles.setText(evento.getDetalles());
+
+        ImageView imagenEvento = v.findViewById(R.id.imgEvento);
+        // Agregamos la imagen por medio de un URL
+        Glide.with(v).load(evento.getUrlImagen()).into(imagenEvento);
     }
 
     //Cuando el usuario le da click al botón, añade el evento a la lista de favoritos del usuario
     public void DarMeGusta(){
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+
+        // FIRESTORE
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Guardamos el eventos en la lista de favoritos
         db.collection("meInteresaUsuarioEvento")
-                .document(Constantes.CORREO_UCR_USUARIO)
-                .collection("eventosMeInteresan")
-                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre()).set(evento);
-        usuarioEventoService.insertar(getContext(), new UsuarioEvento(Constantes.CORREO_UCR_USUARIO, evento.getId()));
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId)
+                .set(evento);
+
+        db.collection("usuarioEventosCreado")
+                .document(evento.getOrganizador())
+                .collection("eventos")
+                .document(eventoId)
+                .update("usuariosInteresados", FieldValue.arrayUnion(usuarioId));
+
         btnNoMeInteresa.setVisibility(View.VISIBLE);
         btnMeInteresa.setVisibility(View.GONE);
         eliminarDeFavoritos = false;
@@ -149,25 +160,23 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     //Cuando el usuario le da click al botón, elimina el evento a la lista de favoritos del usuario
     public void QuitarMeGusta(){
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+
+        // FIRESTORE
         FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Eliminamos el evento de la lista de favoritos
         db.collection("meInteresaUsuarioEvento")
-                .document(Constantes.CORREO_UCR_USUARIO)
-                .collection("eventosMeInteresan")
-                .document(Constantes.CORREO_UCR_USUARIO+evento.getNombre())
-                .delete()
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("", "DocumentSnapshot successfully deleted!");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("TAG", "Error deleting document", e);
-                    }
-                });
-        usuarioEventoService.eliminar(getContext(), usuarioEvento.getCorreoUcr(), usuarioEvento.getIdEvento());
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId)
+                .delete();
+        // Eliminamos el usuario de la lista de me interesa
+        db.collection("usuarioEventosCreado")
+                .document(evento.getOrganizador())
+                .collection("eventos")
+                .document(eventoId)
+                .update("usuariosInteresados", FieldValue.arrayRemove(usuarioId));
+
         btnMeInteresa.setVisibility(View.VISIBLE);
         btnNoMeInteresa.setVisibility(View.GONE);
         eliminarDeFavoritos = true;
@@ -216,7 +225,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     public String getTagEliminar() {
         String tag = null;
         if(eliminarDeFavoritos == true){
-            tag = Constantes.EVENTO_FAV_TAG + evento.getId();
+            tag = Constantes.EVENTO_FAV_TAG + evento.getNombre();
         }
         return tag;
     }
