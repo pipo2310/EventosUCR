@@ -63,11 +63,10 @@ import java.util.List;
 import java.util.Locale;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Institucion;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
+import cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario.ListaEventosUsuario;
 
 public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener, OnMapReadyCallback, GoogleMap.OnMapClickListener,AdapterView.OnItemSelectedListener{
 Evento evento;
@@ -100,7 +99,7 @@ String id;
         if (b != null)
         {
             // obtenemos el objeto persona
-            evento = b.getParcelable(ListaEventosSuperUsuario.EXTRA_MESSAGE);
+            evento = b.getParcelable(ListaEventosUsuario.EXTRA_MESSAGE);
             //imagenes=b.getParcelable(ListaEventosSuperUsuario.EXTRA_MESSAGEIMAGEN);
 
         }
@@ -275,7 +274,7 @@ String id;
             imagenService.insertar(getApplicationContext(),imagenAmodificar);
         }
 
-        Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
+        Intent intent = new Intent(this, ListaEventosUsuario.class);
         startActivity(intent);
         finish();
 
@@ -370,7 +369,7 @@ String id;
         eventoService.eliminar(getApplicationContext(),evento.getId());
         ImagenService imagenService=new ImagenService();
         imagenService.eliminarImagenesEventos(getApplicationContext(),evento.getId());
-        Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
+        Intent intent = new Intent(this, ListaEventosUsuario.class);
         startActivity(intent);
         finish();
     }

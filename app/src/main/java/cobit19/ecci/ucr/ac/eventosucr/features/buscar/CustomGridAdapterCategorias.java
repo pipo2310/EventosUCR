@@ -8,11 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
-
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 
 public class CustomGridAdapterCategorias extends ArrayAdapter<Categoria> {
     private final Activity context;

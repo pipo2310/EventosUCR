@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -27,16 +28,23 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         this.imagenes=imagenes;
 
     }
+
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.lista_eventos_superusuario, null, true);
+        // Nombre del evento
         TextView nombre = (TextView) rowView.findViewById(R.id.name);
         nombre.setText(itemname.get(position).getNombre());
+        // Nombre de la institucion que lo creo
         TextView institucion = (TextView) rowView.findViewById(R.id.institucion);
         institucion.setText(itemname.get(position).getInstitucion(context).getNombre());
+        // Imagen del evento
         ImageView imagenEvento=(ImageView)rowView.findViewById(R.id.image);
         //Picasso.with(getContext()).load(itemname.get(position).getImagen()).into(imagenEvento);
-        imagenEvento.setImageDrawable(imagenes.get(position).getDrawable());
+//        imagenEvento.setImageDrawable(imagenes.get(position).getDrawable());
+
+        // Agregamos la imagen por medio de un URL
+        Glide.with(rowView).load(itemname.get(position).getImagen()).into(imagenEvento);
 
         return rowView;
     }

@@ -1,12 +1,14 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -22,10 +24,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.Uri;
-import android.nfc.Tag;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
 import android.util.Log;
@@ -52,13 +52,11 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.mukesh.tinydb.TinyDB;
 
 import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
@@ -70,16 +68,9 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.CategoriaEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Institucion;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
 
 public class CrearEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener ,TimePickerDialog.OnTimeSetListener, AdapterView.OnItemSelectedListener , OnMapReadyCallback, GoogleMap.OnMapClickListener {
     boolean tiempoInicio;
@@ -89,26 +80,20 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     String horaFinalBase;
     double longitud;
     double latitud;
-    String institucion;
     int horaInicioManejoError;
     int minutoInicioManejoError;
     GoogleMap eventoMap;
     private static final int SELECT_PICTURE=100;
     public static  final String TAG= "SelectImageActivity";
-    // Lista de nombres de instituciones
-    ArrayList<String> nombresInstituciones = new ArrayList<String>();
+
+    // ROOM
+    // Crear la variable del model view de categoria
+    private CategoriaViewModel categoriaViewModel;
+
     // Lista de categorias de la base de datos
-    ArrayList<Categoria> categorias;
-    // Lista de nombres de categorias
-    ArrayList<String> nombresCategorias = new ArrayList<String>();
+    List<Categoria> categorias;
     // Lista de categorias seleccionadas
     ArrayList<Integer> categoriasSeleccionadas = new ArrayList<Integer>();
-    // Servicio de Categorias
-    CategoriaService categoriaService = new CategoriaService();
-    // Servicio de CategoriaEvento
-    CategoriaEventoService categoriaEventoService = new CategoriaEventoService();
-    // Servicio del Evento
-    EventoService eventoService = new EventoService();
 
 
     @Override
@@ -116,8 +101,17 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_evento);
 
-        // Leemos las categorias de la base de datos
-        categorias = categoriaService.leerLista(getApplicationContext());
+        // Le pedimos al proovedor de view models que nos de el de categorias
+        categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
+
+        // Pedimos las categorias y dejamos un listener en caso de que estas cambien
+        categoriaViewModel.getAllCategorias().observe(this, new Observer<List<Categoria>>() {
+            @Override
+            public void onChanged(@Nullable final List<Categoria> c) {
+                // Update the cached copy of the words in the adapter.
+                categorias = c;
+            }
+        });
 
         // Llenamos el spinner con los nombres de las categorias
         llenarCategorias();
@@ -137,28 +131,15 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         SimpleDateFormat sdf = new SimpleDateFormat("EEEE");
         SimpleDateFormat sdfday = new SimpleDateFormat("dd");
         SimpleDateFormat sdfmonth = new SimpleDateFormat("MMMM");
-        //SimpleDateFormat sdfyear = new SimpleDateFormat("YYYY");
         Date d = new Date();
 
         String dayOfTheWeek = sdf.format(d);
         String monthOfTheWeek = sdfmonth.format(d);
-        //String yearOfTheWeek = sdfyear.format(d);
         String numOfTheWeek = sdfday.format(d);
-        llenarInstituciones();
 
         textView.setText(dayOfTheWeek+", \n"+numOfTheWeek +" de "+monthOfTheWeek);
         fecha=Calendar.getInstance();
-        /*
-        ImageButton insertarUbicacion = (ImageButton) findViewById(R.id.ubicacionImagen);
 
-        insertarUbicacion.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                agregarUbicacion();
-            }
-        });
-
-         */
         ImageButton insertarImagen = (ImageButton) findViewById(R.id.agregarImagen);
 
         insertarImagen.setOnClickListener(new View.OnClickListener() {
@@ -167,7 +148,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                 agregarImagenAImageView();
             }
         });
-        //fecha.setTime(d);
+
         ImageButton button = (ImageButton) findViewById(R.id.calendario);
 
         button.setOnClickListener(new View.OnClickListener() {
@@ -204,23 +185,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                guardarEvento();
             }
         });
-    }
-
-    private void llenarInstituciones() {
-        InstitucionService institucionService=new InstitucionService();
-        ArrayList<Institucion> instituciones=institucionService.leerLista(getApplicationContext());
-        nombresInstituciones.add("Seleccione una institucion");
-        for(int i = 0; i<instituciones.size(); i++){
-            nombresInstituciones.add(instituciones.get(i).getNombre());
-        }
-        Spinner listaInstituciones = (Spinner) findViewById(R.id.dropdownInstitucion);
-        //create array adapter and provide arrary list to it
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, nombresInstituciones);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        listaInstituciones.setAdapter(arrayAdapter);
-        listaInstituciones.setOnItemSelectedListener(this);
-
-
     }
 
     @Override
@@ -286,26 +250,24 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
         // Mostrar al usuario la categoria seleccionada
         Spinner spinner = (Spinner) parent;
-        if(spinner.getId()==R.id.dropdownInstitucion){//Spinner instituciones
-            institucion=Integer.toString(pos);
-        }else{
-            if(pos != 0){
-                LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
-                TextView textView = new TextView(this);
-                textView.setText(nombresCategorias.get(pos));
-                layout.addView(textView);
-                categoriasSeleccionadas.add(pos-1);
-            }else{
-                // Decirle al usuario que debe seleccionar una categoria
-            }
-        }
-        
+        if(pos != 0){
+            LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
+            TextView textView = new TextView(this);
+            // Hacer que la primera letra sea mayuscula
+            String categoria = categorias.get(pos).getCategoria();
 
+            textView.setText(categoria);
+            layout.addView(textView);
+            categoriasSeleccionadas.add(pos-1);
+        }else{
+            // Decirle al usuario que debe seleccionar una categoria
+        }
     }
 
     public void onNothingSelected(AdapterView<?> parent) {
         // No sirve
     }
+
     //Permite realizar la configuración del mapa. Añade las coordenadas y el marcador  del evento correspondiente
     //Configura la cámara y el zoom
     public void configurarMapa(GoogleMap googleMap){
@@ -343,11 +305,14 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     // Llena el spinner con la lista de categorias
     public void llenarCategorias(){
+        List<String> nombresCategorias = new ArrayList<String>();
+
         nombresCategorias.add("Seleccione una categoría");
         for(int i = 0; i<categorias.size(); i++){
-            nombresCategorias.add(categorias.get(i).getNombre());
+            nombresCategorias.add(categorias.get(i).getCategoria());
         }
         Spinner listaCategorias = (Spinner) findViewById(R.id.dropdown_cat_1);
+
         //create array adapter and provide arrary list to it
         ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, nombresCategorias);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -359,7 +324,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     public void guardarEvento() {
         boolean insertar=true;
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
-        //EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
         TextView tiempIni=(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempFin=(TextView)findViewById(R.id.tiempoFin);
@@ -371,15 +335,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             insertar=false;
 
         }
-
-
-        if(institucion.length()==0){
-            //institucion.setError("Institucion no valido");
-            insertar=false;
-
-        }
-
-
         if(detalles.length()==0){
             detalles.setError("Detalles no valido");
             insertar=false;
@@ -416,86 +371,63 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         if(insertar==true){
             ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            Evento evento = new Evento(nombre.getText().toString(),institucion,detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud,"");
-            // inserta el estudiante, se le pasa como parametro el contexto de la app
-            long newRowId = eventoService.insertar(getApplicationContext(), evento);
-            String eventoID = Long.toString(newRowId);
-            for(int i=0; i<categoriasSeleccionadas.size(); i++){
-                categoriaEventoService.insertar(getApplicationContext(), new CategoriaEvento(categorias.get(categoriasSeleccionadas.get(i)).getId(), eventoID));
-            }
-            //BitmapDrawable drawable = (BitmapDrawable) imagenEvento.getDrawable();
-            //Bitmap bitmap = drawable.getBitmap();
-            // Create a storage reference from our app
+            String n = nombre.getText().toString().replaceAll(" ", "");
+            String urlImagen = "https://firebasestorage.googleapis.com/v0/b/eventosucr-35c97.appspot.com/o/events%2F" + n + ".png?alt=media";
+            Evento evento = new Evento(nombre.getText().toString(),Constantes.CORREO_UCR_USUARIO.replaceAll("@*", ""),
+                    detalles.getText().toString(), fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(),
+                    latitud,longitud, urlImagen);
+
+            // FIRESTORE
+            // Crear la referencia al storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
 
-// Create a reference to "mountains.jpg"
-            StorageReference mountainsRef = storageRef.child(evento.getNombre()+".png");
-
-// Create a reference to 'images/mountains.jpg'
+            // Crear una refeerencia al lugar donde se va a guardar la imagen
             StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
 
-// While the file names are the same, the references point to different files
-            mountainsRef.getName().equals(mountainImagesRef.getName());    // true
-            mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+            // Setear la forma en la que se va a guardar la imagen
             imagenEvento.setDrawingCacheEnabled(true);
             imagenEvento.buildDrawingCache();
             Bitmap bitmap = ((BitmapDrawable) imagenEvento.getDrawable()).getBitmap();
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
             byte[] data = baos.toByteArray();
             StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("image/jpg")
+                    .setContentType("image/png")
                     .build();
 
+            // Agregar la imagen al storage
             UploadTask uploadTask = mountainImagesRef.putBytes(data);
             uploadTask.addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception exception) {
-                    // Handle unsuccessful uploads
-                }
-            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
-                    // ...
+                    Log.w(TAG, "Error agregando la imagen", exception);
                 }
             });
-            ImagenService imagenService=new ImagenService();
-            Imagen imagenAInsertar=new Imagen(eventoID,bitmap);
 
-            imagenService.insertar(getApplicationContext(),imagenAInsertar);
-            Toast.makeText(getApplicationContext(),
-                    " Id: " + evento.getId() +
-                    " Ubicacion "+evento.getUbicacion()+
-                    " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getInstitucion(getApplicationContext()).getNombre() +
-                    " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
-
-
-
-            // Agregarlo tambien a Usuario eventos creados y a eventos
-
-
+            // FIREBASE
+            // Crear la referencia a firestore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
-            //Agrega a categoria el evento creado segun el numero de categorias
+
+            // Agrega a categoria el evento creado segun el numero de categorias
             for(int i=0; i<categoriasSeleccionadas.size(); i++){
                 db.collection("categoriaEventos")
-                        .document(categorias.get(categoriasSeleccionadas.get(i)).getNombre())
+                        .document(categorias.get(categoriasSeleccionadas.get(i)).getCategoria())
                         .collection("eventos").document(evento.getNombre()).set(evento);
             }
+
             //Agrega a la coleccion de eventos el evento identificado por su nombre
-            db.collection("eventos").document(evento.getNombre()).set(evento);
+            db.collection("eventos").document(evento.getNombre().replaceAll(" ", "")).set(evento);
 
             //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
             db.collection("usuarioEventosCreado")
-                    .document(Constantes.CORREO_UCR_USUARIO)
+                    .document(Constantes.CORREO_UCR_USUARIO.replaceAll("@*", ""))
                     .collection("eventosUsuario").document(Constantes.CORREO_UCR_USUARIO+evento.getNombre()).set(evento);
 
 
 
             // Deseo recibir una respuesta: startActivityForResult()
+            Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
             startActivity(intent);
             finish();
         }

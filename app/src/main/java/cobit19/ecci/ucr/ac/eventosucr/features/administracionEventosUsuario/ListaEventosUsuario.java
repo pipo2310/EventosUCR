@@ -109,50 +109,56 @@ public class ListaEventosSuperUsuario extends AppCompatActivity implements Navig
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
+                             // Creamos la lista de eventos de firebase
                             eventosPruebaFireBase=new ArrayList<Evento>();
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 eventosPruebaFireBase.add(document.toObject(Evento.class));
-                                Log.d("TAG", document.getId() + " => " + document.getData());
                             }
-                            final ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
-                            if(eventosPruebaFireBase.size()>0){
-                                for(Evento evento : eventosPruebaFireBase){
-                                StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
-                                mountainImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-                                    @Override
-                                    public void onSuccess(byte[] bytes) {
-                                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-                                        ImageView imagenExistente = new ImageView(ListaEventosSuperUsuario.this);
-                                        // Set the Bitmap data to the ImageView
-                                        imagenExistente.setImageBitmap(bmp);
-                                        imagenesdeEventos.add(imagenExistente);
-                                        if(i[0]++ == eventosPruebaFireBase.size() - 1){
-                                            ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,imagenesdeEventos);
-                                            getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                                    .commit();
-                                        }
 
+                            ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,new ArrayList<ImageView>());
+                            getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                                    .commit();
 
-                                        // Data for "images/island.jpg" is returns, use this as needed
-                                    }
-                                }).addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception exception) {
-                                        //Imagen imagen=new Imagen(evento.getId(),imagenNula);
-
-                                        imagenesdeEventos.add(imagenNulaImageView);
-                                        if(i[0]++ == eventosPruebaFireBase.size() - 1){
-                                            ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,imagenesdeEventos);
-                                            getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
-                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                                                    .commit();
-                                        }
-
-                                    }
-                                });
-
-                            }}
+//                            final ArrayList<ImageView> imagenesdeEventos=new ArrayList<ImageView>();
+//                            if(eventosPruebaFireBase.size()>0){
+//                                for(Evento evento : eventosPruebaFireBase){
+//                                StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
+//                                mountainImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
+//                                    @Override
+//                                    public void onSuccess(byte[] bytes) {
+//                                        Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+//                                        ImageView imagenExistente = new ImageView(ListaEventosSuperUsuario.this);
+//                                        // Set the Bitmap data to the ImageView
+//                                        imagenExistente.setImageBitmap(bmp);
+//                                        imagenesdeEventos.add(imagenExistente);
+//                                        if(i[0]++ == eventosPruebaFireBase.size() - 1){
+//                                            ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,imagenesdeEventos);
+//                                            getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+//                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                                                    .commit();
+//                                        }
+//
+//
+//                                        // Data for "images/island.jpg" is returns, use this as needed
+//                                    }
+//                                }).addOnFailureListener(new OnFailureListener() {
+//                                    @Override
+//                                    public void onFailure(@NonNull Exception exception) {
+//                                        //Imagen imagen=new Imagen(evento.getId(),imagenNula);
+//
+//                                        imagenesdeEventos.add(imagenNulaImageView);
+//                                        if(i[0]++ == eventosPruebaFireBase.size() - 1){
+//                                            ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,imagenesdeEventos);
+//                                            getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
+//                                                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                                                    .commit();
+//                                        }
+//
+//                                    }
+//                                });
+//
+//                            }}
 
                             //ListaEventosFragment listaEventosFragment=new ListaEventosFragment(eventosPruebaFireBase,imagenesdeEventos);
                             //getSupportFragmentManager().beginTransaction().replace(R.id.listaEventosFragmentVista, listaEventosFragment)
