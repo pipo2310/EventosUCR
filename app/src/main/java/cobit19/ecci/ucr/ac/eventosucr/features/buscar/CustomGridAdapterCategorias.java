@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.buscar;
 
 import android.app.Activity;
 import android.view.LayoutInflater;
@@ -9,11 +9,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 
 public class CustomGridAdapterCategorias extends ArrayAdapter<Categoria> {
     private final Activity context;
-    private final ArrayList<Categoria> itemname;
-    public CustomGridAdapterCategorias(Activity context, ArrayList<Categoria> itemname) {
+    private final List<Categoria> itemname;
+    public CustomGridAdapterCategorias(Activity context, List<Categoria> itemname) {
         super(context, R.layout.lista_categorias_buscar, itemname);
         this.context = context;
         this.itemname = itemname;
@@ -28,7 +32,7 @@ public class CustomGridAdapterCategorias extends ArrayAdapter<Categoria> {
         ImageView categoriaImagen=(ImageView)rowView.findViewById(R.id.imagenCatego);
         categoriaImagen.setBackgroundResource(R.drawable.ucr_evento_img);
         TextView nombreCatego=(TextView)rowView.findViewById(R.id.nombreCatego);
-        nombreCatego.setText(itemname.get(position).getNombre());
+        nombreCatego.setText(itemname.get(position).getCategoria());
 
         return rowView;
     }
