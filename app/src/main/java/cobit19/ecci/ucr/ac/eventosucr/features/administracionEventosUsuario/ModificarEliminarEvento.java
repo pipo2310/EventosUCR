@@ -1,11 +1,14 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
 import android.app.Activity;
@@ -40,6 +43,7 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -48,11 +52,20 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -62,30 +75,35 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cobit19.ecci.ucr.ac.eventosucr.DatePickerFragment;
+import cobit19.ecci.ucr.ac.eventosucr.MapActivity;
+import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.TimePickerFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.InstitucionService;
-import cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario.ListaEventosUsuario;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 
-public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener , TimePickerDialog.OnTimeSetListener, OnMapReadyCallback, GoogleMap.OnMapClickListener,AdapterView.OnItemSelectedListener{
-Evento evento;
-ArrayList<Imagen> imagenes;
-Evento eventoElimina;
-String id;
+public class ModificarEliminarEvento extends AppCompatActivity implements DatePickerDialog.OnDateSetListener,
+        TimePickerDialog.OnTimeSetListener, OnMapReadyCallback,
+        GoogleMap.OnMapClickListener, AdapterView.OnItemSelectedListener {
+
+    Evento evento;
+    Evento eventoElimina;
     boolean tiempoInicio;
     boolean tiempoFinal;
     Calendar fecha;
     String horaInicio;
     String horaFinalBase;
     int horaInicioManejoError;
-    String idInstitucionOriginal;
-    String idImagenModificar;
     int minutoInicioManejoError;
-    ArrayList<String>nombresInstituciones=new ArrayList<String>();
     GoogleMap eventoMap;
     private static final int SELECT_PICTURE=100;
     public static  final String TAG= "SelectImageeActivity";
+
+    // ROOM
+    // Crear la variable del model view de categoria
+    private CategoriaViewModel categoriaViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -98,38 +116,15 @@ String id;
         Bundle b = getIntent().getExtras();
         if (b != null)
         {
-            // obtenemos el objeto persona
+            // Obtenemos el evento
             evento = b.getParcelable(ListaEventosUsuario.EXTRA_MESSAGE);
-            //imagenes=b.getParcelable(ListaEventosSuperUsuario.EXTRA_MESSAGEIMAGEN);
 
         }
-        ImagenService imagenService=new ImagenService();
-        //imagenes=imagenService.leerImagenEvento(getApplicationContext(),evento.getId());
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
 
-        StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
-        final long ONE_MEGABYTE = 1024 * 1024;
         final ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-        //Leer imagen de evento
-        mountainImagesRef.getBytes(ONE_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] bytes) {
-                Bitmap bmp = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+        // Agregamos la imagen por medio de un URL
+        Glide.with(this).load(evento.getUrlImagen()).into(imagenEvento);
 
-                imagenEvento.setImageBitmap(bmp);
-
-
-                // Data for "images/island.jpg" is returns, use this as needed
-            }
-        }).addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
-                Bitmap imagenNula= BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
-                imagenEvento.setImageBitmap(imagenNula);
-            }
-        });
         Button modificarEvento = (Button) findViewById(R.id.modificarEvento);
         modificarEvento.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -170,6 +165,7 @@ String id;
             @Override
             public void onClick(View v) {
                 tiempoFinal=true;
+
                 DialogFragment newFragment = new TimePickerFragment();
                 newFragment.show(getSupportFragmentManager(), "timePicker");
             }
@@ -184,13 +180,13 @@ String id;
             }
         });
 
+        // Le pedimos al proovedor de view models que nos de el de categorias
+        categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-
 
         try {
             SharedPreferences sharedPreferences = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
@@ -229,50 +225,87 @@ String id;
     }
 
     public void modificarEvento() {
-        EventoService eventoService = new EventoService();
-        ImagenService imagenService=new ImagenService();
-        EditText nombre=(EditText)findViewById(R.id.nombreEvento);
+        // Por ahora no se puede editar el nombre
+        // EditText nombre=(EditText)findViewById(R.id.nombreEvento);
 
-        //EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
 
         EditText ubicacion=(EditText)findViewById(R.id.agregarDireccion);
-        if(nombre.length()!=0){
-            evento.setNombre(nombre.getText().toString());
 
-        }
-        if(evento.getIdInstitucion().equals("0")){//Evalua que no se haya seleccionado ninguna insitucion
-            evento.setIdInstitucion(idInstitucionOriginal);
-        }
-        /*
-        if(institucion.length()!=0){
-            evento.setIdInstitucion(institucion.getText().toString());
-
-        }
-
-         */
         if(detalles.length()!=0){
             evento.setDetalles(detalles.getText().toString());
-
         }
 
         if(ubicacion.length()!=0){
             evento.setUbicacion(ubicacion.getText().toString());
-
         }
 
-        long ret=eventoService.actualizar(getApplicationContext(), evento);
-        ImageView imagenEventoModificar=(ImageView)findViewById(R.id.imagenEventoModificar);
-        BitmapDrawable drawable = (BitmapDrawable) imagenEventoModificar.getDrawable();
-        Bitmap bitmap = drawable.getBitmap();
-        Imagen imagenAmodificar=new Imagen(evento.getId(),bitmap);
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
-        if (imagenes.size()>0){
-            imagenAmodificar.setId(idImagenModificar);
-            imagenService.actualizar(getApplicationContext(),imagenAmodificar);
-        }else{
-            imagenService.insertar(getApplicationContext(),imagenAmodificar);
+        // FIRESTORE
+        // Modificamos el evento
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Lo midificamos en las categorias a las que pertenece
+        for (String categoria: evento.getCategorias()) {
+            db.collection("categoriaEventos")
+                    .document(categoria)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
         }
+
+        //Agrega a la coleccion de eventos el evento identificado por su nombre
+        db.collection("eventos").document(eventoId).set(evento);
+
+        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+        db.collection("usuarioEventosCreado")
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId).set(evento);
+
+        // Modificamos el evento para los usuarios interesedos
+        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+            db.collection("meInteresaUsuarioEvento")
+                    .document(usuarioInteresado)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
+        }
+
+        // STORAGE
+        // Crear la referencia al storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        // Crear una refeerencia al lugar donde se va a guardar la imagen
+        StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
+
+        ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
+        // Setear la forma en la que se va a guardar la imagen
+        imagenEvento.setDrawingCacheEnabled(true);
+        imagenEvento.buildDrawingCache();
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
+        if (bitmapDrawable != null) {
+            Bitmap bitmap = bitmapDrawable.getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+            byte[] data = baos.toByteArray();
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/png")
+                    .build();
+
+            // Agregar la imagen al storage
+            UploadTask uploadTask = mountainImagesRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    Log.w(TAG, "Error agregando la imagen", exception);
+                }
+            });
+        }
+
 
         Intent intent = new Intent(this, ListaEventosUsuario.class);
         startActivity(intent);
@@ -288,7 +321,7 @@ String id;
 
     @Override
     public void onMapClick(LatLng latLng) {
-        Intent i =new Intent(this,MapActivity.class);
+        Intent i =new Intent(this, MapActivity.class);
         startActivity(i);
 
     }
@@ -353,7 +386,9 @@ String id;
         eliminar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                dialog.cancel();
                 eliminarEvent();
+
             }
         });
         cancelar.setOnClickListener(new View.OnClickListener() {
@@ -365,10 +400,51 @@ String id;
     }
 
     public void eliminarEvent() {
-        EventoService eventoService = new EventoService();
-        eventoService.eliminar(getApplicationContext(),evento.getId());
-        ImagenService imagenService=new ImagenService();
-        imagenService.eliminarImagenesEventos(getApplicationContext(),evento.getId());
+        // STORAGE
+        // Crear la referencia al storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+
+        StorageReference storageRef = storage.getReference();
+
+        String eventoId = evento.getNombre().replaceAll(" ", "");
+        StorageReference imagenRef = storageRef.child("eventos/" + eventoId + ".png");
+        // Eliminamos la imagen
+        imagenRef.delete();
+
+        // FIRESTORE
+        // Crear la referencia a firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Lo eliminamos de la tabla de eventos
+        db.collection("eventos")
+                .document(eventoId)
+                .delete();
+
+        // Lo eliminamos de la tabla de eventos del usuario
+        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+        db.collection("usuarioEventosCreado")
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId)
+                .delete();
+
+        // Lo eliminamos de la tabla de eventos por categoria
+        for (String categoria: evento.getCategorias()) {
+            db.collection("categoriaEventos")
+                    .document(categoria)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .delete();
+        }
+
+        // Lo eliminamos de favoritos
+        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+            db.collection("meInteresaUsuarioEvento")
+                    .document(usuarioInteresado)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .delete();
+        }
+
         Intent intent = new Intent(this, ListaEventosUsuario.class);
         startActivity(intent);
         finish();
@@ -380,8 +456,6 @@ String id;
     }
     public void eliminarEvento() {
         showAlertDialogButtonClicked();
-
-
     }
 
     public void prellenarCampos() {
@@ -394,7 +468,6 @@ String id;
         String mes = dateFormatMes.format(evento.getFecha().getTime());
 
         EditText nombre=(EditText)findViewById(R.id.nombreEvento);
-        Spinner institucion=(Spinner)findViewById(R.id.dropdownInstitucion);
 
         //EditText institucion=(EditText)findViewById(R.id.nombreInstitucion2);
         EditText detalles=(EditText)findViewById(R.id.agregueDescripcion2);
@@ -404,14 +477,6 @@ String id;
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
         TextView fecha = (TextView) findViewById(R.id.fecha);
-        /*
-        ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-        if (imagenes.size()>0){
-            imagenEvento.setImageBitmap(imagenes.get(0).getImagen());
-            idImagenModificar=imagenes.get(0).getId();
-        }
-
-         */
 
         fecha.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         nombre.setHint(evento.getNombre());
@@ -428,32 +493,9 @@ String id;
     }
 
     private void hintIntituciones() {
-        InstitucionService institucionService=new InstitucionService();
-        ArrayList<Institucion> instituciones=institucionService.leerLista(getApplicationContext());
-        nombresInstituciones.add("Seleccione una institucion");
-        for(int i = 0; i<instituciones.size(); i++){
-            nombresInstituciones.add(instituciones.get(i).getNombre());
-        }
-        idInstitucionOriginal=evento.getIdInstitucion();
-        nombresInstituciones.set(0,nombresInstituciones.get(Integer.parseInt(evento.getIdInstitucion())));
 
-        Spinner listaInstituciones = (Spinner) findViewById(R.id.dropdownInstitucion);
-        //create array adapter and provide arrary list to it
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item, nombresInstituciones);
-        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        listaInstituciones.setAdapter(arrayAdapter);
-        listaInstituciones.setOnItemSelectedListener(this);
     }
     public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-
-        // Mostrar al usuario la categoria seleccionada
-
-        evento.setIdInstitucion(Integer.toString(pos));
-        nombresInstituciones.set(0,nombresInstituciones.get(Integer.parseInt(evento.getIdInstitucion())));
-
-        //nombresInstituciones.clear();
-       // hintIntituciones();
-
 
     }
 

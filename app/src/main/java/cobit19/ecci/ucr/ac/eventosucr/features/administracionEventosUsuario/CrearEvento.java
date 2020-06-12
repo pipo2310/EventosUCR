@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -68,6 +68,11 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
+import cobit19.ecci.ucr.ac.eventosucr.DatePickerFragment;
+import cobit19.ecci.ucr.ac.eventosucr.MapActivity;
+import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.TimePickerFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
@@ -110,11 +115,11 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             public void onChanged(@Nullable final List<Categoria> c) {
                 // Update the cached copy of the words in the adapter.
                 categorias = c;
+
+                // Llenamos el spinner con los nombres de las categorias
+                llenarCategorias();
             }
         });
-
-        // Llenamos el spinner con los nombres de las categorias
-        llenarCategorias();
 
         TextView tiempoIni =(TextView)findViewById(R.id.tiempoInicio);
         TextView tiempoFin =(TextView)findViewById(R.id.tiempoFin);
@@ -196,7 +201,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     @Override
     public void onMapClick(LatLng latLng) {
-        Intent i =new Intent(this,MapActivity.class);
+        Intent i =new Intent(this, MapActivity.class);
         startActivity(i);
 
     }
@@ -253,12 +258,9 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         if(pos != 0){
             LinearLayout layout = (LinearLayout) findViewById(R.id.agregar_categorias_a_crear_evento);
             TextView textView = new TextView(this);
-            // Hacer que la primera letra sea mayuscula
-            String categoria = categorias.get(pos).getCategoria();
-
-            textView.setText(categoria);
+            textView.setText(categorias.get(pos - 1).getCategoria());
             layout.addView(textView);
-            categoriasSeleccionadas.add(pos-1);
+            categoriasSeleccionadas.add(pos - 1);
         }else{
             // Decirle al usuario que debe seleccionar una categoria
         }
@@ -371,19 +373,28 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         if(insertar==true){
             ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            String n = nombre.getText().toString().replaceAll(" ", "");
-            String urlImagen = "https://firebasestorage.googleapis.com/v0/b/eventosucr-35c97.appspot.com/o/events%2F" + n + ".png?alt=media";
-            Evento evento = new Evento(nombre.getText().toString(),Constantes.CORREO_UCR_USUARIO.replaceAll("@*", ""),
-                    detalles.getText().toString(), fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(),
-                    latitud,longitud, urlImagen);
+            // Cariables necesarias para crear el evento
+            String eventoId = nombre.getText().toString().replaceAll(" ", "");
+            String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+            String urlImagen = "https://firebasestorage.googleapis.com/v0/b/eventosucr-35c97.appspot.com/o/eventos%2F" + eventoId + ".png?alt=media";
 
-            // FIRESTORE
+            // Agregar la lista de categorias al evento
+            List<String> categoriasEvento = new ArrayList<>();
+            for (int i: categoriasSeleccionadas) {
+                categoriasEvento.add(categorias.get(i).getCategoria());
+            }
+
+            Evento evento = new Evento(nombre.getText().toString(), usuarioId,
+                    detalles.getText().toString(), fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(),
+                    latitud,longitud, urlImagen, categoriasEvento);
+
+            // STORAGE
             // Crear la referencia al storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
             StorageReference storageRef = storage.getReference();
 
             // Crear una refeerencia al lugar donde se va a guardar la imagen
-            StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
+            StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
 
             // Setear la forma en la que se va a guardar la imagen
             imagenEvento.setDrawingCacheEnabled(true);
@@ -405,33 +416,33 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                 }
             });
 
-            // FIREBASE
+            // FIRESTORE
             // Crear la referencia a firestore
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
             // Agrega a categoria el evento creado segun el numero de categorias
-            for(int i=0; i<categoriasSeleccionadas.size(); i++){
+            for(String categoria: categoriasEvento){
                 db.collection("categoriaEventos")
-                        .document(categorias.get(categoriasSeleccionadas.get(i)).getCategoria())
-                        .collection("eventos").document(evento.getNombre()).set(evento);
+                        .document(categoria)
+                        .collection("eventos").document(eventoId).set(evento);
             }
 
             //Agrega a la coleccion de eventos el evento identificado por su nombre
-            db.collection("eventos").document(evento.getNombre().replaceAll(" ", "")).set(evento);
+            db.collection("eventos").document(eventoId).set(evento);
 
             //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
             db.collection("usuarioEventosCreado")
-                    .document(Constantes.CORREO_UCR_USUARIO.replaceAll("@*", ""))
-                    .collection("eventosUsuario").document(Constantes.CORREO_UCR_USUARIO+evento.getNombre()).set(evento);
+                    .document(usuarioId)
+                    .collection("eventos")
+                    .document(eventoId).set(evento);
 
 
 
             // Deseo recibir una respuesta: startActivityForResult()
-            Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
+            Intent intent = new Intent(this, ListaEventosUsuario.class);
             startActivity(intent);
             finish();
         }
-
     }
 
     @Override
@@ -463,50 +474,45 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             TextView textView = (TextView) findViewById(R.id.fecha);
             textView.setText(diaSemana+", \n"+diaFinal+" de "+mes);
         }
-
     }
-@Override
+
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-    TextView horaIni = (TextView) findViewById(R.id.tiempoInicio);
-    TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
-    DecimalFormat df = new DecimalFormat("00");
+        TextView horaIni = (TextView) findViewById(R.id.tiempoInicio);
+        TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
+        DecimalFormat df = new DecimalFormat("00");
 
 
-    if(tiempoInicio){
-        tiempoInicio=false;
-        try {
-            horaIni.setError(null);
-        }
-        catch(Exception e) {
+        if(tiempoInicio){
+            tiempoInicio=false;
+            try {
+                horaIni.setError(null);
+            }
+            catch(Exception e) {
 
-        }
-        horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
-        horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-        horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
-        horaInicioManejoError=hourOfDay;
-        minutoInicioManejoError=minute;
-
-    }else {
-        tiempoFinal=false;
-        if(hourOfDay>horaInicioManejoError){
-            horaFin.setError(null);
+            }
+            horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
             horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
-        }else if((hourOfDay==horaInicioManejoError)&&(minute>minutoInicioManejoError)){
-            horaFin.setError(null);
-            horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
-        }else{
-            horaFin.setError("Hora final no valida");
-        }
+            horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
+            horaInicioManejoError=hourOfDay;
+            minutoInicioManejoError=minute;
 
+        } else {
+            tiempoFinal=false;
+            if(hourOfDay>horaInicioManejoError){
+                horaFin.setError(null);
+                horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+                horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+            }else if((hourOfDay==horaInicioManejoError)&&(minute>minutoInicioManejoError)){
+                horaFin.setError(null);
+                horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+                horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+            }else{
+                horaFin.setError("Hora final no valida");
+            }
+        }
+        Toast.makeText(getApplicationContext(), hourOfDay + " " + minute, Toast.LENGTH_SHORT).show();
     }
-
-
-
-    Toast.makeText(getApplicationContext(), hourOfDay + " " + minute, Toast.LENGTH_SHORT).show();
-
-}
 
     private void handlePermission() {
 
@@ -538,6 +544,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     }
                 }
         }
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
@@ -569,6 +576,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         intent.setAction(Intent.ACTION_GET_CONTENT);
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
     }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode,resultCode,data);
@@ -584,7 +592,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                         if (null != selectedImageUri) {
                             // Get the path from the Uri
                             String path = getPathFromURI(selectedImageUri);
-                            Log.i(TAG, "Image Path : " + path);
+                            Log.i(TAG, "Image Path: " + path);
                             // Set the image in ImageView
                             findViewById(R.id.imagenEvento).post(new Runnable() {
                                 @Override
@@ -627,9 +635,4 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(i);
     }
-
-
-
-
-
 }

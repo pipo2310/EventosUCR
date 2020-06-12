@@ -22,9 +22,9 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
-        <activity android:name=".ModificarEliminarEvento" />
+        <activity android:name=".features.administracionEventosUsuario.ModificarEliminarEvento" />
         <activity
-            android:name=".ListaEventosSuperUsuario"
+            android:name=".features.administracionEventosUsuario.ListaEventosUsuario"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <!--
@@ -39,11 +39,11 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/google_maps_key" />
 
-        <activity android:name=".ModificarEliminarEvento" />
+        <activity android:name=".features.administracionEventosUsuario.ModificarEliminarEvento" />
         <activity
-            android:name=".ListaEventosSuperUsuario"
+            android:name=".features.administracionEventosUsuario.ListaEventosUsuario"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".CrearEvento" />
+        <activity android:name=".features.administracionEventosUsuario.CrearEvento" />
         <activity
             android:name=".MenuActivity"
             android:theme="@style/AppTheme.NoActionBar" />
