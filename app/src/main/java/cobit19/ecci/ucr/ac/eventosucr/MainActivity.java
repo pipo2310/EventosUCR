@@ -45,10 +45,9 @@ public class MainActivity extends AppCompatActivity {
         crearCanalNotificacion();
         asignarAlarma();
         SharedPreferences sharedPreferences = getSharedPreferences ("COBIT19_EVENTOS_UCR", MODE_PRIVATE);
-       /*if(!isMyServiceRunning(NotificacionCambioEvento.class)){
-            startService(new Intent(MainActivity.this,NotificacionCambioEvento.class));
-            finish();
-        }*/
+       if(!isMyServiceRunning(NotificacionCambioEvento.class)){
+            lanzarServicio();
+        }
         startService(new Intent(MainActivity.this, NotificacionCambioEvento.class));
         if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
@@ -220,6 +219,11 @@ public class MainActivity extends AppCompatActivity {
         usuarioEventoService.insertar(context, new UsuarioEvento("walter.bonillagutierrez@ucr.ac.cr", idEventos.get(3)));
     }
 
+
+    public void lanzarServicio(){
+        Intent i= new Intent(this, NotificacionCambioEvento.class);
+        startService(i);
+    }
 
     private boolean isMyServiceRunning(Class<?> serviceClass) {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);

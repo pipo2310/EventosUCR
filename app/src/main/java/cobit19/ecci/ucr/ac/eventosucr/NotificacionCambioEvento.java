@@ -21,14 +21,16 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 public class NotificacionCambioEvento extends IntentService {
 
     public static final String NOTIFICATION_CHANNEL_ID = "1" ;
+    private static final String TAG = "NotificacionCambioEvento";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      *
-     * @param name Used to name the worker thread, important only for debugging.
+     *
      */
     public NotificacionCambioEvento() {
         super("NotificacionCambioEvento");
+        setIntentRedelivery(true);
     }
 
     @Override
@@ -38,8 +40,14 @@ public class NotificacionCambioEvento extends IntentService {
         android.os.Debug.waitForDebugger();
     }
 
+
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onHandleIntent(@Nullable Intent intent) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("meInteresa").document("Katherine")
                 .collection("eventos")
@@ -65,24 +73,11 @@ public class NotificacionCambioEvento extends IntentService {
                                     evento = dc.getDocument().toObject(Evento.class);
                                     alertManager.crearNotificacion(getApplicationContext(),
                                             "Evento Cancelado","El evento " +
-                                            evento.getNombre() + " ha sido cancelado");
+                                                    evento.getNombre() + " ha sido cancelado");
                                     break;
                             }
                         }
                     }
                 });
-        return START_STICKY;
     }
-
-    @Override
-    public IBinder onBind(Intent intent) {
-        // TODO for communication return IBinder implementation
-        return null;
-    }
-
-    @Override
-    protected void onHandleIntent(@Nullable Intent intent) {
-
-    }
-
 }
