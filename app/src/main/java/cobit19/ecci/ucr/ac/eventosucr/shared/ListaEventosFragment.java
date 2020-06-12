@@ -33,7 +33,6 @@ public class ListaEventosFragment extends Fragment {
     private ArrayList<Evento> eventos;
     private View v;
     ListView list;
-    CustomListAdapter adapter1;
 
 
     public ListaEventosFragment() {
@@ -72,7 +71,7 @@ public class ListaEventosFragment extends Fragment {
 
         }
         list = (ListView) v.findViewById(R.id.list);
-        adapter1=adapter;
+
         list.setAdapter(adapter);
         final String finalNombreActividadPadre = nombreActividadPadre;
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -86,13 +85,13 @@ public class ListaEventosFragment extends Fragment {
                 if(finalNombreActividadPadre.equals("ListaEventosUsuario")) {
                     cambiarDePantalla(eventoSeleccionado);
                 }else {
-                    listener.
-                            onEventoSelecciondo(eventoSeleccionado);
+                    listener.onEventoSelecciondo(eventoSeleccionado);
                 }
 
             }
         });
     }
+
     public void cambiarDePantalla(Evento evento) {
         Intent intent = new Intent(getActivity(), ModificarEliminarEvento.class);
         intent.putExtra(EXTRA_MESSAGE, evento);

@@ -44,6 +44,9 @@ import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -122,8 +125,13 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         }
 
         final ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-        // Agregamos la imagen por medio de un URL
-        Glide.with(this).load(evento.getUrlImagen()).into(imagenEvento);
+        // Agregamos a imagen por medio de un URL
+        Glide.with(this)
+                .load(evento.getUrlImagen())
+                // Vemos si podemos utilizar o no la imagen del cache
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imagenEvento);
 
         Button modificarEvento = (Button) findViewById(R.id.modificarEvento);
         modificarEvento.setOnClickListener(new View.OnClickListener() {
@@ -243,37 +251,6 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         String eventoId = evento.getNombre().replaceAll(" ", "");
         String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
-        // FIRESTORE
-        // Modificamos el evento
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Lo midificamos en las categorias a las que pertenece
-        for (String categoria: evento.getCategorias()) {
-            db.collection("categoriaEventos")
-                    .document(categoria)
-                    .collection("eventos")
-                    .document(eventoId)
-                    .set(evento);
-        }
-
-        //Agrega a la coleccion de eventos el evento identificado por su nombre
-        db.collection("eventos").document(eventoId).set(evento);
-
-        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-        db.collection("usuarioEventosCreado")
-                .document(usuarioId)
-                .collection("eventos")
-                .document(eventoId).set(evento);
-
-        // Modificamos el evento para los usuarios interesedos
-        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
-            db.collection("meInteresaUsuarioEvento")
-                    .document(usuarioInteresado)
-                    .collection("eventos")
-                    .document(eventoId)
-                    .set(evento);
-        }
-
         // STORAGE
         // Crear la referencia al storage
         FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -304,6 +281,37 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
                     Log.w(TAG, "Error agregando la imagen", exception);
                 }
             });
+        }
+
+        // FIRESTORE
+        // Modificamos el evento
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Lo midificamos en las categorias a las que pertenece
+        for (String categoria: evento.getCategorias()) {
+            db.collection("categoriaEventos")
+                    .document(categoria)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
+        }
+
+        //Agrega a la coleccion de eventos el evento identificado por su nombre
+        db.collection("eventos").document(eventoId).set(evento);
+
+        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+        db.collection("usuarioEventosCreado")
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId).set(evento);
+
+        // Modificamos el evento para los usuarios interesedos
+        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+            db.collection("meInteresaUsuarioEvento")
+                    .document(usuarioInteresado)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
         }
 
 

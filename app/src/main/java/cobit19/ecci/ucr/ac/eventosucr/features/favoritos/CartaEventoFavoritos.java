@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -55,8 +57,13 @@ public class CartaEventoFavoritos extends Fragment {
         
         // Obtenemos el ImageView
         ImageView imagenEvento = view.findViewById(R.id.favoritos_carta_imagen);
-        // Agregamos la imagen por medio de un URL
-        Glide.with(view).load(evento.getUrlImagen()).into(imagenEvento);
+        // Agregamos a imagen por medio de un URL
+        Glide.with(this)
+                .load(evento.getUrlImagen())
+                // Vemos si podemos utilizar o no la imagen del cache
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imagenEvento);
             
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));

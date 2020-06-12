@@ -12,6 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
+
+import java.util.Date;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -59,8 +63,13 @@ public class CartaEventoFragment extends Fragment {
         institucion.setText("Organizador: " + evento.getOrganizador());
 
         ImageView imagenEvento = view.findViewById(R.id.explorar_evento_carta_imagen1);
-        // Agregamos la imagen por medio de un URL
-        Glide.with(view).load(evento.getUrlImagen()).into(imagenEvento);
+        // Agregamos a imagen por medio de un URL
+        Glide.with(this)
+                .load(evento.getUrlImagen())
+                // Vemos si podemos utilizar o no la imagen del cache
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imagenEvento);
 
         view.setOnClickListener(new View.OnClickListener() {
             @Override

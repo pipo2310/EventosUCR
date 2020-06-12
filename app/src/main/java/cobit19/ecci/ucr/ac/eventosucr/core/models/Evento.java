@@ -12,6 +12,7 @@ import android.os.Parcelable;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.Exclude;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -31,8 +32,8 @@ public class Evento implements Parcelable {
     private String horaInicio;
     private String horaFin;
     private String urlImagen;
-    private List<String> categorias;
-    private List<String> usuariosInteresados;
+    private List<String> categorias = new ArrayList<>();
+    private List<String> usuariosInteresados = new ArrayList<>();
 
 
 

@@ -14,6 +14,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -130,8 +132,13 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         detalles.setText(evento.getDetalles());
 
         ImageView imagenEvento = v.findViewById(R.id.imgEvento);
-        // Agregamos la imagen por medio de un URL
-        Glide.with(v).load(evento.getUrlImagen()).into(imagenEvento);
+        // Agregamos a imagen por medio de un URL
+        Glide.with(v)
+                .load(evento.getUrlImagen())
+                // Vemos si podemos utilizar o no la imagen del cache
+                .skipMemoryCache(true)
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .into(imagenEvento);
     }
 
     //Cuando el usuario le da click al botón, añade el evento a la lista de favoritos del usuario

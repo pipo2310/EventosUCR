@@ -399,22 +399,26 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             // Setear la forma en la que se va a guardar la imagen
             imagenEvento.setDrawingCacheEnabled(true);
             imagenEvento.buildDrawingCache();
-            Bitmap bitmap = ((BitmapDrawable) imagenEvento.getDrawable()).getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-            StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("image/png")
-                    .build();
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
+            if (bitmapDrawable != null) {
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
 
-            // Agregar la imagen al storage
-            UploadTask uploadTask = mountainImagesRef.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.w(TAG, "Error agregando la imagen", exception);
-                }
-            });
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType("image/png")
+                        .build();
+
+                // Agregar la imagen al storage
+                UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                uploadTask.addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception exception) {
+                        Log.w(TAG, "Error agregando la imagen", exception);
+                    }
+                });
+            }
 
             // FIRESTORE
             // Crear la referencia a firestore
