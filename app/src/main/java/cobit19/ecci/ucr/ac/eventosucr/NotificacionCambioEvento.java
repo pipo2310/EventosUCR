@@ -6,10 +6,13 @@ import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -21,7 +24,7 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 public class NotificacionCambioEvento extends IntentService {
 
     public static final String NOTIFICATION_CHANNEL_ID = "1" ;
-    private static final String TAG = "NotificacionCambioEvento";
+    private static final String TAG = "NotificacionCambioEvent";
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
@@ -49,7 +52,9 @@ public class NotificacionCambioEvento extends IntentService {
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("meInteresa").document("Katherine")
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        Log.i(TAG,"-------------- LO QUE SALE ES " + user.getDisplayName() + "----------------");
+        db.collection("meInteresaUsuarioEvento").document(user.getDisplayName())
                 .collection("eventos")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
