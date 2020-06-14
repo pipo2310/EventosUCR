@@ -28,7 +28,7 @@ public class NotificacionCambioEvento extends IntentService {
 
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
-     *
+     *0
      *
      */
     public NotificacionCambioEvento() {
@@ -53,8 +53,10 @@ public class NotificacionCambioEvento extends IntentService {
     protected void onHandleIntent(@Nullable Intent intent) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-        Log.i(TAG,"-------------- LO QUE SALE ES " + user.getDisplayName() + "----------------");
-        db.collection("meInteresaUsuarioEvento").document(user.getDisplayName())
+        String[] arrOfStr = user.getEmail().split("@");
+        String userName = arrOfStr[0];
+
+        db.collection("meInteresaUsuarioEvento").document(userName)
                 .collection("eventos")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
                     @Override
