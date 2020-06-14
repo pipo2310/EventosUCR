@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.signature.ObjectKey;
 
 import java.util.ArrayList;
 
@@ -44,8 +45,7 @@ public class CustomListAdapter extends ArrayAdapter<Evento> {
         Glide.with(rowView)
                 .load(itemname.get(position).getUrlImagen())
                 // Vemos si podemos utilizar o no la imagen del cache
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .signature(new ObjectKey(itemname.get(position).getImagenUltimaModificacion()))
                 .into(imagenEvento);
 
         return rowView;

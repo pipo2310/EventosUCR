@@ -52,6 +52,7 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageMetadata;
@@ -388,6 +389,10 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     detalles.getText().toString(), fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(),
                     latitud,longitud, urlImagen, categoriasEvento);
 
+            // Agegamos la fecha en que se creo la categoria
+            Date date = new Date();
+            evento.setImagenUltimaModificacion(date.toString());
+
             // STORAGE
             // Crear la referencia al storage
             FirebaseStorage storage = FirebaseStorage.getInstance();
@@ -412,40 +417,79 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
                 // Agregar la imagen al storage
                 UploadTask uploadTask = mountainImagesRef.putBytes(data);
-                uploadTask.addOnFailureListener(new OnFailureListener() {
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
-                    public void onFailure(@NonNull Exception exception) {
-                        Log.w(TAG, "Error agregando la imagen", exception);
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Date date = new Date();
+                        evento.setImagenUltimaModificacion(date.toString());
+
+                        // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
+                        // esto le da tiempo de no traerse la imagen anterior
+
+                        // FIRESTORE
+                        // Modificamos el evento
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                        // Lo midificamos en las categorias a las que pertenece
+                        for (String categoria: evento.getCategorias()) {
+                            db.collection("categoriaEventos")
+                                    .document(categoria)
+                                    .collection("eventos")
+                                    .document(eventoId)
+                                    .set(evento);
+                        }
+
+                        //Agrega a la coleccion de eventos el evento identificado por su nombre
+                        db.collection("eventos").document(eventoId).set(evento);
+
+                        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+                        db.collection("usuarioEventosCreado")
+                                .document(usuarioId)
+                                .collection("eventos")
+                                .document(eventoId).set(evento);
+
+                        // Modificamos el evento para los usuarios interesedos
+                        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+                            db.collection("meInteresaUsuarioEvento")
+                                    .document(usuarioInteresado)
+                                    .collection("eventos")
+                                    .document(eventoId)
+                                    .set(evento);
+                        }
+
+                        Intent intent = new Intent(getApplicationContext(), ListaEventosUsuario.class);
+                        startActivity(intent);
+                        finish();
                     }
                 });
+            } else {
+                // FIRESTORE
+                // Crear la referencia a firestore
+                FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                // Agrega a categoria el evento creado segun el numero de categorias
+                for(String categoria: categoriasEvento){
+                    db.collection("categoriaEventos")
+                            .document(categoria)
+                            .collection("eventos").document(eventoId).set(evento);
+                }
+
+                //Agrega a la coleccion de eventos el evento identificado por su nombre
+                db.collection("eventos").document(eventoId).set(evento);
+
+                //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+                db.collection("usuarioEventosCreado")
+                        .document(usuarioId)
+                        .collection("eventos")
+                        .document(eventoId).set(evento);
+
+
+
+                // Deseo recibir una respuesta: startActivityForResult()
+                Intent intent = new Intent(this, ListaEventosUsuario.class);
+                startActivity(intent);
+                finish();
             }
-
-            // FIRESTORE
-            // Crear la referencia a firestore
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            // Agrega a categoria el evento creado segun el numero de categorias
-            for(String categoria: categoriasEvento){
-                db.collection("categoriaEventos")
-                        .document(categoria)
-                        .collection("eventos").document(eventoId).set(evento);
-            }
-
-            //Agrega a la coleccion de eventos el evento identificado por su nombre
-            db.collection("eventos").document(eventoId).set(evento);
-
-            //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-            db.collection("usuarioEventosCreado")
-                    .document(usuarioId)
-                    .collection("eventos")
-                    .document(eventoId).set(evento);
-
-
-
-            // Deseo recibir una respuesta: startActivityForResult()
-            Intent intent = new Intent(this, ListaEventosUsuario.class);
-            startActivity(intent);
-            finish();
         }
     }
 

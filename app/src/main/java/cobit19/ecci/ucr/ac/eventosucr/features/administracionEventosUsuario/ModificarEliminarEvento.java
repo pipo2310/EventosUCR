@@ -83,7 +83,6 @@ import cobit19.ecci.ucr.ac.eventosucr.MapActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.TimePickerFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 
@@ -95,9 +94,6 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
     Evento eventoElimina;
     boolean tiempoInicio;
     boolean tiempoFinal;
-    Calendar fecha;
-    String horaInicio;
-    String horaFinalBase;
     int horaInicioManejoError;
     int minutoInicioManejoError;
     GoogleMap eventoMap;
@@ -107,6 +103,9 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
     // ROOM
     // Crear la variable del model view de categoria
     private CategoriaViewModel categoriaViewModel;
+
+    // Necesario para ver si hay que cambiar la imagen
+    private boolean imagenCambiada;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,9 +128,9 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         Glide.with(this)
                 .load(evento.getUrlImagen())
                 // Vemos si podemos utilizar o no la imagen del cache
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .signature(new ObjectKey(evento.getImagenUltimaModificacion()))
                 .into(imagenEvento);
+        imagenCambiada = false;
 
         Button modificarEvento = (Button) findViewById(R.id.modificarEvento);
         modificarEvento.setOnClickListener(new View.OnClickListener() {
@@ -251,74 +250,114 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         String eventoId = evento.getNombre().replaceAll(" ", "");
         String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
-        // STORAGE
-        // Crear la referencia al storage
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference();
 
-        // Crear una refeerencia al lugar donde se va a guardar la imagen
-        StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
+        if (imagenCambiada) {
+            // STORAGE
+            // Crear la referencia al storage
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
 
-        ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-        // Setear la forma en la que se va a guardar la imagen
-        imagenEvento.setDrawingCacheEnabled(true);
-        imagenEvento.buildDrawingCache();
-        BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
-        if (bitmapDrawable != null) {
-            Bitmap bitmap = bitmapDrawable.getBitmap();
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-            byte[] data = baos.toByteArray();
-            StorageMetadata metadata = new StorageMetadata.Builder()
-                    .setContentType("image/png")
-                    .build();
+            // Crear una refeerencia al lugar donde se va a guardar la imagen
+            StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
 
-            // Agregar la imagen al storage
-            UploadTask uploadTask = mountainImagesRef.putBytes(data);
-            uploadTask.addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception exception) {
-                    Log.w(TAG, "Error agregando la imagen", exception);
-                }
-            });
-        }
+            ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
+            // Setear la forma en la que se va a guardar la imagen
+            imagenEvento.setDrawingCacheEnabled(true);
+            imagenEvento.buildDrawingCache();
+            BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
+            if (bitmapDrawable != null) {
+                Bitmap bitmap = bitmapDrawable.getBitmap();
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+                byte[] data = baos.toByteArray();
+                StorageMetadata metadata = new StorageMetadata.Builder()
+                        .setContentType("image/png")
+                        .build();
 
-        // FIRESTORE
-        // Modificamos el evento
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
+                // Agregar la imagen al storage
+                UploadTask uploadTask = mountainImagesRef.putBytes(data);
+                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Date date = new Date();
+                        evento.setImagenUltimaModificacion(date.toString());
 
-        // Lo midificamos en las categorias a las que pertenece
-        for (String categoria: evento.getCategorias()) {
-            db.collection("categoriaEventos")
-                    .document(categoria)
+                        // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
+                        // esto le da tiempo de no traerse la imagen anterior
+
+                        // FIRESTORE
+                        // Modificamos el evento
+                        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+                        // Lo midificamos en las categorias a las que pertenece
+                        for (String categoria: evento.getCategorias()) {
+                            db.collection("categoriaEventos")
+                                    .document(categoria)
+                                    .collection("eventos")
+                                    .document(eventoId)
+                                    .set(evento);
+                        }
+
+                        //Agrega a la coleccion de eventos el evento identificado por su nombre
+                        db.collection("eventos").document(eventoId).set(evento);
+
+                        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+                        db.collection("usuarioEventosCreado")
+                                .document(usuarioId)
+                                .collection("eventos")
+                                .document(eventoId).set(evento);
+
+                        // Modificamos el evento para los usuarios interesedos
+                        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+                            db.collection("meInteresaUsuarioEvento")
+                                    .document(usuarioInteresado)
+                                    .collection("eventos")
+                                    .document(eventoId)
+                                    .set(evento);
+                        }
+
+                        Intent intent = new Intent(getApplicationContext(), ListaEventosUsuario.class);
+                        startActivity(intent);
+                        finish();
+                    }
+                });
+            }
+        } else {
+            // FIRESTORE
+            // Modificamos el evento
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // Lo midificamos en las categorias a las que pertenece
+            for (String categoria: evento.getCategorias()) {
+                db.collection("categoriaEventos")
+                        .document(categoria)
+                        .collection("eventos")
+                        .document(eventoId)
+                        .set(evento);
+            }
+
+            //Agrega a la coleccion de eventos el evento identificado por su nombre
+            db.collection("eventos").document(eventoId).set(evento);
+
+            //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+            db.collection("usuarioEventosCreado")
+                    .document(usuarioId)
                     .collection("eventos")
-                    .document(eventoId)
-                    .set(evento);
+                    .document(eventoId).set(evento);
+
+            // Modificamos el evento para los usuarios interesedos
+            for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+                db.collection("meInteresaUsuarioEvento")
+                        .document(usuarioInteresado)
+                        .collection("eventos")
+                        .document(eventoId)
+                        .set(evento);
+            }
+
+            Intent intent = new Intent(this, ListaEventosUsuario.class);
+            startActivity(intent);
+            finish();
         }
-
-        //Agrega a la coleccion de eventos el evento identificado por su nombre
-        db.collection("eventos").document(eventoId).set(evento);
-
-        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-        db.collection("usuarioEventosCreado")
-                .document(usuarioId)
-                .collection("eventos")
-                .document(eventoId).set(evento);
-
-        // Modificamos el evento para los usuarios interesedos
-        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
-            db.collection("meInteresaUsuarioEvento")
-                    .document(usuarioInteresado)
-                    .collection("eventos")
-                    .document(eventoId)
-                    .set(evento);
-        }
-
-
-        Intent intent = new Intent(this, ListaEventosUsuario.class);
-        startActivity(intent);
-        finish();
-
     }
     @Override
     public void onMapReady(GoogleMap googleMap) {
@@ -661,6 +700,8 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
                                 @Override
                                 public void run() {
                                     ((ImageView) findViewById(R.id.imagenEventoModificar)).setImageURI(selectedImageUri);
+
+                                    imagenCambiada = true;
                                 }
                             });
 

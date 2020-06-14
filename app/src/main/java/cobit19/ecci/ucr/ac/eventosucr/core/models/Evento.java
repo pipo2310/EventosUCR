@@ -32,6 +32,7 @@ public class Evento implements Parcelable {
     private String horaInicio;
     private String horaFin;
     private String urlImagen;
+    private String imagenUltimaModificacion;
     private List<String> categorias = new ArrayList<>();
     private List<String> usuariosInteresados = new ArrayList<>();
 
@@ -135,6 +136,13 @@ public class Evento implements Parcelable {
         this.urlImagen = urlImagen;
     }
 
+    public String getImagenUltimaModificacion() {
+        return imagenUltimaModificacion;
+    }
+    public void setImagenUltimaModificacion(String imagenUltimaModificacion) {
+        this.imagenUltimaModificacion = imagenUltimaModificacion;
+    }
+
     public List<String> getCategorias() {
         return categorias;
     }
@@ -165,6 +173,7 @@ public class Evento implements Parcelable {
         latitud=in.readDouble();
         longitud=in.readDouble();
         urlImagen=in.readString();
+        imagenUltimaModificacion = in.readString();
 
         categorias=in.createStringArrayList();
         usuariosInteresados=in.createStringArrayList();
@@ -183,6 +192,7 @@ public class Evento implements Parcelable {
         dest.writeDouble(latitud);
         dest.writeDouble(longitud);
         dest.writeString(urlImagen);
+        dest.writeString(imagenUltimaModificacion);
         dest.writeStringList(categorias);
         dest.writeStringList(usuariosInteresados);
     }

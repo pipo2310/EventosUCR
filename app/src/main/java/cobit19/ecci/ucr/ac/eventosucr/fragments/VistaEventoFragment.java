@@ -136,8 +136,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         Glide.with(v)
                 .load(evento.getUrlImagen())
                 // Vemos si podemos utilizar o no la imagen del cache
-                .skipMemoryCache(true)
-                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .signature(new ObjectKey(evento.getImagenUltimaModificacion()))
                 .into(imagenEvento);
     }
 
