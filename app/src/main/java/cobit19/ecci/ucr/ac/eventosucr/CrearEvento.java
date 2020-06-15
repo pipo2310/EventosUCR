@@ -51,8 +51,16 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageMetadata;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.mukesh.tinydb.TinyDB;
 
+import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
@@ -193,7 +201,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         crearEvento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               guardarEvento();
+                guardarEvento();
             }
         });
     }
@@ -291,7 +299,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                 // Decirle al usuario que debe seleccionar una categoria
             }
         }
-        
+
 
     }
 
@@ -408,26 +416,83 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         if(insertar==true){
             ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            Evento evento = new Evento(nombre.getText().toString(),institucion,detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud);
+            Evento evento = new Evento(nombre.getText().toString(),institucion,detalles.getText().toString(),fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(), latitud,longitud,"");
             // inserta el estudiante, se le pasa como parametro el contexto de la app
             long newRowId = eventoService.insertar(getApplicationContext(), evento);
             String eventoID = Long.toString(newRowId);
             for(int i=0; i<categoriasSeleccionadas.size(); i++){
                 categoriaEventoService.insertar(getApplicationContext(), new CategoriaEvento(categorias.get(categoriasSeleccionadas.get(i)).getId(), eventoID));
             }
-            BitmapDrawable drawable = (BitmapDrawable) imagenEvento.getDrawable();
-            Bitmap bitmap = drawable.getBitmap();
+            //BitmapDrawable drawable = (BitmapDrawable) imagenEvento.getDrawable();
+            //Bitmap bitmap = drawable.getBitmap();
+            // Create a storage reference from our app
+            FirebaseStorage storage = FirebaseStorage.getInstance();
+            StorageReference storageRef = storage.getReference();
+
+// Create a reference to "mountains.jpg"
+            StorageReference mountainsRef = storageRef.child(evento.getNombre()+".png");
+
+// Create a reference to 'images/mountains.jpg'
+            StorageReference mountainImagesRef = storageRef.child("events/"+evento.getNombre()+".png");
+
+// While the file names are the same, the references point to different files
+            mountainsRef.getName().equals(mountainImagesRef.getName());    // true
+            mountainsRef.getPath().equals(mountainImagesRef.getPath());    // false
+            imagenEvento.setDrawingCacheEnabled(true);
+            imagenEvento.buildDrawingCache();
+            Bitmap bitmap = ((BitmapDrawable) imagenEvento.getDrawable()).getBitmap();
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            byte[] data = baos.toByteArray();
+            StorageMetadata metadata = new StorageMetadata.Builder()
+                    .setContentType("image/jpg")
+                    .build();
+
+            UploadTask uploadTask = mountainImagesRef.putBytes(data);
+            uploadTask.addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception exception) {
+                    // Handle unsuccessful uploads
+                }
+            }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                @Override
+                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                    // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+                    // ...
+                }
+            });
             ImagenService imagenService=new ImagenService();
             Imagen imagenAInsertar=new Imagen(eventoID,bitmap);
 
             imagenService.insertar(getApplicationContext(),imagenAInsertar);
             Toast.makeText(getApplicationContext(),
                     " Id: " + evento.getId() +
-                    " Ubicacion "+evento.getUbicacion()+
-                    " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
-                    evento.getInstitucion(getApplicationContext()).getNombre() +
-                    " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
+                            " Ubicacion "+evento.getUbicacion()+
+                            " Nombre Evento: " + evento.getNombre()+ " Nombre Institucion: " +
+                            evento.getInstitucion(getApplicationContext()).getNombre() +
+                            " Detalles" + evento.getDetalles()+ " Hora Inicio: "+evento.getHoraInicio()+" Hora fin "+evento.getHoraFin() ,Toast.LENGTH_LONG).show();
             Intent intent = new Intent(this, ListaEventosSuperUsuario.class);
+
+
+
+            // Agregarlo tambien a Usuario eventos creados y a eventos
+
+
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+            //Agrega a categoria el evento creado segun el numero de categorias
+            for(int i=0; i<categoriasSeleccionadas.size(); i++){
+                db.collection("categoriaEventos")
+                        .document(categorias.get(categoriasSeleccionadas.get(i)).getNombre())
+                        .collection("eventos").document(evento.getNombre()).set(evento);
+            }
+            //Agrega a la coleccion de eventos el evento identificado por su nombre
+            db.collection("eventos").document(evento.getNombre()).set(evento);
+
+            //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+            db.collection("usuarioEventosCreado")
+                    .document(Constantes.CORREO_UCR_USUARIO)
+                    .collection("eventosUsuario").document(Constantes.CORREO_UCR_USUARIO+evento.getNombre()).set(evento);
+
 
 
             // Deseo recibir una respuesta: startActivityForResult()
@@ -468,48 +533,48 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
 
     }
-@Override
+    @Override
     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-    TextView horaIni = (TextView) findViewById(R.id.tiempoInicio);
-    TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
-    DecimalFormat df = new DecimalFormat("00");
+        TextView horaIni = (TextView) findViewById(R.id.tiempoInicio);
+        TextView horaFin = (TextView) findViewById(R.id.tiempoFin);
+        DecimalFormat df = new DecimalFormat("00");
 
 
-    if(tiempoInicio){
-        tiempoInicio=false;
-        try {
-            horaIni.setError(null);
-        }
-        catch(Exception e) {
+        if(tiempoInicio){
+            tiempoInicio=false;
+            try {
+                horaIni.setError(null);
+            }
+            catch(Exception e) {
 
-        }
-        horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
-        horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-        horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
-        horaInicioManejoError=hourOfDay;
-        minutoInicioManejoError=minute;
-
-    }else {
-        tiempoFinal=false;
-        if(hourOfDay>horaInicioManejoError){
-            horaFin.setError(null);
+            }
+            horaIni.setText(df.format(hourOfDay)+" : "+df.format(minute));
             horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
-        }else if((hourOfDay==horaInicioManejoError)&&(minute>minutoInicioManejoError)){
-            horaFin.setError(null);
-            horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
-            horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
-        }else{
-            horaFin.setError("Hora final no valida");
+            horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
+            horaInicioManejoError=hourOfDay;
+            minutoInicioManejoError=minute;
+
+        }else {
+            tiempoFinal=false;
+            if(hourOfDay>horaInicioManejoError){
+                horaFin.setError(null);
+                horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+                horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+            }else if((hourOfDay==horaInicioManejoError)&&(minute>minutoInicioManejoError)){
+                horaFin.setError(null);
+                horaFin.setText(df.format(hourOfDay)+" : "+df.format(minute));
+                horaFinalBase=df.format(hourOfDay)+" : "+df.format(minute);
+            }else{
+                horaFin.setError("Hora final no valida");
+            }
+
         }
+
+
+
+        Toast.makeText(getApplicationContext(), hourOfDay + " " + minute, Toast.LENGTH_SHORT).show();
 
     }
-
-
-
-    Toast.makeText(getApplicationContext(), hourOfDay + " " + minute, Toast.LENGTH_SHORT).show();
-
-}
 
     private void handlePermission() {
 
@@ -630,9 +695,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(i);
     }
-
-
-
 
 
 }
