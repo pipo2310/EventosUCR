@@ -11,7 +11,7 @@ import java.util.Locale;
 public class UtilDates {
 
     public static Date parsearaDate(String fecha) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
         Date date;
 
         try {
@@ -25,7 +25,7 @@ public class UtilDates {
     }
 
     public static String parsearaString(Date fecha) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-M-yyyy hh:mm:ss");
+        SimpleDateFormat sdf = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss");
         return sdf.format(fecha);
     }
 

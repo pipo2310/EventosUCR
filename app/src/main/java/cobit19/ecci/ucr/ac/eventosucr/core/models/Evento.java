@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -155,6 +156,19 @@ public class Evento implements Parcelable {
     public void setHoraFin(String horaFin) {
         this.horaFin = horaFin;
     }
+
+    public static Comparator<Evento> FechaComparator = new Comparator<Evento>() {
+
+        public int compare(Evento e1, Evento e2) {
+            String fechaEvento = UtilDates.parsearaString(e1.getFecha().getTime());
+            String fechaEvento2 = UtilDates.parsearaString(e2.getFecha().getTime());
+
+            //ascending order
+            return fechaEvento.compareTo(fechaEvento2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+        }};
 
     protected Evento (Parcel in) {
         id = in.readString();
