@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.widget.ImageView;
@@ -69,19 +70,32 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Para el menu de abajo
+        footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
+
         //Fragmento que se muestra al inicio
         Intent a =  getIntent();
         Evento evento = (Evento) a.getParcelableExtra(BuscarActivity.EVENTO);
         if (evento != null) {
             showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
         } else {
-            showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+            String type = getIntent().getStringExtra("From");
+            if (type != null) {
+                switch (type) {
+                    case "notifFragVista":
+                        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                        break;
+                    case "notifFragFavoritos":
+                        showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
+                        break;
+                }
+            }else {
+                showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                // Marcado por defecto el explorar
+                footerMenu.setSelectedItemId(R.id.menu_explorar);
+            }
         }
 
-        // Para el menu de abajo
-        footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
-        // Marcado por defecto el explorar
-        footerMenu.setSelectedItemId(R.id.menu_explorar);
         // Listener de la opciones del menú
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
