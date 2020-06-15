@@ -250,115 +250,13 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         String eventoId = evento.getNombre().replaceAll(" ", "");
         String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
-
         if (imagenCambiada) {
-            // STORAGE
-            // Crear la referencia al storage
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-
-            // Crear una refeerencia al lugar donde se va a guardar la imagen
-            StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
-
-            ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEventoModificar);
-            // Setear la forma en la que se va a guardar la imagen
-            imagenEvento.setDrawingCacheEnabled(true);
-            imagenEvento.buildDrawingCache();
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
-            if (bitmapDrawable != null) {
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] data = baos.toByteArray();
-                StorageMetadata metadata = new StorageMetadata.Builder()
-                        .setContentType("image/png")
-                        .build();
-
-                // Agregar la imagen al storage
-                UploadTask uploadTask = mountainImagesRef.putBytes(data);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Date date = new Date();
-                        evento.setImagenUltimaModificacion(date.toString());
-
-                        // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
-                        // esto le da tiempo de no traerse la imagen anterior
-
-                        // FIRESTORE
-                        // Modificamos el evento
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        // Lo midificamos en las categorias a las que pertenece
-                        for (String categoria: evento.getCategorias()) {
-                            db.collection("categoriaEventos")
-                                    .document(categoria)
-                                    .collection("eventos")
-                                    .document(eventoId)
-                                    .set(evento);
-                        }
-
-                        //Agrega a la coleccion de eventos el evento identificado por su nombre
-                        db.collection("eventos").document(eventoId).set(evento);
-
-                        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-                        db.collection("usuarioEventosCreado")
-                                .document(usuarioId)
-                                .collection("eventos")
-                                .document(eventoId).set(evento);
-
-                        // Modificamos el evento para los usuarios interesedos
-                        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
-                            db.collection("meInteresaUsuarioEvento")
-                                    .document(usuarioInteresado)
-                                    .collection("eventos")
-                                    .document(eventoId)
-                                    .set(evento);
-                        }
-
-                        Intent intent = new Intent(getApplicationContext(), ListaEventosUsuario.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
-            }
+            modificarEventoConImagen(eventoId, usuarioId, evento);
         } else {
-            // FIRESTORE
-            // Modificamos el evento
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-            // Lo midificamos en las categorias a las que pertenece
-            for (String categoria: evento.getCategorias()) {
-                db.collection("categoriaEventos")
-                        .document(categoria)
-                        .collection("eventos")
-                        .document(eventoId)
-                        .set(evento);
-            }
-
-            //Agrega a la coleccion de eventos el evento identificado por su nombre
-            db.collection("eventos").document(eventoId).set(evento);
-
-            //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-            db.collection("usuarioEventosCreado")
-                    .document(usuarioId)
-                    .collection("eventos")
-                    .document(eventoId).set(evento);
-
-            // Modificamos el evento para los usuarios interesedos
-            for (String usuarioInteresado: evento.getUsuariosInteresados()) {
-                db.collection("meInteresaUsuarioEvento")
-                        .document(usuarioInteresado)
-                        .collection("eventos")
-                        .document(eventoId)
-                        .set(evento);
-            }
-
-            Intent intent = new Intent(this, ListaEventosUsuario.class);
-            startActivity(intent);
-            finish();
+            modificarEvento(eventoId, usuarioId, evento);
         }
     }
+
     @Override
     public void onMapReady(GoogleMap googleMap) {
         eventoMap = googleMap;
@@ -739,4 +637,83 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(i);
     }
+
+    /*************************************************************************************************************/
+
+    public void modificarEventoConImagen(String eventoId, String usuarioId, Evento evento) {
+        // STORAGE
+        // Crear la referencia al storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        // Crear una refeerencia al lugar donde se va a guardar la imagen
+        StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
+
+        // Obtenemos el image view donde esta la imagen
+        ImageView imagenEvento = (ImageView) findViewById(R.id.imagenEventoModificar);
+
+        // Setear la forma en la que se va a guardar la imagen
+        imagenEvento.setDrawingCacheEnabled(true);
+        imagenEvento.buildDrawingCache();
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        // Agregamos la imagen al storage
+        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Date date = new Date();
+                evento.setImagenUltimaModificacion(date.toString());
+
+                // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
+                // esto no permite que Glide se traiga la imagen anterior y la guarde en el Cache como
+                // si fuera la nueva Imagen
+
+                modificarEvento(eventoId, usuarioId, evento);
+            }
+        });
+    }
+
+    public void modificarEvento(String eventoId, String usuarioId, Evento evento) {
+        // FIRESTORE
+        // Modificamos el evento
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Lo midificamos en las categorias a las que pertenece
+        for (String categoria: evento.getCategorias()) {
+            db.collection("categoriaEventos")
+                    .document(categoria)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
+        }
+
+        //Agrega a la coleccion de eventos el evento identificado por su nombre
+        db.collection("eventos").document(eventoId).set(evento);
+
+        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+        db.collection("usuarioEventosCreado")
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId).set(evento);
+
+        // Modificamos el evento para los usuarios interesedos
+        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
+            db.collection("meInteresaUsuarioEvento")
+                    .document(usuarioInteresado)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
+        }
+
+        Intent intent = new Intent(this, ListaEventosUsuario.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /*************************************************************************************************************/
 }

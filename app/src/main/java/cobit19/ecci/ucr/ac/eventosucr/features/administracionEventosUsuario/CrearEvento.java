@@ -101,11 +101,15 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     // Lista de categorias seleccionadas
     ArrayList<Integer> categoriasSeleccionadas = new ArrayList<Integer>();
 
+    // Necesario para ver si hay que guardar la imagen
+    private boolean guardarImagen;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_crear_evento);
+        guardarImagen = false;
 
         // Le pedimos al proovedor de view models que nos de el de categorias
         categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
@@ -247,9 +251,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
     private void agregarImagenAImageView() {
         openImageChooser();
-
-        //ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-
     }
 
     // Selecciona un item del spinner
@@ -373,13 +374,12 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         }
 
         if(insertar==true){
-            ImageView imagenEvento=(ImageView)findViewById(R.id.imagenEvento);//Seteamos la imagen al image view
-            // Cariables necesarias para crear el evento
+            // Variables necesarias para crear el evento
             String eventoId = nombre.getText().toString().replaceAll(" ", "");
             String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
             String urlImagen = "https://firebasestorage.googleapis.com/v0/b/eventosucr-35c97.appspot.com/o/eventos%2F" + eventoId + ".png?alt=media";
 
-            // Agregar la lista de categorias al evento
+            // Construir la lista de categorias a las que pertenece el evento
             List<String> categoriasEvento = new ArrayList<>();
             for (int i: categoriasSeleccionadas) {
                 categoriasEvento.add(categorias.get(i).getCategoria());
@@ -389,106 +389,14 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                     detalles.getText().toString(), fecha,horaInicio,horaFinalBase,ubicacion.getText().toString(),
                     latitud,longitud, urlImagen, categoriasEvento);
 
-            // Agegamos la fecha en que se creo la categoria
+            // Agegamos la fecha en que se creo el evento
             Date date = new Date();
             evento.setImagenUltimaModificacion(date.toString());
 
-            // STORAGE
-            // Crear la referencia al storage
-            FirebaseStorage storage = FirebaseStorage.getInstance();
-            StorageReference storageRef = storage.getReference();
-
-            // Crear una refeerencia al lugar donde se va a guardar la imagen
-            StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
-
-            // Setear la forma en la que se va a guardar la imagen
-            imagenEvento.setDrawingCacheEnabled(true);
-            imagenEvento.buildDrawingCache();
-            BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
-            if (bitmapDrawable != null) {
-                Bitmap bitmap = bitmapDrawable.getBitmap();
-                ByteArrayOutputStream baos = new ByteArrayOutputStream();
-                bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
-                byte[] data = baos.toByteArray();
-
-                StorageMetadata metadata = new StorageMetadata.Builder()
-                        .setContentType("image/png")
-                        .build();
-
-                // Agregar la imagen al storage
-                UploadTask uploadTask = mountainImagesRef.putBytes(data);
-                uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Date date = new Date();
-                        evento.setImagenUltimaModificacion(date.toString());
-
-                        // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
-                        // esto le da tiempo de no traerse la imagen anterior
-
-                        // FIRESTORE
-                        // Modificamos el evento
-                        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                        // Lo midificamos en las categorias a las que pertenece
-                        for (String categoria: evento.getCategorias()) {
-                            db.collection("categoriaEventos")
-                                    .document(categoria)
-                                    .collection("eventos")
-                                    .document(eventoId)
-                                    .set(evento);
-                        }
-
-                        //Agrega a la coleccion de eventos el evento identificado por su nombre
-                        db.collection("eventos").document(eventoId).set(evento);
-
-                        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-                        db.collection("usuarioEventosCreado")
-                                .document(usuarioId)
-                                .collection("eventos")
-                                .document(eventoId).set(evento);
-
-                        // Modificamos el evento para los usuarios interesedos
-                        for (String usuarioInteresado: evento.getUsuariosInteresados()) {
-                            db.collection("meInteresaUsuarioEvento")
-                                    .document(usuarioInteresado)
-                                    .collection("eventos")
-                                    .document(eventoId)
-                                    .set(evento);
-                        }
-
-                        Intent intent = new Intent(getApplicationContext(), ListaEventosUsuario.class);
-                        startActivity(intent);
-                        finish();
-                    }
-                });
+            if (guardarImagen) {
+                guardarEventoConImagen(eventoId, usuarioId, evento);
             } else {
-                // FIRESTORE
-                // Crear la referencia a firestore
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                // Agrega a categoria el evento creado segun el numero de categorias
-                for(String categoria: categoriasEvento){
-                    db.collection("categoriaEventos")
-                            .document(categoria)
-                            .collection("eventos").document(eventoId).set(evento);
-                }
-
-                //Agrega a la coleccion de eventos el evento identificado por su nombre
-                db.collection("eventos").document(eventoId).set(evento);
-
-                //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
-                db.collection("usuarioEventosCreado")
-                        .document(usuarioId)
-                        .collection("eventos")
-                        .document(eventoId).set(evento);
-
-
-
-                // Deseo recibir una respuesta: startActivityForResult()
-                Intent intent = new Intent(this, ListaEventosUsuario.class);
-                startActivity(intent);
-                finish();
+                guardarEvento(eventoId, usuarioId, evento);
             }
         }
     }
@@ -646,6 +554,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                                 @Override
                                 public void run() {
                                     ((ImageView) findViewById(R.id.imagenEvento)).setImageURI(selectedImageUri);
+                                    guardarImagen = true;
                                 }
                             });
 
@@ -683,4 +592,76 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         i.addFlags(Intent.FLAG_ACTIVITY_EXCLUDE_FROM_RECENTS);
         context.startActivity(i);
     }
+
+    /*************************************************************************************************************/
+
+    public void guardarEventoConImagen(String eventoId, String usuarioId, Evento evento) {
+        // STORAGE
+        // Crear la referencia al storage
+        FirebaseStorage storage = FirebaseStorage.getInstance();
+        StorageReference storageRef = storage.getReference();
+
+        // Crear una refeerencia al lugar donde se va a guardar la imagen
+        StorageReference mountainImagesRef = storageRef.child("eventos/"+eventoId+".png");
+
+        // Obtenemos el image view donde esta la imagen
+        ImageView imagenEvento = (ImageView) findViewById(R.id.imagenEvento);
+
+        // Setear la forma en la que se va a guardar la imagen
+        imagenEvento.setDrawingCacheEnabled(true);
+        imagenEvento.buildDrawingCache();
+        BitmapDrawable bitmapDrawable = (BitmapDrawable) imagenEvento.getDrawable();
+        Bitmap bitmap = bitmapDrawable.getBitmap();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        // Agregamos la imagen al storage
+        UploadTask uploadTask = mountainImagesRef.putBytes(data);
+        uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Date date = new Date();
+                evento.setImagenUltimaModificacion(date.toString());
+
+                // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
+                // esto no permite que Glide se traiga la imagen anterior y la guarde en el Cache como
+                // si fuera la nueva Imagen
+
+                guardarEvento(eventoId, usuarioId, evento);
+            }
+        });
+    }
+
+    public void guardarEvento(String eventoId, String usuarioId, Evento evento) {
+        // Crear la referencia a firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        // Agrega a categoria el evento creado segun el numero de categorias
+        for(String categoria: evento.getCategorias()){
+            db.collection("categoriaEventos")
+                    .document(categoria)
+                    .collection("eventos")
+                    .document(eventoId)
+                    .set(evento);
+        }
+
+        //Agrega a la coleccion de eventos el evento identificado por su nombre
+        db.collection("eventos").document(eventoId).set(evento);
+
+        //Se recupera el usuario actual de la aplicacion mediante firebaase me imagino la verdad nose
+        db.collection("usuarioEventosCreado")
+                .document(usuarioId)
+                .collection("eventos")
+                .document(eventoId).set(evento);
+
+
+
+        // Deseo recibir una respuesta: startActivityForResult()
+        Intent intent = new Intent(this, ListaEventosUsuario.class);
+        startActivity(intent);
+        finish();
+    }
+
+    /*************************************************************************************************************/
 }
