@@ -44,15 +44,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //crea el canal de notificaciones
-        crearCanalNotificacion();
-        asignarAlarma();
         SharedPreferences sharedPreferences = getSharedPreferences ("COBIT19_EVENTOS_UCR", MODE_PRIVATE);
-       /*if(!isMyServiceRunning(NotificacionCambioEvento.class)){
-            lanzarServicio();
-        }*/
-        lanzarServicio();
-
         if (!sharedPreferences.getBoolean("NOT_FIRST_RUN", false)) {
             populateDatabase();
 
@@ -60,17 +52,7 @@ public class MainActivity extends AppCompatActivity {
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
         }
-    }
 
-    @Override
-    protected  void onStart(){
-        super.onStart();
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         // Obtenemos el firebase auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         // Verificar si hay un usuario inscrito en la app
@@ -78,21 +60,19 @@ public class MainActivity extends AppCompatActivity {
             // Si no hay un usuario se envia a la pantalla de login
             cambiarDePantalla(LoginActivity.class);
         }else{
+            //crea el canal de notificaciones
+            crearCanalNotificacion();
+            asignarAlarma();
+            lanzarServicio();
             // Si ya hay un usuario se envia a la vista de explorar
             cambiarDePantalla(MenuActivity.class);
         }
     }
 
-
     public void cambiarDePantalla(Class<?> activity) {
         Intent a =new Intent(this, activity);
         startActivity(a);
         finish();
-    }
-
-    public void irMenu(){
-        Intent a =new Intent(this, MenuActivity.class);
-        startActivity(a);
     }
 
     //Notificaciones
@@ -110,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
     public void asignarAlarma() {
         Calendar alertTime = Calendar.getInstance();
 
-        alertTime.set(Calendar.HOUR_OF_DAY, 15);
-        alertTime.set(Calendar.MINUTE, 28);
+        alertTime.set(Calendar.HOUR_OF_DAY, 14);
+        alertTime.set(Calendar.MINUTE, 48);
         alertTime.set(Calendar.SECOND, 0);
 
         Intent alertIntent = new Intent(this, AlertManager.class);

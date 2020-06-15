@@ -25,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.concurrent.Executor;
 
+import cobit19.ecci.ucr.ac.eventosucr.MainActivity;
 import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
@@ -38,6 +39,8 @@ public class LoginFragment extends Fragment {
     private ImageView showPass;
     // Variable para acceder a Firebase Authentication
     private FirebaseAuth mAuth;
+    // Boton de iniciar sesion
+    Button iniciarSesionBtn;
 
 
     public LoginFragment() {
@@ -57,7 +60,7 @@ public class LoginFragment extends Fragment {
         usuario = view.findViewById(R.id.login_nombre_usuario);
         contrasenna = view.findViewById(R.id.login_contrasenna);
         showPass = view.findViewById(R.id.show_pass_btn);
-        Button iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
+        iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
 
         // Agregamos la accion que se quiere hacer cuando se presione el boton de iniciar sesion
         iniciarSesionBtn.setOnClickListener(new View.OnClickListener() {
@@ -79,6 +82,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void iniciarSesion(){
+        iniciarSesionBtn.setEnabled(false);
         if(usuario.length() > 0 && contrasenna.length() > 0) {
             mAuth.signInWithEmailAndPassword(usuario.getText().toString(), contrasenna.getText().toString())
                     .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
@@ -88,7 +92,7 @@ public class LoginFragment extends Fragment {
                                 // Inicio de sesion exitoso
                                 FirebaseUser user = mAuth.getCurrentUser();
                                 // Se envia al usuario a la vista principal
-                                cambiarDePantalla(MenuActivity.class);
+                                cambiarDePantalla(MainActivity.class);
                             } else {
                                 // Si el inicio de sesion falla, se le indica al usuario
                                 Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
@@ -99,6 +103,7 @@ public class LoginFragment extends Fragment {
             // Se le indica al usuario que debe agregar algo en los campos
             Toast.makeText(getActivity(), "Debe escribir un usario y una contraseña", Toast.LENGTH_SHORT).show();
         }
+        iniciarSesionBtn.setEnabled(true);
     }
 
     /**
@@ -121,6 +126,7 @@ public class LoginFragment extends Fragment {
     }
 
     public void cambiarDePantalla(Class<?> activity) {
+        iniciarSesionBtn.setEnabled(true);
         Intent a =new Intent(getActivity(), activity);
         startActivity(a);
         getActivity().finish();

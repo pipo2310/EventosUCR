@@ -84,6 +84,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 switch (type) {
                     case "notifFragVista":
                         showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                        // Marcado por defecto el explorar
+                        footerMenu.setSelectedItemId(R.id.menu_explorar);
                         break;
                     case "notifFragFavoritos":
                         showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
