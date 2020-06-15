@@ -8,12 +8,14 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.location.Location;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Looper;
 import android.view.LayoutInflater;
@@ -49,6 +51,7 @@ import com.google.android.gms.tasks.Task;
 import java.text.DateFormat;
 import java.util.ArrayList;
 
+import cobit19.ecci.ucr.ac.eventosucr.ComentariosActivity;
 import cobit19.ecci.ucr.ac.eventosucr.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.ObtenerDatosDirecciones;
 import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
@@ -58,7 +61,6 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Imagen;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.UsuarioEvento;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
-import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -76,6 +78,8 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     Button btnMeInteresa;
     Button btnNoMeInteresa;
     Button btnVerRuta;
+    TextView comentarios;
+    public static final String EXTRA_MESSAGE_VE = "EVENTO_ID";
 
     private boolean eliminarDeFavoritos = false;
 
@@ -110,6 +114,14 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         mostrarImagenes();
+
+        comentarios = v.findViewById(R.id.ir_a_comentarios);
+        comentarios.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                iraFragmentComentarios();
+            }
+        });
 
         //Botón para que el usuario le de like a un evento
         btnMeInteresa = (Button) v.findViewById(R.id.btnMeInteresa);
@@ -154,6 +166,14 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         return v;
     }
 
+    private void iraFragmentComentarios() {
+        // Pasar a la siguiente actividad
+        Intent intent = new Intent(getContext(), ComentariosActivity.class);
+        intent.putExtra(EXTRA_MESSAGE_VE, evento);
+        // Deseo recibir una respuesta: startActivityForResult()
+        startActivityForResult(intent, 0);
+    }
+    
     public void mostrarImagenes() {
         // Pedimos las imagenes asociadas a un evento
         ArrayList<Imagen> imagenesEvento = imagenService.leerImagenEvento(getContext(), evento.getId());

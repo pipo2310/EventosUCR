@@ -242,7 +242,26 @@
                 android:id="@+id/divisor2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginTop="35dp"
+                android:layout_marginTop="20dp"
+                android:background="?android:attr/listDivider" />
+
+            <TextView
+                android:id="@+id/ir_a_comentarios"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Ver los comentarios"
+                android:layout_marginStart="25dp"
+                android:layout_marginTop="20dp"
+                android:textStyle="bold"
+                android:textColor="@color/colorPrimary"
+                android:textSize="18sp">
+
+            </TextView>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
                 android:background="?android:attr/listDivider" />
 
 
