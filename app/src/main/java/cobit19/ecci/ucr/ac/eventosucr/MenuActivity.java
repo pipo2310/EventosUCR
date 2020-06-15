@@ -11,6 +11,7 @@ import android.widget.ImageView;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -34,6 +35,7 @@ import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
 import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 
@@ -113,6 +115,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+
     /**
      * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
      * @param menuItem
@@ -120,16 +123,26 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        if(menuItem.getItemId() == R.id.nav_cud_eventos){
-            Intent a =new Intent(this, ListaEventosSuperUsuario.class);
-            startActivity(a);
-            // finalizamos la aplicacion para que NO quede en segundo plano
-            finish();
-        }
-        else{
-            drawer.closeDrawer(Gravity.LEFT, true);
+        switch (menuItem.getItemId()){
+            case R.id.nav_cud_eventos:
+                cambiarDePantalla(ListaEventosSuperUsuario.class);
+                break;
+            case R.id.nav_cerrar_sesion:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                cambiarDePantalla(LoginActivity.class);
+                break;
+            default:
+                drawer.closeDrawer(Gravity.LEFT, true);
+                break;
         }
         return true;
+    }
+
+    public void cambiarDePantalla(Class<?> activity) {
+        Intent a =new Intent(this, activity);
+        startActivity(a);
+        finish();
     }
 
     /**
