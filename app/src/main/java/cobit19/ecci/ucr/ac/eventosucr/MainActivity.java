@@ -90,8 +90,8 @@ public class MainActivity extends AppCompatActivity {
     public void asignarAlarma() {
         Calendar alertTime = Calendar.getInstance();
 
-        alertTime.set(Calendar.HOUR_OF_DAY, 14);
-        alertTime.set(Calendar.MINUTE, 48);
+        alertTime.set(Calendar.HOUR_OF_DAY, 11);
+        alertTime.set(Calendar.MINUTE, 00);
         alertTime.set(Calendar.SECOND, 0);
 
         Intent alertIntent = new Intent(this, AlertManager.class);

@@ -331,7 +331,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
 
     //Url para obtener las rutas desde un punto origen a un punto destino
-    private String  obtenerUrl(LatLng orig, LatLng dest){
+    public String  obtenerUrl(LatLng orig, LatLng dest){
         //Asigna el valor de los parámetros
         String origen = "origin=" + orig.latitude + "," + orig.longitude;
         String destino = "destination=" + dest.latitude + "," + dest.longitude;
