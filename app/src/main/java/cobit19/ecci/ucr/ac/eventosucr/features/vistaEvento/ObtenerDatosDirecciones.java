@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento;
 
 import android.content.Context;
 import android.graphics.Color;

@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -10,6 +10,8 @@ import androidx.fragment.app.DialogFragment;
 import java.util.Calendar;
 import java.util.Objects;
 
+import cobit19.ecci.ucr.ac.eventosucr.R;
+
 public class DatePickerFragment extends DialogFragment {
     @NonNull
     @Override
@@ -19,6 +21,6 @@ public class DatePickerFragment extends DialogFragment {
         int month = c.get(Calendar.MONTH);
         int day = c.get(Calendar.DAY_OF_MONTH);
 
-        return new DatePickerDialog(requireActivity(),R.style.DialogTheme, (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
+        return new DatePickerDialog(requireActivity(), R.style.DialogTheme, (DatePickerDialog.OnDateSetListener) getActivity(), year, month, day);
     }
 }

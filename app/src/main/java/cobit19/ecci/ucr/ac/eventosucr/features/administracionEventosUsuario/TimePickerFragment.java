@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 import androidx.fragment.app.DialogFragment;
 
 import java.util.Calendar;
+
+import cobit19.ecci.ucr.ac.eventosucr.R;
 
 public class TimePickerFragment extends DialogFragment {
 

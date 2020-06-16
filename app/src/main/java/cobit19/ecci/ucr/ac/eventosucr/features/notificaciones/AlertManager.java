@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.notificaciones;
 
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
@@ -21,6 +21,8 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
+import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 

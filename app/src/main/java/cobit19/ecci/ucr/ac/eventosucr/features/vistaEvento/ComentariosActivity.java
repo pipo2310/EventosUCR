@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr;
+package cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento;
 
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -20,9 +20,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Comentario;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
 
 public class ComentariosActivity extends AppCompatActivity {
     private Evento evento;
