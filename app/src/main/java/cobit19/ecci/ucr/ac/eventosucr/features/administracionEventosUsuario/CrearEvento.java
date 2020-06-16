@@ -69,7 +69,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.shared.MapActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;

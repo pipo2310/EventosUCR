@@ -1,6 +1,7 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 
 import android.app.ActivityManager;
@@ -11,6 +12,7 @@ import android.app.PendingIntent;
 import android.content.Context;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -20,6 +22,8 @@ import java.util.Calendar;
 import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
 import cobit19.ecci.ucr.ac.eventosucr.features.notificaciones.AlertManager;
 import cobit19.ecci.ucr.ac.eventosucr.features.notificaciones.NotificacionCambioEvento;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -27,6 +31,16 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
+        boolean notFirstRun = sharedPreferences.getBoolean("NOT_FIRST_RUN", false);
+        if (!notFirstRun) {
+            llenarBase();
+
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean("NOT_FIRST_RUN", true);
+            editor.commit();
+        }
 
         // Obtenemos el firebase auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -90,5 +104,30 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return false;
+    }
+
+    private void llenarBase() {
+
+        // ROOM
+        // Crear la variable del model view de categoria
+        // Le pedimos al proovedor de view models que nos de el de categorias
+        CategoriaViewModel categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
+
+        Categoria[] categorias = new Categoria[] {
+                new Categoria("gastronomia"),
+                new Categoria("teatro"),
+                new Categoria("danza"),
+                new Categoria("expo"),
+                new Categoria("musica"),
+                new Categoria("cine"),
+                new Categoria("literatura"),
+                new Categoria("taller"),
+                new Categoria("feria"),
+                new Categoria("conversatorio"),
+                new Categoria("convocatoria"),
+                new Categoria("otras")
+        };
+
+        categoriaViewModel.insert(categorias);
     }
 }
