@@ -19,6 +19,8 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -79,7 +81,11 @@ public class ListaEventosUsuario extends AppCompatActivity implements Navigation
 
 
     public void leerEventos() {
-        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuarioId = user.getEmail().replaceAll("@(.)*", "");
+
         // FIRESTORE
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         // Pedimos la lista de eventos del usuario

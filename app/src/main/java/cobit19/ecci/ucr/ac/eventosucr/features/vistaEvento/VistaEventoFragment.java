@@ -1,4 +1,4 @@
-package cobit19.ecci.ucr.ac.eventosucr.fragments;
+package cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento;
 
 import android.Manifest;
 import android.content.Context;
@@ -44,15 +44,14 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.text.DateFormat;
-import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.ComentariosActivity;
-import cobit19.ecci.ucr.ac.eventosucr.ObtenerDatosDirecciones;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -75,7 +74,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
 
     // Por ahora voy a hacerlo asi, pero hay que cambiarlo para que siempre sea el id del usuario actual
-    private String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+    private String usuarioId;
 
     //Mapas
     private LatLng ubicacionEvento = new LatLng(0,0);
@@ -122,6 +121,11 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         btnNoMeInteresa = (Button) v.findViewById(R.id.btnNoMeInteresa);
         //Botón para que el usuario vea la ruta
         btnVerRuta = (Button) v.findViewById(R.id.btnVerRuta);
+
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        usuarioId = user.getEmail().replaceAll("@(.)*", "");
 
         String eventoId = evento.getNombre().replaceAll(" ", "");
         // FIRESTORE

@@ -59,8 +59,19 @@ public class CartaEventoFragment extends Fragment {
         TextView institucion = view.findViewById(R.id.explorar_evento_carta_institucion1);
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
-        nombre.setText("Evento: " + evento.getNombre());
-        institucion.setText("Organizador: " + evento.getOrganizador());
+
+        String nombreMostrar = evento.getNombre();
+        if (nombreMostrar.length() > 23) {
+            nombreMostrar = nombreMostrar.substring(0, 23) + "...";
+        }
+
+        String organizadorMostrar = evento.getOrganizador();
+        if (organizadorMostrar.length() > 25) {
+            organizadorMostrar = organizadorMostrar.substring(0, 25) + "...";
+        }
+
+        nombre.setText(nombreMostrar);
+        institucion.setText("Org: " + organizadorMostrar);
 
         ImageView imagenEvento = view.findViewById(R.id.explorar_evento_carta_imagen1);
         // Agregamos a imagen por medio de un URL

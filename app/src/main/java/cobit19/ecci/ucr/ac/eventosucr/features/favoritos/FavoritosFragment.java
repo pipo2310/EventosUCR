@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -41,7 +43,11 @@ public class FavoritosFragment extends Fragment {
 
         LinearLayout listaLayout = view.findViewById(R.id.favoritos_lista);
 
-        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuarioId = user.getEmail().replaceAll("@(.)*", "");
+
         //FIREBASE
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 

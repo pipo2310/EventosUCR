@@ -1,13 +1,11 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
-import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import android.Manifest;
@@ -20,7 +18,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
@@ -32,20 +29,16 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -55,16 +48,11 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -72,16 +60,13 @@ import java.io.ByteArrayOutputStream;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import cobit19.ecci.ucr.ac.eventosucr.DatePickerFragment;
-import cobit19.ecci.ucr.ac.eventosucr.MapActivity;
+import cobit19.ecci.ucr.ac.eventosucr.shared.MapActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.TimePickerFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
@@ -247,8 +232,13 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
             evento.setUbicacion(ubicacion.getText().toString());
         }
 
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuarioId = user.getEmail().replaceAll("@(.)*", "");
+
+        // Variables necesarias para modificar el evento
         String eventoId = evento.getNombre().replaceAll(" ", "");
-        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
 
         if (imagenCambiada) {
             modificarEventoConImagen(eventoId, usuarioId, evento);
@@ -364,8 +354,12 @@ public class ModificarEliminarEvento extends AppCompatActivity implements DatePi
                 .document(eventoId)
                 .delete();
 
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuarioId = user.getEmail().replaceAll("@(.)*", "");
+
         // Lo eliminamos de la tabla de eventos del usuario
-        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
         db.collection("usuarioEventosCreado")
                 .document(usuarioId)
                 .collection("eventos")
