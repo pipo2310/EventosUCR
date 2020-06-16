@@ -1,21 +1,24 @@
 package cobit19.ecci.ucr.ac.eventosucr;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
-import android.widget.ImageView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
-import androidx.appcompat.widget.SearchView;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -24,10 +27,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.EventoService;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.ImagenService;
 import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarActivity;
 import cobit19.ecci.ucr.ac.eventosucr.features.buscar.BuscarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.buscar.CategoriasBuscarFragment;
@@ -35,8 +35,11 @@ import cobit19.ecci.ucr.ac.eventosucr.features.explorar.CartaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario.ListaEventosUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento.VistaEventoFragment;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
 
 
@@ -127,7 +130,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()){
             case R.id.nav_cud_eventos:
-                cambiarDePantalla(ListaEventosSuperUsuario.class);
+                cambiarDePantalla(ListaEventosUsuario.class);
                 break;
             case R.id.nav_cerrar_sesion:
                 FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -213,28 +216,28 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onCategoriaSeleccionada(Categoria categoria) {
-        EventoService eventoService = new EventoService();
-        ArrayList<Evento> eventos = eventoService.leerListaEventosPorCategoria(getApplicationContext(), categoria.getId());
-
-        ImagenService imagenService=new ImagenService();
-
-        Bitmap imagenNula = BitmapFactory.decodeResource(getBaseContext().getResources(),R.drawable.ucr_evento_img);
-        ImageView imagenNulaImageView = new ImageView(this);
-        imagenNulaImageView.setImageBitmap(imagenNula);
-        ArrayList<ImageView> imagenesdeEventos = new ArrayList<ImageView>();
-
-        for (Evento evento : eventos){
-            if(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).size()==0){
-                //Imagen imagen=new Imagen(evento.getId(),imagenNula);
-                imagenesdeEventos.add(imagenNulaImageView);
-            }else{
-                ImageView imagenExistente=new ImageView(this);
-                imagenExistente.setImageBitmap(imagenService.leerImagenEvento(getApplicationContext(),evento.getId()).get(0).getImagen());
-                imagenesdeEventos.add(imagenExistente);
-            }
-        }
-
-        showSelectedFragment(new ListaEventosFragment(eventos, imagenesdeEventos), Constantes.LISTA_EVENTOS_TAG);
+        ArrayList<Evento> eventos = new ArrayList<>();
+        // FIRESTORE
+        // Crear la referencia a firestore
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        // Pedimos la lista de eventos de una categoria
+        db.collection("categoriaEventos")
+                .document(categoria.getCategoria())
+                .collection("eventos").get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            // Creamos la lista de eventos de firebase
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                eventos.add(document.toObject(Evento.class));
+                            }
+                            showSelectedFragment(new ListaEventosFragment(eventos), Constantes.LISTA_EVENTOS_TAG);
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
     }
 
     @Override

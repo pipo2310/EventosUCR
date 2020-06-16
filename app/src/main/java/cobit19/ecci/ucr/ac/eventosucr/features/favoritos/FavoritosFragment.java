@@ -2,20 +2,29 @@ package cobit19.ecci.ucr.ac.eventosucr.features.favoritos;
 
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.ArrayList;
 
-import cobit19.ecci.ucr.ac.eventosucr.Constantes;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.UtilDates;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.UsuarioEventoService;
+
 
 public class FavoritosFragment extends Fragment {
 
@@ -34,17 +43,40 @@ public class FavoritosFragment extends Fragment {
 
         LinearLayout listaLayout = view.findViewById(R.id.favoritos_lista);
 
-        UsuarioEventoService usuarioEventoService = new UsuarioEventoService();
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String usuarioId = user.getEmail().replaceAll("@(.)*", "");
 
-        listaEventos = usuarioEventoService.listaEventosPorUsuario(getContext(), Constantes.CORREO_UCR_USUARIO);
+        //FIREBASE
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-        for (Evento evento: listaEventos){
-            getActivity()
-                    .getSupportFragmentManager()
-                    .beginTransaction()
-                    .add(R.id.favoritos_lista, new CartaEventoFavoritos(evento), Constantes.EVENTO_FAV_TAG+evento.getId())
-                    .commit();
-        }
+        db.collection("meInteresaUsuarioEvento")
+                .document(usuarioId)
+                .collection("eventos")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            Evento evento;
+                            String eventoId;
+                            // Creamos la lista de eventos de firebase
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                evento = document.toObject(Evento.class);
+                                eventoId = evento.getNombre().replaceAll(" ", "");
+
+                                getActivity()
+                                        .getSupportFragmentManager()
+                                        .beginTransaction()
+                                        .add(R.id.favoritos_lista, new CartaEventoFavoritos(evento), Constantes.EVENTO_FAV_TAG+eventoId)
+                                        .commit();
+                            }
+                        } else {
+                            Log.d("TAG", "Error getting documents: ", task.getException());
+                        }
+                    }
+                });
 
         return view;
     }

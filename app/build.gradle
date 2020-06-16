@@ -19,6 +19,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = 1.8
+        targetCompatibility = 1.8
+    }
 }
 
 dependencies {
@@ -39,14 +43,14 @@ dependencies {
     implementation 'com.google.firebase:firebase-analytics:17.2.2'
     // add the Firebase SDK for Google Firestore
     implementation 'com.google.firebase:firebase-firestore:21.2.1'
+    // add the Firebase SDK for Google Realtime Database
+    implementation 'com.google.firebase:firebase-database:19.3.0'
     // add the Firebase SDK for Google Authentication
     implementation 'com.google.firebase:firebase-auth:19.3.1'
     // add the Firebase SDK for Google Storage
     implementation 'com.google.firebase:firebase-storage:19.1.1'
     // add SDKs for any other desired Firebase products
     // https://firebase.google.com/docs/android/setup#available-libraries
-    // Firebase Authentication
-    implementation 'com.google.firebase:firebase-auth:19.2.0'
 
     //Rooom implementation
     def room_version = "2.2.5"
@@ -55,15 +59,17 @@ dependencies {
     // Test helpers
     testImplementation "androidx.room:room-testing:$room_version"
 
+    // Glide utilizado para cargar imagenes desde internet
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
-    implementation 'com.google.android.material:material:1.0.0'
+
     implementation 'com.google.android.gms:play-services-maps:17.0.0'
     implementation 'com.google.android.gms:play-services-location:17.0.0'
     implementation 'com.google.android.libraries.places:places:2.2.0'
     implementation 'com.mukesh:tinydb:1.0.1'
-    implementation 'com.google.firebase:firebase-database:19.3.0'
     implementation 'com.squareup.picasso:picasso:2.5.2'
-
 }
