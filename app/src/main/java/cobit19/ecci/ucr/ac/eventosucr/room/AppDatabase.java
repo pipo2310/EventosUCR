@@ -27,10 +27,45 @@ public abstract class AppDatabase extends RoomDatabase {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(context.getApplicationContext(),
                             AppDatabase.class, "app_database")
+                            .addCallback(sRoomDatabaseCallback)
                             .build();
                 }
             }
         }
         return INSTANCE;
     }
+
+    private static RoomDatabase.Callback sRoomDatabaseCallback = new RoomDatabase.Callback() {
+        @Override
+        public void onOpen(@NonNull SupportSQLiteDatabase db) {
+            super.onOpen(db);
+
+            // If you want to keep data through app restarts,
+            // comment out the following block
+            databaseWriteExecutor.execute(() -> {
+
+                Categoria[] categorias = new Categoria[] {
+                        new Categoria("gastronomia"),
+                        new Categoria("teatro"),
+                        new Categoria("danza"),
+                        new Categoria("expo"),
+                        new Categoria("musica"),
+                        new Categoria("cine"),
+                        new Categoria("literatura"),
+                        new Categoria("taller"),
+                        new Categoria("feria"),
+                        new Categoria("conversatorio"),
+                        new Categoria("convocatoria"),
+                        new Categoria("otras")
+                };
+
+
+                // Populate the database in the background.
+                // If you want to start with more words, just add them.
+                CategoriaDao dao = INSTANCE.categoriaDao();
+                dao.delete(categorias);
+                dao.insert(categorias);
+            });
+        }
+    };
 }

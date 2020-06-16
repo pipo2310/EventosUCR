@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
         boolean notFirstRun = sharedPreferences.getBoolean("NOT_FIRST_RUN", false);
-        if (!notFirstRun) {
+        if (notFirstRun) {
             llenarBase();
-
+        } else {
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
@@ -128,6 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 new Categoria("otras")
         };
 
-        categoriaViewModel.insert(categorias);
+        categoriaViewModel.delete(categorias);
     }
 }
