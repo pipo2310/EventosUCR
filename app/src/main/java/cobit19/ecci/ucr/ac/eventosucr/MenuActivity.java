@@ -10,9 +10,12 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -33,7 +36,8 @@ import cobit19.ecci.ucr.ac.eventosucr.features.explorar.ExplorarFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario.ListaEventosUsuario;
-import cobit19.ecci.ucr.ac.eventosucr.fragments.VistaEventoFragment;
+import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
+import cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento.VistaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.shared.ListaEventosFragment;
@@ -69,19 +73,34 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+        // Para el menu de abajo
+        footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
+
         //Fragmento que se muestra al inicio
         Intent a =  getIntent();
         Evento evento = (Evento) a.getParcelableExtra(BuscarActivity.EVENTO);
         if (evento != null) {
             showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
         } else {
-            showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+            String type = getIntent().getStringExtra("From");
+            if (type != null) {
+                switch (type) {
+                    case "notifFragVista":
+                        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                        // Marcado por defecto el explorar
+                        footerMenu.setSelectedItemId(R.id.menu_explorar);
+                        break;
+                    case "notifFragFavoritos":
+                        showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
+                        break;
+                }
+            }else {
+                showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                // Marcado por defecto el explorar
+                footerMenu.setSelectedItemId(R.id.menu_explorar);
+            }
         }
 
-        // Para el menu de abajo
-        footerMenu = (BottomNavigationView) findViewById(R.id.menu_footer);
-        // Marcado por defecto el explorar
-        footerMenu.setSelectedItemId(R.id.menu_explorar);
         // Listener de la opciones del menú
         footerMenu.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -101,6 +120,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         });
     }
 
+
     /**
      * Metodo para el menu lateral aqui se pone donde se va la aplicacion cada vez que se toca un item
      * @param menuItem
@@ -108,16 +128,26 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
      */
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
-        if(menuItem.getItemId() == R.id.nav_cud_eventos){
-            Intent a =new Intent(this, ListaEventosUsuario.class);
-            startActivity(a);
-            // finalizamos la aplicacion para que NO quede en segundo plano
-            finish();
-        }
-        else{
-            drawer.closeDrawer(Gravity.LEFT, true);
+        switch (menuItem.getItemId()){
+            case R.id.nav_cud_eventos:
+                cambiarDePantalla(ListaEventosUsuario.class);
+                break;
+            case R.id.nav_cerrar_sesion:
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                mAuth.signOut();
+                cambiarDePantalla(LoginActivity.class);
+                break;
+            default:
+                drawer.closeDrawer(Gravity.LEFT, true);
+                break;
         }
         return true;
+    }
+
+    public void cambiarDePantalla(Class<?> activity) {
+        Intent a =new Intent(this, activity);
+        startActivity(a);
+        finish();
     }
 
     /**

@@ -51,11 +51,11 @@ import com.google.android.gms.maps.UiSettings;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageMetadata;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
@@ -70,10 +70,8 @@ import java.util.List;
 import java.util.Locale;
 
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
-import cobit19.ecci.ucr.ac.eventosucr.DatePickerFragment;
-import cobit19.ecci.ucr.ac.eventosucr.MapActivity;
+import cobit19.ecci.ucr.ac.eventosucr.shared.MapActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.TimePickerFragment;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
@@ -192,7 +190,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         crearEvento.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               guardarEvento();
+                guardarEvento();
             }
         });
     }
@@ -239,12 +237,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             EditText ubicacionEscrita=(EditText)findViewById(R.id.agregarDireccion);
             ubicacionEscrita.setText(address);
             Log.i(TAG, "Direccion : " + addresses.get(0));
-
-
-
-        }catch (Exception e){
-
-        }
+        }catch (Exception e){ }
     }
 
 
@@ -373,10 +366,13 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
 
         }
 
-        if(insertar==true){
+        if(insertar==true) {
+            // Obtenemos el usuario
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+            String usuarioId = user.getEmail().replaceAll("@(.)*", "");
+
             // Variables necesarias para crear el evento
             String eventoId = nombre.getText().toString().replaceAll(" ", "");
-            String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
             String urlImagen = "https://firebasestorage.googleapis.com/v0/b/eventosucr-35c97.appspot.com/o/eventos%2F" + eventoId + ".png?alt=media";
 
             // Construir la lista de categorias a las que pertenece el evento
@@ -452,8 +448,7 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
             horaInicio=df.format(hourOfDay)+" : "+df.format(minute);
             horaInicioManejoError=hourOfDay;
             minutoInicioManejoError=minute;
-
-        } else {
+        }else {
             tiempoFinal=false;
             if(hourOfDay>horaInicioManejoError){
                 horaFin.setError(null);
@@ -471,7 +466,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
     }
 
     private void handlePermission() {
-
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             return;
         }
@@ -563,7 +557,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
                 }
             }
         }).start();
-
     }
 
     /* Get the real path from the URI */
@@ -621,9 +614,6 @@ public class CrearEvento extends AppCompatActivity implements DatePickerDialog.O
         uploadTask.addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                Date date = new Date();
-                evento.setImagenUltimaModificacion(date.toString());
-
                 // La razon de hacerlo asi es porque la imagen toma un rato en actualizarce por lo tanto
                 // esto no permite que Glide se traiga la imagen anterior y la guarde en el Cache como
                 // si fuera la nueva Imagen

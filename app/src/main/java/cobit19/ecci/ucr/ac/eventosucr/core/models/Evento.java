@@ -1,11 +1,5 @@
 package cobit19.ecci.ucr.ac.eventosucr.core.models;
 
-/**
- * Created by Fabian on 22/4/2020.
- * Ultima modificacion by Fabian on 22/4/2020.
- * Esta clase define lo que conforma un evento
- */
-
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -14,6 +8,7 @@ import com.google.firebase.firestore.Exclude;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
@@ -41,6 +36,7 @@ public class Evento implements Parcelable {
     private Long timestamp;
 
     public Evento() { }
+
 
     public Evento(String nombre, String organizador, String detalles, Calendar fecha, String horaInicio, String horaFin, String ubicacion, double latitud, double longitud,String urlImagen, List<String> categorias) {
         this.nombre = nombre;
@@ -156,6 +152,20 @@ public class Evento implements Parcelable {
     public void setUsuariosInteresados(List<String> usuariosInteresados) {
         this.usuariosInteresados = usuariosInteresados;
     }
+
+    public static Comparator<Evento> FechaComparator = new Comparator<Evento>() {
+
+        public int compare(Evento e1, Evento e2) {
+            String fechaEvento = UtilDates.parsearaString(e1.getFecha().getTime());
+            String fechaEvento2 = UtilDates.parsearaString(e2.getFecha().getTime());
+
+            //ascending order
+            return fechaEvento.compareTo(fechaEvento2);
+
+            //descending order
+            //return StudentName2.compareTo(StudentName1);
+        }
+    };
 
     protected Evento (Parcel in) {
         nombre = in.readString();
