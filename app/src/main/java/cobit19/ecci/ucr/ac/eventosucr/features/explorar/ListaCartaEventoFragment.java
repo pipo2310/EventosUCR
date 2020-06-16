@@ -70,7 +70,11 @@ public class ListaCartaEventoFragment extends Fragment {
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_lista_carta_evento, container, false);
         TextView nombre = view.findViewById(R.id.explorar_nombre_categoria_eventos);
-        nombre.setText(categoria.getCategoria());
+
+        // Hacer que la primera letra sea en mayuscula
+        String categoriasMostrar = categoria.getCategoria();
+        categoriasMostrar = categoriasMostrar.substring(0, 1).toUpperCase() + categoriasMostrar.substring(1);
+        nombre.setText(categoriasMostrar);
 
         if (view.findViewById(R.id.explorar_categoria_lista_eventos) != null) {
             if (savedInstanceState == null) {
