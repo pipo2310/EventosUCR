@@ -44,7 +44,7 @@ public abstract class AppDatabase extends RoomDatabase {
             // comment out the following block
             databaseWriteExecutor.execute(() -> {
 
-                Categoria[] categorias = new Categoria[] {
+                /*Categoria[] categorias = new Categoria[] {
                         new Categoria("gastronomia"),
                         new Categoria("teatro"),
                         new Categoria("danza"),
@@ -64,7 +64,7 @@ public abstract class AppDatabase extends RoomDatabase {
                 // If you want to start with more words, just add them.
                 CategoriaDao dao = INSTANCE.categoriaDao();
                 dao.delete(categorias);
-                dao.insert(categorias);
+                dao.insert(categorias);*/
             });
         }
     };
