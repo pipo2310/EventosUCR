@@ -34,9 +34,9 @@ public class MainActivity extends AppCompatActivity {
 
         SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
         boolean notFirstRun = sharedPreferences.getBoolean("NOT_FIRST_RUN", false);
-        if (notFirstRun) {
+        if (!notFirstRun) {
             llenarBase();
-        } else {
+
             SharedPreferences.Editor editor = sharedPreferences.edit();
             editor.putBoolean("NOT_FIRST_RUN", true);
             editor.commit();
@@ -79,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
     public void asignarAlarma() {
         Calendar alertTime = Calendar.getInstance();
 
-        alertTime.set(Calendar.HOUR_OF_DAY, 14);
-        alertTime.set(Calendar.MINUTE, 48);
+        alertTime.set(Calendar.HOUR_OF_DAY, 18);
+        alertTime.set(Calendar.MINUTE, 55);
         alertTime.set(Calendar.SECOND, 0);
 
         Intent alertIntent = new Intent(this, AlertManager.class);
@@ -128,6 +128,6 @@ public class MainActivity extends AppCompatActivity {
                 new Categoria("otras")
         };
 
-        categoriaViewModel.delete(categorias);
+        categoriaViewModel.insert(categorias);
     }
 }
