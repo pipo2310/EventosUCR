@@ -57,13 +57,16 @@ public class LoginInstrumentedTestUI {
     }
 
     @Test
-    public void testLoginSucces() {
+    public void testLoginSuccess() {
+        // Cerramos la sesion que iniciamos para la prueba
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth.signOut();
         onView(withId(R.id.login_nombre_usuario)).perform(typeText(TEST_LOGIN_USER));
         onView(withId(R.id.login_contrasenna)).perform(typeText(TEST_LOGIN_PASS), closeSoftKeyboard());
         onView(withId(R.id.login_boton_is)).perform(click());
         Class<?> activity = getActivityInstance().getClass();
         // Cerramos la sesion que iniciamos para la prueba
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        mAuth = FirebaseAuth.getInstance();
         mAuth.signOut();
         // Comparamos el valor de la actividad
         Assert.assertEquals(activity, MenuActivity.class);
