@@ -3,18 +3,28 @@ package cobit19.ecci.ucr.ac.eventosucr.features.buscar;
 import android.content.Intent;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import java.util.List;
+
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.services.CategoriaService;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.CategoriaViewModel;
+
 
 public class BuscarFragment extends Fragment {
 
+    // ROOM
+    // Crear la variable del model view de categoria
+    private CategoriaViewModel categoriaViewModel;
 
     public BuscarFragment() {}
     public BuscarFragment(String query) {
@@ -46,11 +56,20 @@ public class BuscarFragment extends Fragment {
             }
         });
 
-        CategoriaService categoriaService = new CategoriaService();
-        CategoriasBuscarFragment categoriasBuscarFragment =
-                new CategoriasBuscarFragment(categoriaService.leerLista(getActivity().getApplicationContext()));
-        getActivity().getSupportFragmentManager().beginTransaction()
-                .add(R.id.categoriasBuscar, categoriasBuscarFragment).commit();
+        // Le pedimos al proovedor de view models que nos de el de categorias
+        categoriaViewModel = new ViewModelProvider(this).get(CategoriaViewModel.class);
+
+        // Pedimos las categorias y dejamos un listener en caso de que estas cambien
+        categoriaViewModel.getAllCategorias().observe(getViewLifecycleOwner(), new Observer<List<Categoria>>() {
+            @Override
+            public void onChanged(@Nullable final List<Categoria> c) {
+                // Update the cached copy of the words in the adapter.
+                CategoriasBuscarFragment categoriasBuscarFragment = new CategoriasBuscarFragment(c);
+
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .add(R.id.categoriasBuscar, categoriasBuscarFragment).commit();
+            }
+        });
 
         return view;
     }
