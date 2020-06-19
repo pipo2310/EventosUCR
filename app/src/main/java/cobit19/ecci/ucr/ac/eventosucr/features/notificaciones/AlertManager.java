@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.service.notification.StatusBarNotification;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -30,6 +31,7 @@ import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 public class AlertManager extends BroadcastReceiver {
 
     private static final String EVENTO = "evento";
+    String GROUP_KEY_EVENTO_PROXIMO = "eventoProximo";
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -49,6 +51,7 @@ public class AlertManager extends BroadcastReceiver {
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        //int i = 0;
                         Evento eventoUsuario = new Evento();
                         String hola = "";
                         if(task.isSuccessful()){
@@ -65,6 +68,7 @@ public class AlertManager extends BroadcastReceiver {
                                                 eventoUsuario.getNombre() + " se realizará mañana a las " +
                                                 eventoUsuario.getHoraInicio(), true);
                                     }
+                                    //i++;
                                 }
                             }
 
@@ -80,7 +84,12 @@ public class AlertManager extends BroadcastReceiver {
 
     //El parametro "caso" sirve para saber si hay que irse a la vista de favoritos o a la vista de un evento
     public void crearNotificacion(Context context, String titulo, String mensaje, boolean caso){
-        //PendingIntent notifIntent = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), 0);
+
+        //id único para cada notificación
+        //Se envía en notificationManagerCompat.notify y hace que una notificación no le "caiga encima" a otra
+        int idNotif = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+
+
 
         Intent notificationIntent = new Intent(context, MenuActivity.class);
         if(caso){
@@ -97,12 +106,12 @@ public class AlertManager extends BroadcastReceiver {
         PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(100, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-
         //Se crea la notificacion
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
                 .setSmallIcon(R.drawable.calendar_azul)
                 .setContentTitle(titulo)
                 .setContentText(mensaje)
+                .setGroup(GROUP_KEY_EVENTO_PROXIMO)
                 .setColor(Color.parseColor("#005DA4"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
                 builder.setStyle(new NotificationCompat.BigTextStyle(builder));
@@ -111,8 +120,8 @@ public class AlertManager extends BroadcastReceiver {
 
 
         NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(
-                1, builder.build());
+        notificationManagerCompat.notify(idNotif, builder.build());
+
 
 
 
