@@ -3,15 +3,21 @@ package cobit19.ecci.ucr.ac.eventosucr.features.notificaciones;
 import android.app.IntentService;
 import android.content.Intent;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+
+import java.util.ArrayList;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 
@@ -49,7 +55,6 @@ public class NotificacionCambioEvento extends IntentService {
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
         String userName = arrOfStr[0];
-
         db.collection("meInteresaUsuarioEvento").document(userName)
                 .collection("eventos")
                 .addSnapshotListener(new EventListener<QuerySnapshot>() {
@@ -72,9 +77,28 @@ public class NotificacionCambioEvento extends IntentService {
                                     break;
                                 case REMOVED:
                                     evento = dc.getDocument().toObject(Evento.class);
-                                    alertManager.crearNotificacion(getApplicationContext(),
-                                            "Evento Cancelado","El evento " +
-                                                    evento.getNombre() + " ha sido cancelado", false);
+                                    db.collection("eventos")
+                                            .get()
+                                            .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                                @Override
+                                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                                    if (task.isSuccessful()) {
+                                                        // Creamos la lista de eventos de firebase
+                                                        boolean eventoCancelado = true;
+                                                        for (QueryDocumentSnapshot document : task.getResult()) {
+                                                            final Evento eventoRecuperado = document.toObject(Evento.class);
+                                                            if(evento.getNombre().equals(eventoRecuperado.getNombre())){
+                                                                eventoCancelado = false;
+                                                            }
+                                                        }
+                                                        if(eventoCancelado){
+                                                            alertManager.crearNotificacion(getApplicationContext(),
+                                                                    "Evento Cancelado","El evento " +
+                                                                            evento.getNombre() + " ha sido cancelado", false);
+                                                        }
+                                                    }
+                                                }
+                                            });
                                     break;
                             }
                         }
