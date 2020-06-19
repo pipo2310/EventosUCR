@@ -87,6 +87,7 @@ public class AlertManager extends BroadcastReceiver {
 
         //id único para cada notificación
         //Se envía en notificationManagerCompat.notify y hace que una notificación no le "caiga encima" a otra
+        //CCB-46 D:Katherine N:Javier
         int idNotif = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
 
 
