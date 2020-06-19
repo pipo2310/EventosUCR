@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.method.HideReturnsTransformationMethod;
@@ -14,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -41,6 +44,8 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     // Boton de iniciar sesion
     Button iniciarSesionBtn;
+    // Boton de registro
+    TextView registrarseBtn;
 
 
     public LoginFragment() {
@@ -61,6 +66,7 @@ public class LoginFragment extends Fragment {
         contrasenna = view.findViewById(R.id.login_contrasenna);
         showPass = view.findViewById(R.id.show_pass_btn);
         iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
+        registrarseBtn = view.findViewById(R.id.login_registro);
 
         // Agregamos la accion que se quiere hacer cuando se presione el boton de iniciar sesion
         iniciarSesionBtn.setOnClickListener(new View.OnClickListener() {
@@ -78,7 +84,19 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        // Agregamos la accion que se quiere hacer cuando se presione el boton de crear un cuenta
+        registrarseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irARegitrar();
+            }
+        });
+
         return view;
+    }
+
+    public void irARegitrar(){
+        showSelectedFragment(new RegistroFragment());
     }
 
     public void iniciarSesion(){
@@ -130,5 +148,16 @@ public class LoginFragment extends Fragment {
         Intent a =new Intent(getActivity(), activity);
         startActivity(a);
         getActivity().finish();
+    }
+
+    /**
+     * Metodo que se usa para indicar cual es el feagment que se va a ver
+     */
+    private void showSelectedFragment(Fragment fragment){
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.login_container_fragment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 }
