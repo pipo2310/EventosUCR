@@ -12,10 +12,10 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 
 import java.util.ArrayList;
+import java.util.List;
 
-import cobit19.ecci.ucr.ac.eventosucr.CustomGridAdapterCategorias;
 import cobit19.ecci.ucr.ac.eventosucr.R;
-import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,16 +25,16 @@ import cobit19.ecci.ucr.ac.eventosucr.core.models.Categoria;
 public class CategoriasBuscarFragment extends Fragment {
 
     private OnCategoriaSeleccionadaInteractionListener listener;
-    ArrayList<Categoria> categorias;
+    List<Categoria> categorias;
     View view;
 
     public CategoriasBuscarFragment() {}
 
-    public CategoriasBuscarFragment(ArrayList<Categoria> categorias) {
+    public CategoriasBuscarFragment(List<Categoria> categorias) {
         this.categorias=categorias;
     }
 
-    public static CategoriasBuscarFragment newInstance(String param1, String param2) {
+    public static CategoriasBuscarFragment newInstance() {
         CategoriasBuscarFragment fragment = new CategoriasBuscarFragment();
         return fragment;
     }
