@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -44,7 +45,7 @@ public class LoginFragment extends Fragment {
     // Boton de iniciar sesion
     Button iniciarSesionBtn;
     // Boton de registro
-    Button registrarseBtn;
+    TextView registrarseBtn;
 
 
     public LoginFragment() {
@@ -155,7 +156,7 @@ public class LoginFragment extends Fragment {
     private void showSelectedFragment(Fragment fragment){
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_fragment, fragment)
+                .replace(R.id.login_container_fragment, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }

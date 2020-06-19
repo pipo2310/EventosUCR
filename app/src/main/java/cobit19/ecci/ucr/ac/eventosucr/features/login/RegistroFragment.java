@@ -9,6 +9,8 @@ import androidx.fragment.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
 
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
@@ -17,6 +19,9 @@ import cobit19.ecci.ucr.ac.eventosucr.R;
  */
 public class RegistroFragment extends Fragment {
     View view;
+
+    // Boton de registro
+    TextView tieneCuentaBtn;
 
     public RegistroFragment() {
         // Required empty public constructor
@@ -29,6 +34,16 @@ public class RegistroFragment extends Fragment {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.fragment_registro, container, false);
 
+        // Obtenemos de la vista el boton que indica que ya creo una cuenta
+        tieneCuentaBtn = view.findViewById(R.id.registro_login);
+
+        // Agregamos la accion que se quiere hacer cuando se presione el boton de ya tiene cuenta
+        tieneCuentaBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irALogin();
+            }
+        });
 
 
         // Retornamos la vista inflada
@@ -37,6 +52,10 @@ public class RegistroFragment extends Fragment {
 
     public void registrar(){
 
+    }
+
+    public void irALogin(){
+        showSelectedFragment(new LoginFragment());
     }
 
     public void cambiarDePantalla(Class<?> activity) {
@@ -51,7 +70,7 @@ public class RegistroFragment extends Fragment {
     private void showSelectedFragment(Fragment fragment){
         getActivity().getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.container_fragment, fragment)
+                .replace(R.id.login_container_fragment, fragment)
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                 .commit();
     }
