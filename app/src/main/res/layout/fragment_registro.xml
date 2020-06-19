@@ -26,7 +26,7 @@
             android:src="@drawable/ucr_logo_login"/>
 
         <EditText
-            android:id="@+id/login_nombre_usuario"
+            android:id="@+id/registro_nombre_usuario"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Correo UCR"
