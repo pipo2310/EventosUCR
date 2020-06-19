@@ -1,8 +1,11 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.explorar;
 
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -10,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,6 +28,7 @@ import java.util.ArrayList;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Util;
 
 public class ListaCartaEventoFragment extends Fragment {
 
@@ -75,6 +80,10 @@ public class ListaCartaEventoFragment extends Fragment {
         String categoriasMostrar = categoria.getCategoria();
         categoriasMostrar = categoriasMostrar.substring(0, 1).toUpperCase() + categoriasMostrar.substring(1);
         nombre.setText(categoriasMostrar);
+
+        // Colocar el icono correcto en la lista
+        ImageView contenedorIcono = view.findViewById(R.id.explorar_icono_categoria);
+        contenedorIcono.setImageResource(Util.idCategoria(categoria.getCategoria()));
 
         if (view.findViewById(R.id.explorar_categoria_lista_eventos) != null) {
             if (savedInstanceState == null) {
