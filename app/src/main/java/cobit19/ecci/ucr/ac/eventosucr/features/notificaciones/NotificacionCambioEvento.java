@@ -73,7 +73,7 @@ public class NotificacionCambioEvento extends IntentService {
                                     evento = dc.getDocument().toObject(Evento.class);
                                     alertManager.crearNotificacion(getApplicationContext(),
                                             "Evento Modificado","El evento " +
-                                                    evento.getNombre() + " ha sido modificado", true);
+                                                    evento.getNombre() + " ha sido modificado", true, evento);
                                     break;
                                 case REMOVED:
                                     evento = dc.getDocument().toObject(Evento.class);
@@ -94,7 +94,7 @@ public class NotificacionCambioEvento extends IntentService {
                                                         if(eventoCancelado){
                                                             alertManager.crearNotificacion(getApplicationContext(),
                                                                     "Evento Cancelado","El evento " +
-                                                                            evento.getNombre() + " ha sido cancelado", false);
+                                                                            evento.getNombre() + " ha sido cancelado", false, evento);
                                                         }
                                                     }
                                                 }

@@ -454,4 +454,5 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         }
         return tag;
     }
+
 }

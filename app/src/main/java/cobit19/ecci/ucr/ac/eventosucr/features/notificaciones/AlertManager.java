@@ -30,7 +30,7 @@ import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 
 public class AlertManager extends BroadcastReceiver {
 
-    private static final String EVENTO = "evento";
+    public static final String EVENTO = "evento";
     String GROUP_KEY_EVENTO_PROXIMO = "eventoProximo";
 
     @Override
@@ -66,7 +66,7 @@ public class AlertManager extends BroadcastReceiver {
                                         // Si alguno de los eventos es mañana, se envía la notificación
                                         crearNotificacion(context, "Evento Próximo", "El evento " +
                                                 eventoUsuario.getNombre() + " se realizará mañana a las " +
-                                                eventoUsuario.getHoraInicio(), true);
+                                                eventoUsuario.getHoraInicio(), true, eventoUsuario);
                                     }
                                     //i++;
                                 }
@@ -83,7 +83,7 @@ public class AlertManager extends BroadcastReceiver {
     }
 
     //El parametro "caso" sirve para saber si hay que irse a la vista de favoritos o a la vista de un evento
-    public void crearNotificacion(Context context, String titulo, String mensaje, boolean caso){
+    public void crearNotificacion(Context context, String titulo, String mensaje, boolean caso, Evento evento){
 
         //id único para cada notificación
         //Se envía en notificationManagerCompat.notify y hace que una notificación no le "caiga encima" a otra
@@ -95,6 +95,7 @@ public class AlertManager extends BroadcastReceiver {
         Intent notificationIntent = new Intent(context, MenuActivity.class);
         if(caso){
             notificationIntent.putExtra("From", "notifFragVista");
+            notificationIntent.putExtra(EVENTO, evento);
         }else{
             notificationIntent.putExtra("From", "notifFragFavoritos");
         }

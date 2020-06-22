@@ -37,6 +37,7 @@ import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.CartaEventoFavoritos;
 import cobit19.ecci.ucr.ac.eventosucr.features.favoritos.FavoritosFragment;
 import cobit19.ecci.ucr.ac.eventosucr.features.administracionEventosUsuario.ListaEventosUsuario;
 import cobit19.ecci.ucr.ac.eventosucr.features.login.LoginActivity;
+import cobit19.ecci.ucr.ac.eventosucr.features.notificaciones.AlertManager;
 import cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento.VistaEventoFragment;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
@@ -82,15 +83,17 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         if (evento != null) {
             showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
         } else {
+            Intent notificacion = getIntent();
+            Evento evento1 = (Evento) notificacion.getParcelableExtra(AlertManager.EVENTO);
             String type = getIntent().getStringExtra("From");
             if (type != null) {
                 switch (type) {
                     case "notifFragVista":
-                        showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
-                        // Marcado por defecto el explorar
-                        footerMenu.setSelectedItemId(R.id.menu_explorar);
+                        //Se va a la vista del evento proximo o evento modificado
+                        showSelectedFragment(new VistaEventoFragment(evento1), Constantes.VISTA_EVENTO_TAG);
                         break;
                     case "notifFragFavoritos":
+                        //Se va a la vista de favoritos
                         showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
                         break;
                 }
