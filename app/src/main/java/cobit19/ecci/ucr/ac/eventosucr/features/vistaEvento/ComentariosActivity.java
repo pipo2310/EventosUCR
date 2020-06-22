@@ -3,7 +3,11 @@ package cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +19,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -28,11 +34,13 @@ public class ComentariosActivity extends AppCompatActivity {
     private Evento evento;
     private ArrayList<Comentario> comentarios=new ArrayList<Comentario>();
     private ListView list;
+    private int numeroComentarios;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comentarios);
+
 
         // Obtenemos el evento
         Bundle b = getIntent().getExtras();
@@ -42,11 +50,12 @@ public class ComentariosActivity extends AppCompatActivity {
         }else{
             onBackPressed();
         }
+        //eventLiked();
 
         // Ponemos el nombre del evento
         TextView nombreEvento = findViewById(R.id.comentarios_nombre_evento);
         nombreEvento.setText(evento.getNombre());
-
+        numeroComentarios=0;
         // Llenamos la lista con los comentarios de los usuarios
         llenarLista();
 
@@ -59,6 +68,30 @@ public class ComentariosActivity extends AppCompatActivity {
                 comentar();
             }
         });
+
+        // boton para likear un comentario
+        /*
+        View commentLayout = LayoutInflater.from(this).inflate(R.layout.comentario_evento, null);
+        ImageButton likeComentario = (ImageButton)commentLayout.findViewById(R.id.likeicon);
+
+        likeComentario.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                like();
+            }
+        });
+
+         */
+    }
+
+    private void like() {
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String[] arrOfStr = user.getEmail().split("@");
+        String userName = arrOfStr[0];
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        myRef.child("likes").child(evento.getNombre()).push().setValue(user.getEmail());
+
     }
 
     private void comentar() {
@@ -100,6 +133,8 @@ public class ComentariosActivity extends AppCompatActivity {
         }
     }
 
+
+
     private void llenarLista() {
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference ref = database.getReference("comentariosEvento/"+evento.getNombre());
@@ -109,7 +144,9 @@ public class ComentariosActivity extends AppCompatActivity {
                 Comentario newPost = dataSnapshot.getValue(Comentario.class);
 
                 comentarios.add(newPost);
-                llenarListView();
+                llenarListView(newPost);
+
+                //eventLiked();
             }
 
             @Override
@@ -126,10 +163,55 @@ public class ComentariosActivity extends AppCompatActivity {
         });
     }
 
-    private void llenarListView() {
-        ComentariosListAdapter adapter = new ComentariosListAdapter(this, comentarios);
+    private void llenarListView(Comentario ultimoComentario) {
+        ComentariosListAdapter adapter = new ComentariosListAdapter(this, comentarios,evento);
         list = findViewById(R.id.lista_comentarios);
         list.setAdapter(adapter);
+
+        eventLiked(ultimoComentario,comentarios.size()-1,list);
+
+
+    }
+
+    private void eventLiked(Comentario comentario, int position, ViewGroup listView){
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference ref = database.getReference("likes/"+evento.getNombre()+"/"+comentario.getHora());
+        ref.orderByKey().addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
+                //Se actualiza interfaz aumentandole la cantidad de likes
+                String comentante = dataSnapshot.getValue(String.class);
+
+                comentario.setLikes(comentario.getLikes()+1);
+                comentarios.set(position,comentario);
+                ListView yourListView= (ListView) listView;
+                //notifyDataSetChanged();
+
+                View v = yourListView.getChildAt(position -
+                        yourListView.getFirstVisiblePosition());
+
+                if(v == null)
+                    return;
+
+                TextView numComentarios = v.findViewById(R.id.numerocomentarios);
+                numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+                //ComentariosActivity.this.notifyDataSetChanged();
+
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {}
+        });
     }
 
     @Override
