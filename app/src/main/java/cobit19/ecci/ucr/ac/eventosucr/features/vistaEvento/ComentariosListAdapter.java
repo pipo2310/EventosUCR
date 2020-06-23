@@ -1,6 +1,7 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.vistaEvento;
 
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -58,12 +61,22 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         ImageButton like=rowView.findViewById(R.id.likeicon);
 
 
-
+        //like.setTag("like");
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                like(comentarios.get(position),position,parent);
+                //Evaluar con el tag del boton si ya esta likeado o no
+                if(like.getTag()=="liked"){
+                    dislike(comentarios.get(position),position,parent);
+
+                }
+                else
+                {
+                    like(comentarios.get(position),position,parent);
+
+                }
+
             }
         });
 
@@ -71,14 +84,55 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         return rowView;
     }
 
-    private void like(Comentario comentario,int position,ViewGroup listView) {
+
+    private void dislike(Comentario comentario,int position,ViewGroup listView){
+
+        ListView yourListView= (ListView) listView;
+        //notifyDataSetChanged();
+        View v = yourListView.getChildAt(position -
+                yourListView.getFirstVisiblePosition());
+
+        if(v == null)
+            return;
+
+        ImageButton like = v.findViewById(R.id.likeicon);
+        like.setTag("like");
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
         String userName = arrOfStr[0];
+        userName=userName.replace('.',' ');
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference();
 
-        myRef.child("likes").child(evento.getNombre()).child(comentario.getHora()).push().setValue(user.getEmail());
+        myRef.child("likes").child(evento.getNombre()).child(comentario.getHora()).child(userName).removeValue();
+
+
+
+    }
+
+
+
+    private void like(Comentario comentario,int position,ViewGroup listView) {
+
+        ListView yourListView= (ListView) listView;
+        //notifyDataSetChanged();
+        View v = yourListView.getChildAt(position -
+                yourListView.getFirstVisiblePosition());
+
+        if(v == null)
+            return;
+
+        ImageButton like = v.findViewById(R.id.likeicon);
+        like.setTag("liked");
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String[] arrOfStr = user.getEmail().split("@");
+        String userName = arrOfStr[0];
+        userName=userName.replace('.',' ');
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+
+        myRef.child("likes").child(evento.getNombre()).child(comentario.getHora()).child(userName).push().setValue(true);
         //eventLiked(comentario,position,listView);
     }
 

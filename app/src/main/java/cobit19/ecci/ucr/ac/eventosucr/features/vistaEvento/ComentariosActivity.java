@@ -180,7 +180,7 @@ public class ComentariosActivity extends AppCompatActivity {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String prevChildKey) {
                 //Se actualiza interfaz aumentandole la cantidad de likes
-                String comentante = dataSnapshot.getValue(String.class);
+                //String comentante = dataSnapshot.getValue(String.class);
 
                 comentario.setLikes(comentario.getLikes()+1);
                 comentarios.set(position,comentario);
@@ -204,7 +204,22 @@ public class ComentariosActivity extends AppCompatActivity {
             public void onChildChanged(DataSnapshot dataSnapshot, String prevChildKey) {}
 
             @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {}
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                comentario.setLikes(comentario.getLikes()-1);
+                comentarios.set(position,comentario);
+                ListView yourListView= (ListView) listView;
+                //notifyDataSetChanged();
+
+                View v = yourListView.getChildAt(position -
+                        yourListView.getFirstVisiblePosition());
+
+                if(v == null)
+                    return;
+
+                TextView numComentarios = v.findViewById(R.id.numerocomentarios);
+                numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+                //ComentariosActivity.this.notifyDataSetChanged();
+            }
 
             @Override
             public void onChildMoved(DataSnapshot dataSnapshot, String prevChildKey) {}
