@@ -1,12 +1,15 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.notificaciones;
 
+import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.TaskStackBuilder;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.os.SystemClock;
 import android.service.notification.StatusBarNotification;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
@@ -107,8 +110,8 @@ public class AlertManager extends BroadcastReceiver {
 
         PendingIntent pendingIntent = taskStackBuilder.getPendingIntent(100, PendingIntent.FLAG_UPDATE_CURRENT);
 
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
 
-        //Se crea la notificacion
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, "1")
                 .setSmallIcon(R.drawable.calendar_azul)
                 .setContentTitle(titulo)
@@ -116,15 +119,32 @@ public class AlertManager extends BroadcastReceiver {
                 .setGroup(GROUP_KEY_EVENTO_PROXIMO)
                 .setColor(Color.parseColor("#005DA4"))
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-                builder.setStyle(new NotificationCompat.BigTextStyle(builder));
-                builder.setContentIntent(pendingIntent).build();
-                builder.setAutoCancel(true);
+        builder.setStyle(new NotificationCompat.BigTextStyle(builder));
+        builder.setContentIntent(pendingIntent).build();
+        builder.setAutoCancel(true);
 
+        notificationManager.notify(idNotif, builder.build());
 
-        NotificationManagerCompat notificationManagerCompat = NotificationManagerCompat.from(context);
-        notificationManagerCompat.notify(idNotif, builder.build());
+        SystemClock.sleep(2000);
 
+        if(notificationManager.getActiveNotifications().length > 1){
+            int idNotifGroup = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+            //Se crea la notificacion de grupo
+            NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context, "1")
+                    .setSmallIcon(R.drawable.calendar_azul)
+                    .setContentTitle("Eventos UCR")
+                    .setGroup(GROUP_KEY_EVENTO_PROXIMO)
+                    .setGroupSummary(true)
+                    .setGroupAlertBehavior(NotificationCompat.GROUP_ALERT_CHILDREN)
+                    .setColor(Color.parseColor("#005DA4"))
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+            groupBuilder.setStyle(new NotificationCompat.BigTextStyle(builder));
+            groupBuilder.setContentIntent(pendingIntent).build();
+            groupBuilder.setAutoCancel(true);
 
+            notificationManager.notify(idNotifGroup, groupBuilder.build());
+
+        }
 
 
     }
