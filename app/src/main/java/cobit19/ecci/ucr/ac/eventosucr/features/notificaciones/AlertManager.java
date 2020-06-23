@@ -23,6 +23,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import cobit19.ecci.ucr.ac.eventosucr.MenuActivity;
@@ -34,7 +35,12 @@ import cobit19.ecci.ucr.ac.eventosucr.shared.UtilDates;
 public class AlertManager extends BroadcastReceiver {
 
     public static final String EVENTO = "evento";
+    public static final String ID_NOTI = "id_notificacion";
     String GROUP_KEY_EVENTO_PROXIMO = "eventoProximo";
+    Integer ID_GROUP = 1;
+
+    public ArrayList<NotificationCompat.Builder> listaNotificaciones = new ArrayList<NotificationCompat.Builder>();
+    public ArrayList<Integer> idNotificaciones = new ArrayList<Integer>();
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -87,7 +93,6 @@ public class AlertManager extends BroadcastReceiver {
 
     //El parametro "caso" sirve para saber si hay que irse a la vista de favoritos o a la vista de un evento
     public void crearNotificacion(Context context, String titulo, String mensaje, boolean caso, Evento evento){
-
         //id único para cada notificación
         //Se envía en notificationManagerCompat.notify y hace que una notificación no le "caiga encima" a otra
         //CCB-46 D:Katherine N:Javier
@@ -99,8 +104,10 @@ public class AlertManager extends BroadcastReceiver {
         if(caso){
             notificationIntent.putExtra("From", "notifFragVista");
             notificationIntent.putExtra(EVENTO, evento);
+            notificationIntent.putExtra(ID_NOTI, idNotif);
         }else{
             notificationIntent.putExtra("From", "notifFragFavoritos");
+            notificationIntent.putExtra(ID_NOTI, idNotif);
         }
 
 
@@ -123,12 +130,17 @@ public class AlertManager extends BroadcastReceiver {
         builder.setContentIntent(pendingIntent).build();
         builder.setAutoCancel(true);
 
-        notificationManager.notify(idNotif, builder.build());
+        //Guardar las notificaciones ya enviadas
+        listaNotificaciones.add(builder);
+
+        //notificationManager.notify(idNotif, builder.build());
+
+        //Se guarda el id de las notificaciones
+        idNotificaciones.add(idNotif);
 
         SystemClock.sleep(2000);
 
-        if(notificationManager.getActiveNotifications().length > 1){
-            int idNotifGroup = (int) ((new Date().getTime() / 1000L) % Integer.MAX_VALUE);
+        if(notificationManager.getActiveNotifications().length >= 2){
             //Se crea la notificacion de grupo
             NotificationCompat.Builder groupBuilder = new NotificationCompat.Builder(context, "1")
                     .setSmallIcon(R.drawable.calendar_azul)
@@ -142,10 +154,31 @@ public class AlertManager extends BroadcastReceiver {
             groupBuilder.setContentIntent(pendingIntent).build();
             groupBuilder.setAutoCancel(true);
 
-            notificationManager.notify(idNotifGroup, groupBuilder.build());
 
+            //Enviar todas las notificaciones al resumen
+            for(int i=0; i<listaNotificaciones.size(); i++){
+                notificationManager.notify(idNotificaciones.get(i), listaNotificaciones.get(i).build());
+            }
+
+            notificationManager.notify(ID_GROUP, groupBuilder.build());
+
+        } else if(notificationManager.getActiveNotifications().length < 2) {
+            notificationManager.notify(idNotif, builder.build());
         }
 
+
+    }
+
+    //Eliminar las notificaciones de las listas
+    public void eliminarNotificacionesGrupo(int id) {
+        //int idN = Integer.parseInt(id);
+
+        for(int i=0;  i<listaNotificaciones.size(); i++){
+            if(idNotificaciones.get(i) == id){
+                listaNotificaciones.remove(i);
+                idNotificaciones.remove(i);
+            }
+        }
 
     }
 

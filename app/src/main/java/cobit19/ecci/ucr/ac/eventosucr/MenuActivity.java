@@ -83,18 +83,22 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         if (evento != null) {
             showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
         } else {
+            AlertManager alertManager = new AlertManager();
             Intent notificacion = getIntent();
             Evento evento1 = (Evento) notificacion.getParcelableExtra(AlertManager.EVENTO);
+            int idNotificacion = notificacion.getIntExtra(AlertManager.ID_NOTI, 0);
             String type = getIntent().getStringExtra("From");
             if (type != null) {
                 switch (type) {
                     case "notifFragVista":
                         //Se va a la vista del evento proximo o evento modificado
                         showSelectedFragment(new VistaEventoFragment(evento1), Constantes.VISTA_EVENTO_TAG);
+                        alertManager.eliminarNotificacionesGrupo(idNotificacion);
                         break;
                     case "notifFragFavoritos":
                         //Se va a la vista de favoritos
                         showSelectedFragment(new FavoritosFragment(), Constantes.FAVORITOS_TAG);
+                        alertManager.eliminarNotificacionesGrupo(idNotificacion);
                         break;
                 }
             }else {
