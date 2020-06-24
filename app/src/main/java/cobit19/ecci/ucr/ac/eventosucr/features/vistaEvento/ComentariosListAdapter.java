@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -31,12 +33,17 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
     private final Activity context;
     private final ArrayList<Comentario> comentarios;
     private final Evento evento;
+    private final String userName;
 
     public ComentariosListAdapter(Activity context, ArrayList<Comentario> comentarios, Evento evento) {
         super(context, R.layout.comentario_evento, comentarios);
         this.context = context;
         this.comentarios = comentarios;
         this.evento=evento;
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        String[] arrOfStr = user.getEmail().split("@");
+        userName = arrOfStr[0].replace('.',' ');
+        //userName=userName
 
     }
     public View getView(int position, View view, ViewGroup parent) {
@@ -61,7 +68,11 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         ImageButton like=rowView.findViewById(R.id.likeicon);
 
 
+        //Si ya esta likeado el comentario por ese usuario poner el tag segun corresponda
+
+
         //like.setTag("like");
+        //isLiked(comentarios.get(position),like);
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,6 +95,31 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         return rowView;
     }
 
+    private void isLiked(Comentario comentario,ImageButton like) {
+
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference();
+        myRef.child("likes").child(evento.getNombre()).child(comentario.getHora());
+        myRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                if(dataSnapshot.child(userName).exists()){
+                    like.setTag("liked");
+                    like.setImageResource(R.drawable.dislike_icon);
+                }else{
+                    like.setTag("like");
+                    like.setImageResource(R.drawable.likeicon);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     private void dislike(Comentario comentario,int position,ViewGroup listView){
 
@@ -97,6 +133,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("like");
+        like.setImageResource(R.drawable.likeicon);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
@@ -125,6 +162,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("liked");
+        like.setImageResource(R.drawable.dislike_icon);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
         String userName = arrOfStr[0];
