@@ -1,20 +1,16 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.explorar;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -23,7 +19,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
@@ -34,32 +30,23 @@ public class ListaCartaEventoFragment extends Fragment {
 
     private static final String ARG_CATEGORIA = "categoria";
 
+    private boolean displayable;
     private Categoria categoria;
-    private int layoutId;
+    private List<Evento> eventos;
     private View view;
 
     public ListaCartaEventoFragment() {
-        // Required empty public constructor
+        displayable = false;
     }
 
-    public ListaCartaEventoFragment(Categoria categoria, int id) {
+    public ListaCartaEventoFragment(Categoria categoria, List<Evento> eventos) {
+        displayable = false;
         this.categoria = categoria;
-        layoutId = 1000 + id;
+        this.eventos = eventos;
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param categoria Parameter 1.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ListaCartaEventoFragment newInstance(Categoria categoria) {
-        ListaCartaEventoFragment fragment = new ListaCartaEventoFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(ARG_CATEGORIA, categoria);
-        fragment.setArguments(args);
-        return fragment;
+    public boolean isDisplayable() {
+        return displayable;
     }
 
     @Override
@@ -85,42 +72,15 @@ public class ListaCartaEventoFragment extends Fragment {
         ImageView contenedorIcono = view.findViewById(R.id.explorar_icono_categoria);
         contenedorIcono.setImageResource(Util.idCategoria(categoria.getCategoria()));
 
-        if (view.findViewById(R.id.explorar_categoria_lista_eventos) != null) {
-            if (savedInstanceState == null) {
-                HorizontalScrollView horizontalScrollView = view.findViewById(R.id.explorar_categoria_lista_eventos);
-                LinearLayout linearLayout =  new LinearLayout(getContext());
-                linearLayout.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-                linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-                linearLayout.setId(layoutId);
-                horizontalScrollView.addView(linearLayout);
+        // Pedimos el fragment transaction de este fragmento
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
 
-                // FIRESTORE
-                // Crear la referencia a firestore
-                FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-                db.collection("categoriaEventos")
-                        .document(categoria.getCategoria())
-                        .collection("eventos")
-                        .get()
-                        .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
-                            @Override
-                            public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                if (task.isSuccessful()) {
-                                    Evento evento;
-                                    // Creamos la lista de eventos de firebase
-                                    for (QueryDocumentSnapshot document : task.getResult()) {
-                                        evento = document.toObject(Evento.class);
-
-                                        getFragmentManager().beginTransaction()
-                                                .add(layoutId, new CartaEventoFragment(evento)).commit();
-                                    }
-                                } else {
-                                    Log.d("TAG", "Error getting documents: ", task.getException());
-                                }
-                            }
-                        });
-            }
+        // Agregamos los eventos a la vista dek fragmento
+        for (Evento evento: eventos) {
+            transaction.add(R.id.categorias_layout, new CartaEventoFragment(evento));
         }
+
+        transaction.commit();
 
         return view;
     }
