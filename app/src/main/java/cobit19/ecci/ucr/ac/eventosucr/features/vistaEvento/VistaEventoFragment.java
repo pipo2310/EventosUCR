@@ -55,6 +55,7 @@ import java.text.DateFormat;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Util;
 
 
 public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback {
@@ -104,6 +105,10 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
         //Para la localización actual del dispositivo
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
+
+        // Colocamos el icono que muestra el tipo de evento
+        ImageView icono = v.findViewById(R.id.imgCreadorEvento);
+        icono.setImageResource(Util.idCategoria(evento.getCategorias().get(0)));
 
         /*mostrarImagenes();*/
 
