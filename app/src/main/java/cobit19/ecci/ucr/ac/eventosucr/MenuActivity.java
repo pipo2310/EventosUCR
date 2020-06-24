@@ -12,6 +12,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.navigation.NavigationView;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -223,7 +224,9 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         // Pedimos la lista de eventos de una categoria
         db.collection("categoriaEventos")
                 .document(categoria.getCategoria())
-                .collection("eventos").get()
+                .collection("eventos")
+                .orderBy("timestamp", Query.Direction.ASCENDING)
+                .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
                     @Override
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
