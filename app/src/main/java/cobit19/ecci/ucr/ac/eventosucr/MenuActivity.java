@@ -207,6 +207,7 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
             currentFragmentTag = oldFragmentTag;
             super.onBackPressed();
         }
+
     }
 
     public void onListFragmentInteraction(Evento evento){
