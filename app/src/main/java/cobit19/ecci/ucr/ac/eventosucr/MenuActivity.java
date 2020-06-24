@@ -113,7 +113,6 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
                 }
                 if(menuItem.getItemId() == R.id.menu_buscar){
                     showSelectedFragment(new BuscarFragment(), Constantes.BUSCAR_TAG);
-                    /*SearchView searchView = (SearchView) findViewById(R.id.buscar_barra);*/
                 }
                 return true;
             }
