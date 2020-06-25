@@ -13,6 +13,7 @@ import java.util.List;
 
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.room.Categoria;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Util;
 
 public class CustomGridAdapterCategorias extends ArrayAdapter<Categoria> {
     private final Activity context;
@@ -29,10 +30,15 @@ public class CustomGridAdapterCategorias extends ArrayAdapter<Categoria> {
 
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.lista_categorias_buscar, null, true);
+
         ImageView categoriaImagen=(ImageView)rowView.findViewById(R.id.imagenCatego);
-        categoriaImagen.setBackgroundResource(R.drawable.ucr_evento_img);
+        categoriaImagen.setBackgroundResource(Util.idCategoria(itemname.get(position).getCategoria()));
+
         TextView nombreCatego=(TextView)rowView.findViewById(R.id.nombreCatego);
-        nombreCatego.setText(itemname.get(position).getCategoria());
+        // Hacer que la primera letra sea en mayuscula
+        String categoriasMostrar = itemname.get(position).getCategoria();
+        categoriasMostrar = categoriasMostrar.substring(0, 1).toUpperCase() + categoriasMostrar.substring(1);
+        nombreCatego.setText(categoriasMostrar);
 
         return rowView;
     }
