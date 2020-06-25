@@ -185,30 +185,56 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void onBackPressed(){
-        if (currentFragmentTag == Constantes.VISTA_EVENTO_TAG) {
-            Fragment olderFragment = getSupportFragmentManager().findFragmentByTag(oldFragmentTag);
+    public void onBackPressed() {
+        // Preguntamos si la vista en la que estamos es el explorar
+        if (currentFragmentTag == Constantes.EXPLORAR_TAG) {
+            super.onBackPressed();
+        } else if (currentFragmentTag == Constantes.LISTA_EVENTOS_TAG) {
+            // Cargamos el fragmento buscar
+            showSelectedFragment(new BuscarFragment(), Constantes.BUSCAR_TAG);
+        } else if (currentFragmentTag == Constantes.VISTA_EVENTO_TAG) {
+            Fragment oldFragment = getSupportFragmentManager().findFragmentByTag(oldFragmentTag);
             Fragment currentFragment = getSupportFragmentManager().findFragmentByTag(currentFragmentTag);
-            currentFragmentTag = oldFragmentTag;
-            if(oldFragmentTag == Constantes.FAVORITOS_TAG){
+
+            // Preguntamos si se llego a la vista del evento atraves de favoritos
+            if (oldFragmentTag == Constantes.FAVORITOS_TAG) {
+                // Regresamos al punto exacto en donde quedo en el favoritos
+                FavoritosFragment favoritosFragment = (FavoritosFragment) oldFragment;
                 VistaEventoFragment vistaEventoFragment = (VistaEventoFragment) currentFragment;
-                FavoritosFragment favoritosFragment = (FavoritosFragment) olderFragment;
+
+                // Preguntamos si hay que eliminar el tag de favoritos
                 String tag = vistaEventoFragment.getTagEliminar();
                 if(tag != null){
                     favoritosFragment.eliminarDeLista(tag);
                 }
-            }
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .hide(currentFragment)
-                    .show(olderFragment)
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .commit();
-        } else {
-            currentFragmentTag = oldFragmentTag;
-            super.onBackPressed();
-        }
 
+                onBackFragment(oldFragment, currentFragment, Constantes.FAVORITOS_TAG);
+
+            } else if (oldFragmentTag == Constantes.EXPLORAR_TAG) {
+                onBackFragment(oldFragment, currentFragment, Constantes.EXPLORAR_TAG);
+
+            } else if (oldFragmentTag == Constantes.LISTA_EVENTOS_TAG) {
+                onBackFragment(oldFragment, currentFragment, Constantes.LISTA_EVENTOS_TAG);
+            } else {
+                showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+                // Marcado por defecto el explorar
+                footerMenu.setSelectedItemId(R.id.menu_explorar);
+            }
+        } else {
+            showSelectedFragment(new ExplorarFragment(), Constantes.EXPLORAR_TAG);
+            // Marcado por defecto el explorar
+            footerMenu.setSelectedItemId(R.id.menu_explorar);
+        }
+    }
+
+    public void onBackFragment(Fragment oldFragment, Fragment currentFragment, String tag) {
+        currentFragmentTag = tag;
+        getSupportFragmentManager()
+                .beginTransaction()
+                .remove(currentFragment)
+                .show(oldFragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 
     public void onListFragmentInteraction(Evento evento){
