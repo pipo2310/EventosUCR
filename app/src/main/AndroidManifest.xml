@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="cobit19.ecci.ucr.ac.eventosucr">
 
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.SET_ALARM"/>
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.SET_ALARM" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
 
     <application
         android:allowBackup="true"
@@ -15,9 +15,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".features.login.RecuperarContActivity"></activity>
         <activity
             android:name=".features.login.LoginActivity"
-            android:theme="@style/AppTheme.NoActionBar" ></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".features.buscar.BuscarActivity" />
         <activity android:name=".shared.MapActivity" />
         <activity android:name=".features.vistaEvento.ComentariosActivity" />
@@ -26,7 +27,6 @@
         <activity
             android:name=".features.administracionEventosUsuario.ListaEventosUsuario"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <!--
              The API key for Google Maps-based APIs is defined as a string resource.
              (See the file "res/values/google_maps_api.xml").
@@ -52,11 +52,12 @@
 
         <receiver android:name=".features.notificaciones.AlertManager">
             <intent-filter>
-                <action android:name="cobit19.ecci.ucr.ac.eventosucr.AlertManager"/>
+                <action android:name="cobit19.ecci.ucr.ac.eventosucr.AlertManager" />
             </intent-filter>
         </receiver>
 
-        <service android:name=".features.notificaciones.NotificacionCambioEvento"
+        <service
+            android:name=".features.notificaciones.NotificacionCambioEvento"
             android:enabled="true" />
     </application>
 
