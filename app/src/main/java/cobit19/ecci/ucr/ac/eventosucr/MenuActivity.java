@@ -82,6 +82,8 @@ public class MenuActivity extends AppCompatActivity implements NavigationView.On
         Evento evento = (Evento) a.getParcelableExtra(BuscarActivity.EVENTO);
         if (evento != null) {
             showSelectedFragment(new VistaEventoFragment(evento), Constantes.VISTA_EVENTO_TAG);
+            // Marcado por defecto el explorar
+            footerMenu.setSelectedItemId(R.id.menu_explorar);
         } else {
             String type = getIntent().getStringExtra("From");
             if (type != null) {
