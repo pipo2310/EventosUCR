@@ -74,7 +74,6 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     private boolean eliminarDeFavoritos = false;
 
 
-    // Por ahora voy a hacerlo asi, pero hay que cambiarlo para que siempre sea el id del usuario actual
     private String usuarioId;
 
     //Mapas
