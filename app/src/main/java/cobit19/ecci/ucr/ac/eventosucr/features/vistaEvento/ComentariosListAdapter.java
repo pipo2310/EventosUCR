@@ -12,6 +12,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -46,6 +47,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         //userName=userName
 
     }
+
     public View getView(int position, View view, ViewGroup parent) {
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView = inflater.inflate(R.layout.comentario_evento, null, true);
@@ -72,7 +74,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
 
         //like.setTag("like");
-        //isLiked(comentarios.get(position),like);
+        isLiked(comentarios.get(position),like);
 
         like.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -99,11 +101,12 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
 
         FirebaseDatabase database = FirebaseDatabase.getInstance();
-        DatabaseReference myRef = database.getReference();
-        myRef.child("likes").child(evento.getNombre()).child(comentario.getHora());
+        DatabaseReference myRef = database.getReference().child("likes").child(evento.getNombre()).child(comentario.getHora());
+        //myRef.child("likes").child(evento.getNombre()).child(comentario.getHora());
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                //String a=dataSnapshot.child(userName).getValue(String.class);
                 if(dataSnapshot.child(userName).exists()){
                     like.setTag("liked");
                     like.setImageResource(R.drawable.dislike_icon);
