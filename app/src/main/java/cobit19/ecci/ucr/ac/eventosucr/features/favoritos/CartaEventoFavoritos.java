@@ -18,6 +18,8 @@ import com.bumptech.glide.signature.ObjectKey;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -33,6 +35,9 @@ public class CartaEventoFavoritos extends Fragment {
     private Evento evento;
     private View view;
     private OnFavoritosItemListener listener;
+
+    // Usuario que esta en la aplicacion
+    private String usuarioId;
 
     public CartaEventoFavoritos(){
     }
@@ -63,6 +68,11 @@ public class CartaEventoFavoritos extends Fragment {
                 // Vemos si podemos utilizar o no la imagen del cache
                 .signature(new ObjectKey(evento.getImagenUltimaModificacion()))
                 .into(imagenEvento);
+
+        // AUTH
+        // Obtenemos el usuario
+        FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+        usuarioId = user.getEmail().replaceAll("@(.)*", "");
             
 
         fecha.setText(UtilDates.obtenerFechaParaExplorarEventoCarta(evento.getFecha()));
@@ -91,7 +101,6 @@ public class CartaEventoFavoritos extends Fragment {
     }
 
     public void QuitarMeGusta(){
-        String usuarioId = Constantes.CORREO_UCR_USUARIO.replaceAll("@(.)*", "");
         String eventoId = evento.getNombre().replaceAll(" ", "");
         
         //FIREBASE
