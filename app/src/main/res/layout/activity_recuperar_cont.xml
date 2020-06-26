@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".features.login.LoginFragment"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical"
+    android:background="@color/colorPrimary">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="80dp"
+        android:layout_marginLeft="@dimen/login_der_izq"
+        android:layout_marginRight="@dimen/login_der_izq"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/login_logo"
+            android:layout_width="200dp"
+            android:layout_height="150dp"
+            android:src="@drawable/ucr_logo_login" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="Introduzca su email y le enviaremos un correo de recuperación"
+            android:textColor="#FFFF"
+            android:textSize="20sp"
+            android:textStyle="bold">
+
+
+        </TextView>
+
+        <EditText
+            android:id="@+id/correoUsuario"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Correo UCR"
+            android:textSize="18sp"
+            android:inputType="textPersonName"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/rounded_edittext"/>
+
+
+
+
+        <Button
+            android:id="@+id/recuperarBoton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Recuperar"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="@dimen/login_espacio_items"
+            android:background="@drawable/boton_login_celeste"></Button>
+
+    </LinearLayout>
+
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

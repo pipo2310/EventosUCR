@@ -56,6 +56,7 @@ import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 import cobit19.ecci.ucr.ac.eventosucr.shared.MapsVistaEvento;
+import cobit19.ecci.ucr.ac.eventosucr.shared.Util;
 
 
 public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback {
@@ -96,6 +97,10 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ubicacionMap);
         mapFragment.getMapAsync(this);
 
+
+        // Colocamos el icono que muestra el tipo de evento
+        ImageView icono = v.findViewById(R.id.imgCreadorEvento);
+        icono.setImageResource(Util.idCategoria(evento.getCategorias().get(0)));
 
         /*mostrarImagenes();*/
 
