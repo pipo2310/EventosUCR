@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
     android:paddingTop="5dp"
-    android:paddingBottom="5dp">
+    android:paddingBottom="5dp"
+
+    >
 
     <ImageView
         android:layout_width="30dp"
@@ -44,6 +46,26 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="fecha"
+            android:textColor="#828282"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="15dp"
+            android:textSize="12sp" />
+
+        <ImageButton
+            android:id="@+id/likeicon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#00FFFFFF"
+            android:src="@drawable/likeicon">
+
+
+        </ImageButton>
+
+        <TextView
+            android:id="@+id/numerocomentarios"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="0"
             android:textColor="#828282"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="15dp"
