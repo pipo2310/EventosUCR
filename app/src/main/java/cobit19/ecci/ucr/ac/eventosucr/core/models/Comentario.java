@@ -5,13 +5,23 @@ public class Comentario {
     private String nombre;
     private String hora;
     private String comentante;
+    private int likes;
     public Comentario(){}
 
-    public Comentario(String comentario, String nombre, String hora,String commentante) {
+    public Comentario(String comentario, String nombre, String hora,String commentante,int likes) {
         this.comentario = comentario;
         this.nombre = nombre;
         this.hora = hora;
         this.comentante=commentante;
+        this.likes=likes;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
     }
 
     public String getComentante() {
