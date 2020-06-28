@@ -19,11 +19,13 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/login_logo"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ucr_logo_login"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar una cuenta"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <EditText
             android:id="@+id/registro_nombre_usuario"
@@ -36,6 +38,15 @@
             android:paddingRight="10dp"
             android:layout_marginTop="40dp"
             android:background="@drawable/rounded_edittext"/>
+
+        <TextView
+            android:id="@+id/registro_msj_correo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#F87676"
+            android:textSize="15sp"
+            android:layout_gravity="end"/>
 
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
@@ -90,6 +101,15 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+        <TextView
+            android:id="@+id/registro_msj_contrasenna"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#F87676"
+            android:textSize="15sp"
+            android:layout_gravity="end"/>
+
         <Button
             android:id="@+id/registro_boton_is"
             android:layout_width="match_parent"
@@ -115,7 +135,7 @@
         android:id="@+id/registro_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ya tiene una cuenta?"
+        android:text="¿Ya tienes una cuenta?"
         android:textSize="17sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
