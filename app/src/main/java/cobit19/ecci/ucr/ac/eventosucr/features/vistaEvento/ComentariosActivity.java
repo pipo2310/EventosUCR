@@ -22,6 +22,7 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.w3c.dom.Text;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,20 +69,6 @@ public class ComentariosActivity extends AppCompatActivity {
                 comentar();
             }
         });
-
-        // boton para likear un comentario
-        /*
-        View commentLayout = LayoutInflater.from(this).inflate(R.layout.comentario_evento, null);
-        ImageButton likeComentario = (ImageButton)commentLayout.findViewById(R.id.likeicon);
-
-        likeComentario.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                like();
-            }
-        });
-
-         */
     }
 
     private void like() {
@@ -101,12 +88,13 @@ public class ComentariosActivity extends AppCompatActivity {
         if(textoComentario != "") {
             // Se obtiene la fecha actual
             Date currentTime = Calendar.getInstance().getTime();
+            SimpleDateFormat sdf = new SimpleDateFormat("HH:mm, dd-MM-yy");
             // Se crea un objeto comentario
             Comentario comment = new Comentario();
             // al objeto comentario se le agrega el texto que ingreso el usuario
             comment.setComentario(comentarioNuevo.getText().toString());
             // se agrega la fecha y hora actual del usuario
-            comment.setHora(currentTime.toString());
+            comment.setHora(sdf.format(currentTime));
 
             // Obtenemos el usuario logueado de Firebase
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
@@ -194,7 +182,7 @@ public class ComentariosActivity extends AppCompatActivity {
                     return;
 
                 TextView numComentarios = v.findViewById(R.id.numerocomentarios);
-                numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+                numComentarios.setText(comentarios.get(position).getLikes()+" Me gusta");
                 //ComentariosActivity.this.notifyDataSetChanged();
 
 
@@ -217,7 +205,7 @@ public class ComentariosActivity extends AppCompatActivity {
                     return;
 
                 TextView numComentarios = v.findViewById(R.id.numerocomentarios);
-                numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+                numComentarios.setText(comentarios.get(position).getLikes()+" Me gusta");
                 //ComentariosActivity.this.notifyDataSetChanged();
             }
 

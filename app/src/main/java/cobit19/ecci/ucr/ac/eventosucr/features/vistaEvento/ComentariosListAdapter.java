@@ -65,7 +65,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         fecha.setText(comentarios.get(position).getHora());
 
         TextView numComentarios = rowView.findViewById(R.id.numerocomentarios);
-        numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+        numComentarios.setText(comentarios.get(position).getLikes()+" Me gusta");
 
         ImageButton like=rowView.findViewById(R.id.likeicon);
 
@@ -109,10 +109,10 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
                 //String a=dataSnapshot.child(userName).getValue(String.class);
                 if(dataSnapshot.child(userName).exists()){
                     like.setTag("liked");
-                    like.setImageResource(R.drawable.dislike_icon);
+                    like.setImageResource(R.drawable.boton_dislike_24dp);
                 }else{
                     like.setTag("like");
-                    like.setImageResource(R.drawable.likeicon);
+                    like.setImageResource(R.drawable.boton_like_24dp);
                 }
             }
 
@@ -217,10 +217,11 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         });
     }
 
-    private void actualizarArrayList(int position) {
-
+    private String formatoFecha(String fecha) {
+        String[] lista = fecha.split("\\s+");
+        String nuevaFecha = lista[2] + "/" + lista[1] + "/" + lista[5] + " " + lista[3];
+        return nuevaFecha;
     }
-
 
 }
 
