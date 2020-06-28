@@ -42,6 +42,7 @@ public class ComentariosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_comentarios);
 
+        this.setTitle("Comentarios");
 
         // Obtenemos el evento
         Bundle b = getIntent().getExtras();

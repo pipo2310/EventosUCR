@@ -136,7 +136,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("like");
-        like.setImageResource(R.drawable.likeicon);
+        like.setImageResource(R.drawable.boton_like_24dp);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
@@ -165,7 +165,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("liked");
-        like.setImageResource(R.drawable.dislike_icon);
+        like.setImageResource(R.drawable.boton_dislike_24dp);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
         String userName = arrOfStr[0];
@@ -216,12 +216,5 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
             public void onCancelled(DatabaseError databaseError) {}
         });
     }
-
-    private String formatoFecha(String fecha) {
-        String[] lista = fecha.split("\\s+");
-        String nuevaFecha = lista[2] + "/" + lista[1] + "/" + lista[5] + " " + lista[3];
-        return nuevaFecha;
-    }
-
 }
 
