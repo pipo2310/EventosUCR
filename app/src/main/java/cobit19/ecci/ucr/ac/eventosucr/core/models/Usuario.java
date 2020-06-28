@@ -3,8 +3,6 @@ package cobit19.ecci.ucr.ac.eventosucr.core.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import androidx.annotation.NonNull;
-
 public class Usuario implements Parcelable {
 
     private String correoUcr;

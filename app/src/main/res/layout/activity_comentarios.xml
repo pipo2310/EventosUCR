@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ComentariosActivity">
+    tools:context=".features.vistaEvento.ComentariosActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

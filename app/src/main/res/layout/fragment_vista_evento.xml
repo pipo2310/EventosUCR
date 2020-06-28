@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.VistaEventoFragment">
+    tools:context=".features.vistaEvento.VistaEventoFragment">
 
     <ScrollView
         android:id="@+id/scroll"
@@ -42,8 +42,8 @@
 
             <TextView
                 android:id="@+id/nombreDeEvento"
-                android:layout_width="334dp"
-                android:layout_height="42dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="34dp"
