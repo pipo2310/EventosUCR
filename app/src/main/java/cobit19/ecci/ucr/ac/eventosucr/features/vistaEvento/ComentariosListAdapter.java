@@ -65,7 +65,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
         fecha.setText(comentarios.get(position).getHora());
 
         TextView numComentarios = rowView.findViewById(R.id.numerocomentarios);
-        numComentarios.setText("Likes "+comentarios.get(position).getLikes());
+        numComentarios.setText(comentarios.get(position).getLikes()+" Me gusta");
 
         ImageButton like=rowView.findViewById(R.id.likeicon);
 
@@ -109,10 +109,10 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
                 //String a=dataSnapshot.child(userName).getValue(String.class);
                 if(dataSnapshot.child(userName).exists()){
                     like.setTag("liked");
-                    like.setImageResource(R.drawable.dislike_icon);
+                    like.setImageResource(R.drawable.boton_dislike_24dp);
                 }else{
                     like.setTag("like");
-                    like.setImageResource(R.drawable.likeicon);
+                    like.setImageResource(R.drawable.boton_like_24dp);
                 }
             }
 
@@ -136,7 +136,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("like");
-        like.setImageResource(R.drawable.likeicon);
+        like.setImageResource(R.drawable.boton_like_24dp);
         DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
@@ -165,7 +165,7 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
 
         ImageButton like = v.findViewById(R.id.likeicon);
         like.setTag("liked");
-        like.setImageResource(R.drawable.dislike_icon);
+        like.setImageResource(R.drawable.boton_dislike_24dp);
         FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
         String[] arrOfStr = user.getEmail().split("@");
         String userName = arrOfStr[0];
@@ -216,11 +216,5 @@ public class ComentariosListAdapter extends ArrayAdapter<Comentario> {
             public void onCancelled(DatabaseError databaseError) {}
         });
     }
-
-    private void actualizarArrayList(int position) {
-
-    }
-
-
 }
 
