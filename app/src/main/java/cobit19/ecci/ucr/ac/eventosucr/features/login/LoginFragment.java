@@ -44,6 +44,7 @@ public class LoginFragment extends Fragment {
     private FirebaseAuth mAuth;
     // Boton de iniciar sesion
     Button iniciarSesionBtn;
+    Button olvidarContrasena;
     // Boton de registro
     TextView registrarseBtn;
 
@@ -66,7 +67,16 @@ public class LoginFragment extends Fragment {
         contrasenna = view.findViewById(R.id.login_contrasenna);
         showPass = view.findViewById(R.id.show_pass_btn);
         iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
+        olvidarContrasena = view.findViewById(R.id.login_reset_pass);
         registrarseBtn = view.findViewById(R.id.login_registro);
+
+
+        olvidarContrasena.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cambiarDePantalla(RecuperarContActivity.class);
+            }
+        });
 
         // Agregamos la accion que se quiere hacer cuando se presione el boton de iniciar sesion
         iniciarSesionBtn.setOnClickListener(new View.OnClickListener() {

@@ -12,7 +12,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -32,16 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
-        boolean notFirstRun = sharedPreferences.getBoolean("NOT_FIRST_RUN", false);
-        if (!notFirstRun) {
-            llenarBase();
-
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("NOT_FIRST_RUN", true);
-            editor.commit();
-        }
+        llenarBase();
 
         // Obtenemos el firebase auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
