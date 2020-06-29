@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.login.LoginFragment"
+    tools:context=".features.login.RegistroFragment"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
@@ -19,14 +19,16 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/login_logo"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ucr_logo_login"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registrar una cuenta"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"/>
 
         <EditText
-            android:id="@+id/login_nombre_usuario"
+            android:id="@+id/registro_nombre_usuario"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Correo UCR"
@@ -37,6 +39,15 @@
             android:layout_marginTop="40dp"
             android:background="@drawable/rounded_edittext"/>
 
+        <TextView
+            android:id="@+id/registro_msj_correo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#F87676"
+            android:textSize="15sp"
+            android:layout_gravity="end"/>
+
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
@@ -44,7 +55,7 @@
             android:layout_marginTop="@dimen/login_espacio_items">
 
             <EditText
-                android:id="@+id/login_contrasenna"
+                android:id="@+id/registro_contrasenna"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:hint="Contraseña"
@@ -55,7 +66,7 @@
                 android:background="@drawable/rounded_edittext" />
 
             <ImageView
-                android:id="@+id/show_pass_btn"
+                android:id="@+id/show_pass_btn_contrasenna"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_gravity="center|end"
@@ -64,25 +75,50 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="@dimen/login_espacio_items">
+
+            <EditText
+                android:id="@+id/registro_conf_contrasenna"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="Confirmar Contraseña"
+                android:textSize="18sp"
+                android:inputType="textPassword"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:background="@drawable/rounded_edittext" />
+
+            <ImageView
+                android:id="@+id/show_pass_btn_conf_contrasenna"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_gravity="center|end"
+                android:layout_marginRight="10dp"
+                android:src="@drawable/hide_password"/>
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+        <TextView
+            android:id="@+id/registro_msj_contrasenna"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#F87676"
+            android:textSize="15sp"
+            android:layout_gravity="end"/>
+
         <Button
-            android:id="@+id/login_boton_is"
+            android:id="@+id/registro_boton_is"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Iniciar Sesión"
+            android:text="Crear Cuenta"
             android:textColor="#FFFFFF"
             android:layout_marginTop="@dimen/login_espacio_items"
             android:background="@drawable/boton_login_celeste"></Button>
 
-        <Button
-            android:id="@+id/login_reset_pass"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="¿Olvidaste la contraseña?"
-            android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="@dimen/login_espacio_items"
-            style="@style/Widget.MaterialComponents.Button.TextButton"/>
     </LinearLayout>
 
     <View
@@ -96,10 +132,10 @@
         android:layout_marginRight="@dimen/login_der_izq"/>
 
     <TextView
-        android:id="@+id/login_registro"
+        android:id="@+id/registro_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crea una cuenta"
+        android:text="¿Ya tienes una cuenta?"
         android:textSize="17sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"

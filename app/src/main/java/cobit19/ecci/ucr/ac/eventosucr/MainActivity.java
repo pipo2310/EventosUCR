@@ -13,6 +13,7 @@ import android.content.Context;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -39,12 +40,18 @@ public class MainActivity extends AppCompatActivity {
             // Si no hay un usuario se envia a la pantalla de login
             cambiarDePantalla(LoginActivity.class);
         }else{
-            //crea el canal de notificaciones
-            crearCanalNotificacion();
-            asignarAlarma();
-            lanzarServicio();
-            // Si ya hay un usuario se envia a la vista de explorar
-            cambiarDePantalla(MenuActivity.class);
+            if(mAuth.getCurrentUser().isEmailVerified()) {
+                //crea el canal de notificaciones
+                crearCanalNotificacion();
+                asignarAlarma();
+                lanzarServicio();
+                // Si ya hay un usuario se envia a la vista de explorar
+                cambiarDePantalla(MenuActivity.class);
+            }else{
+                Toast.makeText(this, "Debe verificar la direccion de correo electronico", Toast.LENGTH_LONG).show();
+                mAuth.signOut();
+                cambiarDePantalla(LoginActivity.class);
+            }
         }
     }
 

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".features.login.LoginFragment"
+    tools:context=".features.login.VerificarCorreoFragment"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
     android:background="@color/colorPrimary">
@@ -19,14 +19,24 @@
         android:layout_gravity="center"
         android:gravity="center">
 
-        <ImageView
-            android:id="@+id/login_logo"
-            android:layout_width="200dp"
-            android:layout_height="150dp"
-            android:src="@drawable/ucr_logo_login"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Verificación de cuenta"
+            android:textColor="#FFFFFF"
+            android:textSize="25sp"
+            android:textStyle="bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/texto_VC"
+            android:textColor="#000000"
+            android:textSize="17sp"
+            android:layout_marginTop="10dp"/>
 
         <EditText
-            android:id="@+id/login_nombre_usuario"
+            android:id="@+id/verificar_correo_nombre_usuario"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:hint="Correo UCR"
@@ -34,55 +44,37 @@
             android:inputType="textPersonName"
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
-            android:layout_marginTop="40dp"
+            android:layout_marginTop="30dp"
             android:background="@drawable/rounded_edittext"/>
 
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="@dimen/login_espacio_items">
-
-            <EditText
-                android:id="@+id/login_contrasenna"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:hint="Contraseña"
-                android:textSize="18sp"
-                android:inputType="textPassword"
-                android:paddingLeft="10dp"
-                android:paddingRight="10dp"
-                android:background="@drawable/rounded_edittext" />
-
-            <ImageView
-                android:id="@+id/show_pass_btn"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_gravity="center|end"
-                android:layout_marginRight="10dp"
-                android:src="@drawable/hide_password"/>
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+        <TextView
+            android:id="@+id/verificar_correo_msj_correo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#F87676"
+            android:textSize="15sp"
+            android:layout_gravity="end"/>
 
         <Button
-            android:id="@+id/login_boton_is"
+            android:id="@+id/verificar_correo_boton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Iniciar Sesión"
+            android:text="Volver a enviar el correo"
             android:textColor="#FFFFFF"
             android:layout_marginTop="@dimen/login_espacio_items"
             android:background="@drawable/boton_login_celeste"></Button>
 
-        <Button
-            android:id="@+id/login_reset_pass"
+        <TextView
+            android:id="@+id/verificar_correo_boton_2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="¿Olvidaste la contraseña?"
+            android:text="Ya verifiqué mi correo"
+            android:textColor="#ffffff"
+            android:layout_marginTop="25dp"
             android:textSize="17sp"
-            android:textStyle="bold"
-            android:textColor="#FFFFFF"
-            android:layout_marginTop="@dimen/login_espacio_items"
-            style="@style/Widget.MaterialComponents.Button.TextButton"/>
+            android:textStyle="bold"/>
+
     </LinearLayout>
 
     <View
@@ -96,10 +88,10 @@
         android:layout_marginRight="@dimen/login_der_izq"/>
 
     <TextView
-        android:id="@+id/login_registro"
+        android:id="@+id/verificar_correo_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Crea una cuenta"
+        android:text="Ir a iniciar sesión"
         android:textSize="17sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"

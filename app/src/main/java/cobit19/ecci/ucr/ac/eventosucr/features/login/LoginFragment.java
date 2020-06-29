@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.method.HideReturnsTransformationMethod;
@@ -14,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -42,6 +45,8 @@ public class LoginFragment extends Fragment {
     // Boton de iniciar sesion
     Button iniciarSesionBtn;
     Button olvidarContrasena;
+    // Boton de registro
+    TextView registrarseBtn;
 
 
     public LoginFragment() {
@@ -63,6 +68,7 @@ public class LoginFragment extends Fragment {
         showPass = view.findViewById(R.id.show_pass_btn);
         iniciarSesionBtn = view.findViewById(R.id.login_boton_is);
         olvidarContrasena = view.findViewById(R.id.login_reset_pass);
+        registrarseBtn = view.findViewById(R.id.login_registro);
 
 
         olvidarContrasena.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +94,19 @@ public class LoginFragment extends Fragment {
             }
         });
 
+        // Agregamos la accion que se quiere hacer cuando se presione el boton de crear un cuenta
+        registrarseBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                irARegitrar();
+            }
+        });
+
         return view;
+    }
+
+    public void irARegitrar(){
+        showSelectedFragment(new RegistroFragment());
     }
 
     public void iniciarSesion(){
@@ -101,8 +119,14 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 // Inicio de sesion exitoso
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                // Se envia al usuario a la vista principal
-                                cambiarDePantalla(MainActivity.class);
+                                // Se verifica si el usuario tiene el email verificado
+                                if(user.isEmailVerified()){
+                                    // Se envia al usuario a la vista principal
+                                    cambiarDePantalla(MainActivity.class);
+                                }else{
+                                    // Se envia a la vista de Verificar email
+                                    showSelectedFragment(new VerificarCorreoFragment());
+                                }
                             } else {
                                 // Si el inicio de sesion falla, se le indica al usuario
                                 Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();
@@ -140,5 +164,16 @@ public class LoginFragment extends Fragment {
         Intent a =new Intent(getActivity(), activity);
         startActivity(a);
         getActivity().finish();
+    }
+
+    /**
+     * Metodo que se usa para indicar cual es el feagment que se va a ver
+     */
+    private void showSelectedFragment(Fragment fragment){
+        getActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.login_container_fragment, fragment)
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                .commit();
     }
 }

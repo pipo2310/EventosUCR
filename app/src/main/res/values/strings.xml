@@ -9,6 +9,7 @@
     <string name="menu_cud_eventos">Crear Evento</string>
     <string name="menu_cerrar_sesion">Cerrar Sesión</string>
 
+    <string name="texto_VC">Se le envió un mensaje a su dirección de correo, por favor verifique su cuenta. \n\nSi desea cambiar la dirección de correo electrónico, modifíquelo ahora.</string>
 
     <string name="title_activity_maps">Map</string>
     <string name="listaEventos">Lista de Eventos</string>
