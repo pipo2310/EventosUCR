@@ -109,8 +109,14 @@ public class LoginFragment extends Fragment {
                             if (task.isSuccessful()) {
                                 // Inicio de sesion exitoso
                                 FirebaseUser user = mAuth.getCurrentUser();
-                                // Se envia al usuario a la vista principal
-                                cambiarDePantalla(MainActivity.class);
+                                // Se verifica si el usuario tiene el email verificado
+                                if(user.isEmailVerified()){
+                                    // Se envia al usuario a la vista principal
+                                    cambiarDePantalla(MainActivity.class);
+                                }else{
+                                    // Se envia a la vista de Verificar email
+                                    showSelectedFragment(new VerificarCorreoFragment());
+                                }
                             } else {
                                 // Si el inicio de sesion falla, se le indica al usuario
                                 Toast.makeText(getActivity(), "Usuario o contraseña incorrectos", Toast.LENGTH_SHORT).show();

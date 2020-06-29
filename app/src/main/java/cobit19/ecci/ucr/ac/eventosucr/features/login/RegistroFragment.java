@@ -1,6 +1,5 @@
 package cobit19.ecci.ucr.ac.eventosucr.features.login;
 
-import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -9,12 +8,14 @@ import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,12 +23,11 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.FirebaseAuthException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import cobit19.ecci.ucr.ac.eventosucr.MainActivity;
 import cobit19.ecci.ucr.ac.eventosucr.R;
 
 /**
@@ -52,6 +52,8 @@ public class RegistroFragment extends Fragment {
     private EditText correo;
     private EditText contrasenna;
     private EditText confirmarContrasenna;
+    private ImageView showPass;
+    private ImageView showPassConf;
     // Autenticacion de Firebase
     private FirebaseAuth mAuth;
     // Validacion de correo
@@ -85,6 +87,8 @@ public class RegistroFragment extends Fragment {
         registrar = view.findViewById(R.id.registro_boton_is);
         msj_correo = view.findViewById(R.id.registro_msj_correo);
         msj_contrasenna = view.findViewById(R.id.registro_msj_contrasenna);
+        showPass = view.findViewById(R.id.show_pass_btn_contrasenna);
+        showPassConf = view.findViewById(R.id.show_pass_btn_conf_contrasenna);
 
         // Registro desabilitado
         registrar.setEnabled(false);
@@ -107,6 +111,22 @@ public class RegistroFragment extends Fragment {
             }
         });
 
+        // Agregamos la accion que se quiere hacer cuando se presione el boton de mostrar y ocultar contraseña
+        showPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHidePass();
+            }
+        });
+
+        // Agregamos la accion que se quiere hacer cuando se presione el boton de mostrar y ocultar contraseña
+        showPassConf.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showHidePassConf();
+            }
+        });
+
         // Agregamos la accion que se desea ver cuando se escriba el correo
         correo.addTextChangedListener(new TextWatcher() {
             @Override
@@ -124,7 +144,16 @@ public class RegistroFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { validarContrasenna(); }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (contrasenna.getText().length() > 5) {
+                    validarContrasenna();
+                }else{
+                    msj_contrasenna.setText("La contraseña debe tener minimo 6 caracteres");
+                    passValida = false;
+                    registrar.setEnabled(false);
+                    registrar.setBackgroundResource(R.drawable.boton_login_disabled);
+                }
+            }
 
             @Override
             public void afterTextChanged(Editable s) {validarRegistro();}
@@ -179,28 +208,69 @@ public class RegistroFragment extends Fragment {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            // Inicio de sesion exitoso
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // Se envia al usuario a la vista principal
-                            //cambiarDePantalla(MainActivity.class);
+                            // Se envia al usuario a la vista de verificar email
+                            irAVerificacion();
                         } else {
                             // Si el registro falla, se le indica al usuario
-                            Toast.makeText(getActivity(), "No se pudo realizar el registro, intente de nuevo mas tarde", Toast.LENGTH_SHORT).show();
+                            try{
+                                FirebaseAuthException e = (FirebaseAuthException) task.getException();
+                                if(e.getErrorCode() == "ERROR_EMAIL_ALREADY_IN_USE"){
+                                    Toast.makeText(getActivity(), "El correo ya está asociado a una cuenta", Toast.LENGTH_SHORT).show();
+                                }
+                            }catch (Exception e){
+                                Toast.makeText(getActivity(), "No se pudo realizar el registro, intente de nuevo mas tarde", Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
                 });
         registrar.setEnabled(true);
     }
 
+    public void irAVerificacion(){
+        registrar.setEnabled(true);
+        showSelectedFragment(new VerificarCorreoFragment());
+    }
+
     public void irALogin(){
         showSelectedFragment(new LoginFragment());
     }
 
-    public void cambiarDePantalla(Class<?> activity) {
-        registrar.setEnabled(true);
-        Intent a =new Intent(getActivity(), activity);
-        startActivity(a);
-        getActivity().finish();
+    /**
+     * Metodo para mostrar u ocultar la contraseña cada vez que se selecciona el boton correspondiente
+     */
+    public void showHidePass(){
+        if(contrasenna.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+            showPass.setImageResource(R.drawable.show_password);
+
+            //Mostrar contraseña
+            contrasenna.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+        else{
+            showPass.setImageResource(R.drawable.hide_password);
+
+            //Ocultar contraseña
+            contrasenna.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        }
+    }
+
+    /**
+     * Metodo para mostrar u ocultar la contraseña cada vez que se selecciona el boton correspondiente
+     */
+    public void showHidePassConf(){
+        if(confirmarContrasenna.getTransformationMethod().equals(PasswordTransformationMethod.getInstance())){
+            showPassConf.setImageResource(R.drawable.show_password);
+
+            //Mostrar contraseña
+            confirmarContrasenna.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+        }
+        else{
+            showPassConf.setImageResource(R.drawable.hide_password);
+
+            //Ocultar contraseña
+            confirmarContrasenna.setTransformationMethod(PasswordTransformationMethod.getInstance());
+
+        }
     }
 
     /**
