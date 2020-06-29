@@ -62,6 +62,7 @@ public class RegistroFragment extends Fragment {
     // Validacion de inicio de sesion
     private boolean correoValido;
     private boolean passValida;
+    private String correoUser;
 
     public RegistroFragment() {
         // Required empty public constructor
@@ -176,9 +177,9 @@ public class RegistroFragment extends Fragment {
         str = str.toLowerCase();
         Matcher matcher = pattern.matcher(str);
         if(matcher.matches()){
-            correo.setText(str);
             msj_correo.setText("");
             correoValido = true;
+            correoUser = str;
         }else{
             msj_correo.setText("Debe ingresar un email válido de la ucr");
             correoValido = false;
@@ -208,7 +209,7 @@ public class RegistroFragment extends Fragment {
 
     public void registrarUsuario(){
         registrar.setEnabled(false);
-        mAuth.createUserWithEmailAndPassword(correo.getText().toString(), contrasenna.getText().toString())
+        mAuth.createUserWithEmailAndPassword(correoUser, contrasenna.getText().toString())
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
