@@ -91,7 +91,7 @@
         android:id="@+id/verificar_correo_login"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ir a iniciar de sesión"
+        android:text="Ir a iniciar sesión"
         android:textSize="17sp"
         android:textStyle="bold"
         android:textColor="#FFFFFF"
