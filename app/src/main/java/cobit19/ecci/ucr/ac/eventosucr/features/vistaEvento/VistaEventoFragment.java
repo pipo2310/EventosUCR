@@ -55,6 +55,7 @@ import java.text.DateFormat;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Constantes;
 import cobit19.ecci.ucr.ac.eventosucr.core.models.Evento;
 import cobit19.ecci.ucr.ac.eventosucr.R;
+import cobit19.ecci.ucr.ac.eventosucr.shared.MapsVistaEvento;
 import cobit19.ecci.ucr.ac.eventosucr.shared.Util;
 
 
@@ -77,13 +78,6 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
     // Por ahora voy a hacerlo asi, pero hay que cambiarlo para que siempre sea el id del usuario actual
     private String usuarioId;
 
-    //Mapas
-    private LatLng ubicacionEvento = new LatLng(0,0);
-    private LatLng ubicacionActual = new LatLng(0,0);
-    Location mLastKnownLocation;
-    FusedLocationProviderClient fusedLocationProviderClient;
-    StringBuilder sb;
-    Object[] obtenerDir = new Object[4];
 
     public VistaEventoFragment() {
     }
@@ -103,8 +97,6 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.ubicacionMap);
         mapFragment.getMapAsync(this);
 
-        //Para la localización actual del dispositivo
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getActivity());
 
         // Colocamos el icono que muestra el tipo de evento
         ImageView icono = v.findViewById(R.id.imgCreadorEvento);
@@ -170,7 +162,8 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         btnVerRuta.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                obtenerRuta();
+                //obtenerRuta();
+                irMapaRuta();
             }
         });
 
@@ -348,7 +341,7 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
         }
 
         //Se agregan las coordenadas del evento al mapa
-        ubicacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
+        LatLng ubicacionEvento = new LatLng(evento.getLatitud(), evento.getLongitud());
 
 
         //Se agrega el marcador del evento en el mapa
@@ -379,78 +372,16 @@ public class  VistaEventoFragment extends Fragment implements OnMapReadyCallback
 
     }
 
-
-    //Url para obtener las rutas desde un punto origen a un punto destino
-    private String  obtenerUrl(LatLng orig, LatLng dest){
-        //Asigna el valor de los parámetros
-        String origen = "origin=" + orig.latitude + "," + orig.longitude;
-        String destino = "destination=" + dest.latitude + "," + dest.longitude;
-        String mode = "mode=driving";
-        String key = "key=AIzaSyAqZYlg_jAJqO6q9-tZa6-ntIZc_dgqUb4";
-        String params = origen + "&" + destino + "&" + mode  + "&" + key;
-        //Url para pedir direcciones
-        String url = "https://maps.googleapis.com/maps/api/directions/json?" + params;
-
-        return url;
+    public void irMapaRuta() {
+        // Intent para llamar a MapaPais
+        Intent intent = new Intent(getActivity(), MapsVistaEvento.class);
+        intent.putExtra("latitud", evento.getLatitud());
+        intent.putExtra("longitud", evento.getLongitud());
+        intent.putExtra("nombre", evento.getNombre());
+        startActivity(intent);
     }
 
 
-
-    //Obtiene la ubicación actual del dispositivo
-    //Marca la ruta desde la ubicación actual hasta la ubicación del evento
-
-    private void obtenerRuta() {
-        Task<Location> locationResult = fusedLocationProviderClient.getLastLocation();
-        locationResult.addOnCompleteListener(new OnCompleteListener<Location>() {
-            @Override
-            public void onComplete(@NonNull Task<Location> task) {
-                if (task.isSuccessful()) {
-                    // Set the map's camera position to the current location of the device.
-                    mLastKnownLocation = task.getResult();
-                    //Obtiene la ubicación del dispositivo
-                   ubicacionActual = new LatLng(mLastKnownLocation.getLatitude(),
-                            mLastKnownLocation.getLongitude());
-
-                    Bitmap icon = BitmapFactory.decodeResource(getResources(),R.drawable.calendar_azul);
-                    VistaEventoMap.addMarker(new MarkerOptions().position(ubicacionActual).title("Mi ubicación")
-                            .icon(generarBitmap(getContext(), R.drawable.ubic_actual)));
-
-
-                    //Mover la cámara a la ubicación actual
-                    CameraPosition cameraPosition = new CameraPosition.Builder()
-                            .target(ubicacionActual)
-                            .zoom(12)
-                            .bearing(90)
-                            .tilt(30)
-                            .build();
-                    VistaEventoMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-
-                    //Obtiene el url para la solicitud hhtp
-                    sb = new StringBuilder();
-                    sb.append(obtenerUrl(ubicacionActual, ubicacionEvento));
-
-                    //Obtiene las direcciones del api de google
-                    ObtenerDatosDirecciones obtenerDatosDirecciones = new ObtenerDatosDirecciones(getContext());
-                    obtenerDir[0] = VistaEventoMap;
-                    obtenerDir[1] = sb.toString();
-                    obtenerDir[2] = new LatLng(ubicacionActual.latitude, ubicacionActual.longitude);
-                    obtenerDir[3] = new LatLng(ubicacionEvento.latitude, ubicacionEvento.longitude);
-
-                    obtenerDatosDirecciones.execute(obtenerDir);
-                }
-            }
-        });
-    }
-
-    //Permite pasar drawables a bitmap (para agregar un imagen a un marcador)
-    public static BitmapDescriptor generarBitmap(Context context, int resId) {
-        Drawable drawable = ContextCompat.getDrawable(context, resId);
-        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        drawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
 
     public String getTagEliminar() {
         String tag = null;
