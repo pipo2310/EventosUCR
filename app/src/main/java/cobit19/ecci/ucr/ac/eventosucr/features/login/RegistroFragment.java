@@ -133,7 +133,9 @@ public class RegistroFragment extends Fragment {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) { validarCorreo(s); }
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                validarCorreo(s);
+            }
 
             @Override
             public void afterTextChanged(Editable s) { validarRegistro(); }
@@ -169,13 +171,16 @@ public class RegistroFragment extends Fragment {
         return view;
     }
 
-    public void validarCorreo(CharSequence str){
+    public void validarCorreo(CharSequence s){
+        String str = s.toString();
+        str = str.toLowerCase();
         Matcher matcher = pattern.matcher(str);
         if(matcher.matches()){
+            correo.setText(str);
             msj_correo.setText("");
             correoValido = true;
         }else{
-            msj_correo.setText("Debe ingresar un email valido de la ucr");
+            msj_correo.setText("Debe ingresar un email válido de la ucr");
             correoValido = false;
             registrar.setEnabled(false);
             registrar.setBackgroundResource(R.drawable.boton_login_disabled);
