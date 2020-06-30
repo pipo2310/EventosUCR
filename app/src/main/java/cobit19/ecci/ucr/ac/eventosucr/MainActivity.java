@@ -31,16 +31,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        SharedPreferences sharedPreferences = getSharedPreferences ("PREFERENCES", MODE_PRIVATE);
-        boolean notFirstRun = sharedPreferences.getBoolean("NOT_FIRST_RUN", false);
-        if (notFirstRun) {
-            llenarBase();
-        } else {
-            SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean("NOT_FIRST_RUN", true);
-            editor.commit();
-        }
+        llenarBase();
 
         // Obtenemos el firebase auth
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -79,8 +70,8 @@ public class MainActivity extends AppCompatActivity {
     public void asignarAlarma() {
         Calendar alertTime = Calendar.getInstance();
 
-        alertTime.set(Calendar.HOUR_OF_DAY, 17);
-        alertTime.set(Calendar.MINUTE,39);
+        alertTime.set(Calendar.HOUR_OF_DAY, 10);
+        alertTime.set(Calendar.MINUTE, 00);
         alertTime.set(Calendar.SECOND, 0);
 
         Intent alertIntent = new Intent(this, AlertManager.class);
@@ -128,6 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 new Categoria("otras")
         };
 
-        categoriaViewModel.delete(categorias);
+        categoriaViewModel.insert(categorias);
     }
 }

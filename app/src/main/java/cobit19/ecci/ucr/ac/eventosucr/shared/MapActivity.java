@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import com.google.android.gms.maps.MapFragment;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
@@ -32,14 +34,24 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     private double latitud;
     private double longitud;
     private GoogleMap mMap;
+    private Marker marcador;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
-        String apikey = getResources().getString(R.string.google_maps_key);
-        latitud = 9.9370;
-        longitud = -84.0510;
+        String apikey = "AIzaSyAqZYlg_jAJqO6q9-tZa6-ntIZc_dgqUb4";
+        SharedPreferences sharedPreferences = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
+        String latitudString = sharedPreferences.getString("latitud","");
+        String longitudString = sharedPreferences.getString("longitud","");
+        if(latitudString.equals("") && longitudString.equals("")){
+            latitud = 9.9370;
+            longitud = -84.0510;
+        }else{
+            latitud = Double.parseDouble(latitudString);
+            longitud = Double.parseDouble(longitudString);
+        }
+
         FloatingActionButton floatingActionButton =
                 (FloatingActionButton) findViewById(R.id.btnConfirmarLocation);
 
@@ -73,9 +85,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 new PlaceSelectionListener() {
                     @Override
                     public void onPlaceSelected(Place place) {
+                        // Se setea la nueva localización, que es el lugar que el usuario digitó
                         final LatLng latLng = place.getLatLng();
-
-                        Toast.makeText(MapActivity.this, ""+latLng.latitude, Toast.LENGTH_SHORT).show();
+                        latitud = latLng.latitude;
+                        longitud = latLng.longitude;
+                        onMapReady(mMap);
+                        Toast.makeText(MapActivity.this, ""+place.getName(), Toast.LENGTH_SHORT).show();
 
                     }
 
@@ -88,6 +103,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     }
 
+    // Enviar latitud y longitud que se ingresó
     private void addLocationAEvento() {
 
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCES", MODE_PRIVATE);
@@ -95,15 +111,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         editor.putString("latitud", Double.toString(latitud));
         editor.putString("longitud", Double.toString(longitud));
         editor.apply();
-        /*
-        Intent i =new Intent(this,CrearEvento.class);
-        Bundle b = new Bundle();
-        b.putDouble("Longitud",1.0);
-        b.putDouble("Latitud",1.0);
-        i.putExtras(b);
 
-        startActivity(i);
-         */
         finish();
     }
 
@@ -112,10 +120,21 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         mMap = googleMap;
         // setear la ubicacion
         LatLng ubicacion = new LatLng(latitud, longitud);
-        // agregar marcador
-        mMap.addMarker(new MarkerOptions().position(ubicacion).title("Ubicacion:"));
+        // Se crea un marcador en la localización digitada
+        if(marcador == null){
+            MarkerOptions markerOptions = new MarkerOptions();
+            markerOptions.position(ubicacion);
+            markerOptions.title("Ubicacion");
+            marcador = mMap.addMarker(markerOptions);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
+        }else{
+            // Si ya existe un marcador, solo se acutaliza la posición
+            marcador.setPosition(ubicacion);
+            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
+        }
+
+
         // mover camara hacia el marcador
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(ubicacion,17));
         mMap.setOnMapClickListener(this);
         // Asignamos el evento de clic largo en el mapa
         mMap.setOnMapLongClickListener(this);
@@ -140,15 +159,22 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     @Override
     public void onMapLongClick(LatLng latLng) {
-        // Agregamos un marcador cuando el usuario deja presionado un punto en el mapa
-        mMap.addMarker(new MarkerOptions()
-                .position(latLng)
-                .title(latLng.toString())
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+        // Eliminamos el viejo marcador y agregamos uno nuevo
+        // cuando el usuario deja presionado un punto en el mapa
+        if(marcador != null){
+            marcador.remove();
+            marcador = mMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(latLng.toString())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+            latitud= latLng.latitude;
+            longitud= latLng.longitude;
+        }
+
+
         // Mensaje
         Toast.makeText(getApplicationContext(),
                 "Ubicacion seleccionada: " + latLng.toString(), Toast.LENGTH_LONG).show();
-        latitud= latLng.latitude;
-        longitud= latLng.longitude;
+
     }
 }
